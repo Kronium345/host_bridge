@@ -1,5 +1,6 @@
 from app import app
-from flask import render_template
+from flask import render_template, request, redirect, url_for, session, flash
+from app.db import verify_credentials, create_user, find_user_by_email
 
 @app.route('/')
 def home():
@@ -43,6 +44,16 @@ def services():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip()
+        password = request.form.get('password', '')
+        user = verify_credentials(email, password)
+        if user:
+            session['user_id'] = user['id']
+            session['user_email'] = user['email']
+            flash('Logged in successfully.', 'success')
+            return redirect(url_for('home'))
+        flash('Invalid email or password.', 'error')
     return render_template('login.html')
 
 @app.route('/forgotpassword')
@@ -51,7 +62,36 @@ def forgotpassword():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if request.method == 'POST':
+        first_name = request.form.get('name')
+        last_name = request.form.get('lastname')
+        email = request.form.get('email', '').strip()
+        phone = request.form.get('phone')
+        password = request.form.get('password', '')
+        confirm_password = request.form.get('confirm_password', '')
+
+        if not email or not password:
+            flash('Email and password are required.', 'error')
+            return render_template('register.html')
+        if password != confirm_password:
+            flash('Passwords do not match.', 'error')
+            return render_template('register.html')
+        if find_user_by_email(email):
+            flash('An account with that email already exists.', 'error')
+            return render_template('register.html')
+
+        user_id = create_user(email=email, password=password, first_name=first_name, last_name=last_name, phone=phone)
+        session['user_id'] = user_id
+        session['user_email'] = email
+        flash('Account created. You are now signed in.', 'success')
+        return redirect(url_for('home'))
     return render_template('register.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('You have been signed out.', 'info')
+    return redirect(url_for('home'))
 
 
 @app.route('/filter-properties', methods=['POST'])
