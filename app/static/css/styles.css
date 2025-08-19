@@ -962,3 +962,55 @@ body {
     border-radius: 10px;
     font-weight: 700;
 }
+
+/* =============================== */
+/* PRIVACY POLICY PAGE                                                 */
+/* =============================== */
+.policy-page {
+    background: #f6fbf9;
+    padding: 60px 20px;
+}
+
+.policy-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #ffffff;
+    border: 1px solid #e0f0ea;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    padding: 32px 28px;
+}
+
+.policy-container h1 {
+    color: #004c46;
+    margin-top: 0;
+}
+
+.policy-container h2 {
+    color: #004c46;
+    margin-top: 28px;
+}
+
+.policy-container h3 {
+    color: #2b7c6c;
+    margin-top: 18px;
+}
+
+.policy-container p {
+    color: #334155;
+    line-height: 1.7;
+}
+
+.policy-updated {
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+.policy-list {
+    padding-left: 20px;
+}
+
+.policy-list li {
+    margin: 6px 0;
+    color: #04463f;
+}

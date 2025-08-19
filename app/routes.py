@@ -42,6 +42,10 @@ def templates_page():
 def services():
     return render_template('services.html')
 
+@app.route('/privacy')
+def privacy():
+    return render_template('privacypolicy.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
