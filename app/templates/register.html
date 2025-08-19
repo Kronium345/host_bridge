@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script src="https://kit.fontawesome.com/2c64fe788e.js" crossorigin="anonymous"></script>
+
+<section class="auth-wrapper">
+    <aside class="auth-side">
+        <div class="quote">
+            <img src="{{ url_for('static', filename='images/b.png') }}" alt="" class="brand-mark brand-mark-invert">
+            <h2>Investing in short‑term rentals has never been easier.</h2>
+            <p>HostBridge helps small businesses and investors locate, research, and acquire opportunities. Get started
+                today.</p>
+        </div>
+    </aside>
+
+    <div class="auth-form">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1 class="auth-title">Create your account</h1>
+                <div class="auth-subtle">Already have an account? <a href="{{ url_for('login') }}">Sign In</a></div>
+            </div>
+
+            <button class="google-btn" type="button"><img
+                    src="{{ url_for('static', filename='images/logo-google.png') }}" alt="Google" class="google-logo">
+                Sign up with Google</button>
+            <div class="or-sep">or</div>
+
+            <form action="{{ url_for('register') }}" method="post" class="auth-grid">
+                <div class="field">
+                    <i class="fa-regular fa-user"></i>
+                    <input class="input" type="text" id="name" name="name" placeholder="First name" required>
+                </div>
+                <div class="field">
+                    <i class="fa-regular fa-user"></i>
+                    <input class="input" type="text" id="lastname" name="lastname" placeholder="Last name" required>
+                </div>
+                <div class="field span-2">
+                    <i class="fa-regular fa-envelope"></i>
+                    <input class="input" type="email" id="email" name="email" placeholder="Email" required>
+                </div>
+                <div class="field span-2">
+                    <i class="fa-solid fa-phone"></i>
+                    <input class="input" type="tel" id="phone" name="phone" placeholder="Phone number" required>
+                </div>
+                <div class="field">
+                    <i class="fa-solid fa-lock"></i>
+                    <input class="input" type="password" id="password" name="password" placeholder="Password" required>
+                </div>
+                <div class="field">
+                    <i class="fa-solid fa-lock"></i>
+                    <input class="input" type="password" id="confirm_password" name="confirm_password"
+                        placeholder="Confirm password" required>
+                </div>
+                <button class="submit-btn span-2" type="submit">Create account</button>
+            </form>
+
+            <p class="terms">By clicking Create account, you agree to our <a href="#">Terms of Use</a> and <a
+                    href="#">Privacy Policy</a>.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

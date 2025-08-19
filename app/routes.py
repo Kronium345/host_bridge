@@ -41,11 +41,15 @@ def templates_page():
 def services():
     return render_template('services.html')
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     return render_template('login.html')
 
-@app.route('/register')
+@app.route('/forgotpassword')
+def forgotpassword():
+    return render_template('forgotpassword.html')
+
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     return render_template('register.html')
 
