@@ -58,8 +58,12 @@
                 </ul>
             </div>
             <div class="navbar-right">
+                {% if session.get('user_id') %}
+                <a href="{{ url_for('logout') }}" class="nav-button login-btn">Logout</a>
+                {% else %}
                 <a href="{{ url_for('login') }}" class="nav-button login-btn">Login</a>
                 <a href="{{ url_for('register') }}" class="nav-button register-btn">Register</a>
+                {% endif %}
             </div>
         </div>
     </nav>

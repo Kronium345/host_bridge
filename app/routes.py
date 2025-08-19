@@ -1,6 +1,11 @@
 from app import app
 from flask import render_template, request, redirect, url_for, session, flash
-from app.db import verify_credentials, create_user, find_user_by_email
+from app.db import verify_credentials, create_user, find_user_by_email, create_or_link_google_user
+import os
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
+from google_auth_oauthlib.flow import Flow
+import secrets
 
 @app.route('/')
 def home():
@@ -103,3 +108,81 @@ def filter_properties():
     # For now, just render the same find_property.html — implement filtering later
     return render_template('find_property.html')
 
+
+# ----------------------------
+# Google OAuth
+# ----------------------------
+
+GOOGLE_CLIENT_ID = os.getenv('GOOGLE_OAUTH_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_OAUTH_CLIENT_SECRET')
+GOOGLE_REDIRECT_URI = os.getenv('GOOGLE_REDIRECT_URI', 'https://host-bridge.com/auth/google/callback','http://127.0.0.1:5000/auth/google/callback')
+
+
+def _build_flow() -> Flow:
+    return Flow(
+        client_config={
+            'web': {
+                'client_id': GOOGLE_CLIENT_ID,
+                'client_secret': GOOGLE_CLIENT_SECRET,
+                'auth_uri': 'https://accounts.google.com/o/oauth2/auth',
+                'token_uri': 'https://oauth2.googleapis.com/token',
+            }
+        },
+        scopes=['openid', 'email', 'profile'],
+        redirect_uri=GOOGLE_REDIRECT_URI,
+    )
+
+
+@app.route('/login/google')
+def login_google():
+    if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
+        flash('Google OAuth is not configured. Set GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET.', 'error')
+        return redirect(url_for('login'))
+
+    flow = _build_flow()
+    state = secrets.token_urlsafe(32)
+    session['oauth_state'] = state
+    auth_url, _ = flow.authorization_url(
+        access_type='offline',
+        include_granted_scopes='true',
+        prompt='consent',
+        state=state,
+    )
+    return redirect(auth_url)
+
+
+@app.route('/auth/google/callback')
+def auth_google_callback():
+    if 'oauth_state' not in session or session['oauth_state'] != request.args.get('state'):
+        flash('Invalid login state. Please try again.', 'error')
+        return redirect(url_for('login'))
+
+    flow = _build_flow()
+    try:
+        flow.fetch_token(authorization_response=request.url)
+    except Exception as e:
+        flash(f'Google auth failed: {e}', 'error')
+        return redirect(url_for('login'))
+
+    credentials = flow.credentials
+    request_adapter = google_requests.Request()
+    try:
+        idinfo = id_token.verify_oauth2_token(
+            credentials.id_token,
+            request_adapter,
+            GOOGLE_CLIENT_ID,
+        )
+    except Exception as e:
+        flash(f'Could not verify Google ID token: {e}', 'error')
+        return redirect(url_for('login'))
+
+    google_sub = idinfo.get('sub')
+    email = idinfo.get('email')
+    name = idinfo.get('name')
+    picture = idinfo.get('picture')
+
+    user = create_or_link_google_user(google_sub=google_sub, email=email, name=name, picture_url=picture)
+    session['user_id'] = user['id']
+    session['user_email'] = user.get('email')
+    flash('Signed in with Google.', 'success')
+    return redirect(url_for('home'))
