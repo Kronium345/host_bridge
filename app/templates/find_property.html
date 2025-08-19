@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+  <h1>Find Your Ideal Short-Term Rental</h1>
+  <p>Explore verified properties across regions. Filter by STR regulations, property type, furnishings, and more.</p>
+</section>
+
+<!-- Filter + Map Section -->
+<section class="map-filters-section">
+  <div class="map-filter-container">
+
+    <!-- Filters -->
+    <div class="filters-box">
+      <form method="POST" action="/filter-properties" class="filters">
+        <div class="form-group">
+          <label>Region</label>
+          <select class="filter-select" name="region" required>
+            <option disabled selected>Select Region</option>
+            <option>England</option>
+            <option>Scotland</option>
+            <option>Wales</option>
+            <option>Northern Ireland</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Property Type</label>
+          <select class="filter-select" name="property_type" required>
+            <option disabled selected>Select Property Type</option>
+            <option>Apartment</option>
+            <option>Villa</option>
+            <option>Studio</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>STR Regulations</label>
+          <select class="filter-select" name="str_status" required>
+            <option disabled selected>Select STR Regulation Status</option>
+            <option>Compliant</option>
+            <option>Pending</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Furnishings</label>
+          <select class="filter-select" name="furnishing" required>
+            <option disabled selected>Select Furnishing</option>
+            <option>Fully Furnished</option>
+            <option>Semi Furnished</option>
+            <option>Unfurnished</option>
+          </select>
+        </div>
+
+        <button type="submit" class="register-btn">Apply Filters</button>
+      </form>
+    </div>
+
+    <!-- Map -->
+    <div class="map-box">
+      <h2 style="text-align: center; color: #004c46;">Available Listings Map</h2>
+      <div id="map" style="height: 500px; width: 100%; border-radius: 12px;"></div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-o9N1j7kGZkOD8Wt+IHuuN+1eA1rh36+6VZPzjRGbYlA=" crossorigin=""></script>
+
+<script>
+  // UK-Centered Map
+  const map = L.map('map').setView([54.505, -3.09], 6); // UK center
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Sample UK Listings
+  const listings = [
+    { name: "London Studio", lat: 51.5074, lng: -0.1278 },
+    { name: "Manchester Apartment", lat: 53.4808, lng: -2.2426 },
+    { name: "Edinburgh Flat", lat: 55.9533, lng: -3.1883 },
+    { name: "Belfast House", lat: 54.5973, lng: -5.9301 },
+    { name: "Cardiff Loft", lat: 51.4816, lng: -3.1791 }
+  ];
+
+  listings.forEach(p => {
+    L.marker([p.lat, p.lng])
+      .addTo(map)
+      .bindPopup(`<b>${p.name}</b>`);
+  });
+</script>
+{% endblock %}

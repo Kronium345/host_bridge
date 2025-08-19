@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero">
+  <h1>How HostBridge Works for Operators</h1>
+  <p>Find high-quality properties, manage easily, and grow your STR business with zero upfront costs.</p>
+</section>
+
+<!-- Steps Section -->
+<section class="steps-wrapper">
+  <div class="step-box">
+    <img src="{{ url_for('static', filename='images/search.png') }}" alt="Browse Listings">
+    <h3>Step 1: Browse Available Listings</h3>
+    <p>View landlord-submitted properties based on your region, budget, and requirements.</p>
+  </div>
+  <div class="step-box">
+    <img src="{{ url_for('static', filename='images/verify.png') }}" alt="Verify">
+    <h3>Step 2: Get Verified</h3>
+    <p>Complete your verification to access contracts, templates, and direct communication.</p>
+  </div>
+  <div class="step-box">
+    <img src="{{ url_for('static', filename='images/connect.png') }}" alt="Connect">
+    <h3>Step 3: Connect & Manage</h3>
+    <p>Sign contracts, schedule onboarding, and manage your new STR unit seamlessly.</p>
+  </div>
+</section>
+
+<!-- Illustration Section -->
+<section class="visual-section">
+  <div class="visual-text">
+    <h2>One platform to grow your operator business</h2>
+    <p>No more outreach or uncertainty — we bring verified landlords and properties to you with built-in compliance tools.</p>
+  </div>
+  <div class="visual-image">
+    <img src="{{ url_for('static', filename='images/operator_illustration.png') }}" alt="Operator Illustration">
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <h2>Looking for Your Next STR Unit?</h2>
+  <a href="{{ url_for('find_property') }}" class="cta-button">Start Exploring</a>
+</section>
+
+{% endblock %}
