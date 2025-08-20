@@ -115,7 +115,26 @@ def filter_properties():
 
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_OAUTH_CLIENT_ID')
 GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_OAUTH_CLIENT_SECRET')
-GOOGLE_REDIRECT_URI = os.getenv('GOOGLE_REDIRECT_URI', 'https://host-bridge.com/auth/google/callback','http://127.0.0.1:5000/auth/google/callback')
+GOOGLE_REDIRECT_URI_DEFAULT = os.getenv('GOOGLE_REDIRECT_URI', 'http://127.0.0.1:5000/auth/google/callback')
+
+
+def _current_redirect_uri() -> str:
+    """Build redirect URI for the current host.
+
+    - In production on host-bridge.com → use https://<host>/auth/google/callback
+    - In dev → use incoming scheme and host (e.g., http://127.0.0.1:5000)
+    - Fallback to GOOGLE_REDIRECT_URI_DEFAULT if request is unavailable
+    """
+    try:
+        host = request.host
+        if not host:
+            return GOOGLE_REDIRECT_URI_DEFAULT
+        if 'host-bridge.com' in host:
+            return f"https://{host}/auth/google/callback"
+        scheme = request.headers.get('X-Forwarded-Proto', request.scheme)
+        return f"{scheme}://{host}/auth/google/callback"
+    except Exception:
+        return GOOGLE_REDIRECT_URI_DEFAULT
 
 
 def _build_flow() -> Flow:
@@ -129,14 +148,14 @@ def _build_flow() -> Flow:
             }
         },
         scopes=['openid', 'email', 'profile'],
-        redirect_uri=GOOGLE_REDIRECT_URI,
+        redirect_uri=_current_redirect_uri(),
     )
 
 
 @app.route('/login/google')
 def login_google():
     if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
-        flash('Google OAuth is not configured. Set GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET.', 'error')
+        flash('Google OAuth is not configured. Set GOOGLE_OAUTH_WEB_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET.', 'error')
         return redirect(url_for('login'))
 
     flow = _build_flow()

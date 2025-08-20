@@ -49,7 +49,10 @@ def init_db():
 
         existing_cols = {r[1] for r in conn.execute('PRAGMA table_info(users)').fetchall()}
         if 'google_sub' not in existing_cols:
-            conn.execute('ALTER TABLE users ADD COLUMN google_sub TEXT UNIQUE')
+            conn.execute('ALTER TABLE users ADD COLUMN google_sub TEXT')
+            conn.execute('CREATE UNIQUE INDEX IF NOT EXISTS idx_users_google_sub ON users(google_sub)')
+        else:
+            conn.execute('CREATE UNIQUE INDEX IF NOT EXISTS idx_users_google_sub ON users(google_sub)')
         if 'picture_url' not in existing_cols:
             conn.execute('ALTER TABLE users ADD COLUMN picture_url TEXT')
 

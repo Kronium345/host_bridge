@@ -49,11 +49,6 @@ pip install flask google-auth google-auth-oauthlib requests
 # Required for sessions
 $env:FLASK_SECRET_KEY = (python -c "import secrets;print(secrets.token_hex(32))")
 
-# Optional for Google OAuth (see below)
-# $env:GOOGLE_OAUTH_CLIENT_ID = "...apps.googleusercontent.com"
-# $env:GOOGLE_OAUTH_CLIENT_SECRET = "..."
-# Dev only if using http://127.0.0.1:5000 callback
-# $env:OAUTHLIB_INSECURE_TRANSPORT = 1
 
 python run.py
 ```
@@ -101,7 +96,6 @@ Configure redirect URIs in Google Cloud (OAuth 2.0 client → Web application):
 
 - Local development:
   - `http://127.0.0.1:5000/auth/google/callback`
-  - `http://localhost:5000/auth/google/callback`
 - Production:
   - `https://host-bridge.com/auth/google/callback`
 
@@ -115,7 +109,7 @@ References:
 ## Environment variables
 
 - `FLASK_SECRET_KEY` — required to sign sessions (use a long random hex)
-- `GOOGLE_OAUTH_CLIENT_ID` — OAuth client ID (Google Cloud)
+- `GOOGLE_OAUTH_WEB_CLIENT_ID` — OAuth client ID (Google Cloud)
 - `GOOGLE_OAUTH_CLIENT_SECRET` — OAuth client secret (Google Cloud)
 - `OAUTHLIB_INSECURE_TRANSPORT` — set to `1` only in development for `http://127.0.0.1:5000`
 
@@ -132,9 +126,17 @@ Styles live in `app/static/css/styles.css` and include sections for:
 
 - Set environment variables in your host (never commit secrets):
   - `FLASK_SECRET_KEY` (required)
-  - `GOOGLE_OAUTH_CLIENT_ID` and `GOOGLE_OAUTH_CLIENT_SECRET` (if using Google Sign‑In)
+  - `GOOGLE_OAUTH_WEB_CLIENT_ID` and `GOOGLE_OAUTH_CLIENT_SECRET` (if using Google Sign‑In)
 - Ensure your production URL matches the OAuth redirect URI (`https://host-bridge.com/auth/google/callback`).
 - Run with a production server (e.g., gunicorn behind nginx) and HTTPS enabled.
+
+## Seeding Database
+- To have test data for logging in/signing up, you can seed the database. To do this WITHOUT resetting database:
+  - .\.venv\Scripts\Activate.ps1
+      python seed.py
+
+- To reset database:
+  - python seed.py --reset
 
 
 ## Troubleshooting
