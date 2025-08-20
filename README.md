@@ -109,7 +109,7 @@ References:
 ## Environment variables
 
 - `FLASK_SECRET_KEY` — required to sign sessions (use a long random hex)
-- `GOOGLE_OAUTH_WEB_CLIENT_ID` — OAuth client ID (Google Cloud)
+- `GOOGLE_OAUTH_CLIENT_ID` — OAuth client ID (Google Cloud)
 - `GOOGLE_OAUTH_CLIENT_SECRET` — OAuth client secret (Google Cloud)
 - `OAUTHLIB_INSECURE_TRANSPORT` — set to `1` only in development for `http://127.0.0.1:5000`
 
@@ -126,7 +126,7 @@ Styles live in `app/static/css/styles.css` and include sections for:
 
 - Set environment variables in your host (never commit secrets):
   - `FLASK_SECRET_KEY` (required)
-  - `GOOGLE_OAUTH_WEB_CLIENT_ID` and `GOOGLE_OAUTH_CLIENT_SECRET` (if using Google Sign‑In)
+  - `GOOGLE_OAUTH_CLIENT_ID` and `GOOGLE_OAUTH_CLIENT_SECRET` (if using Google Sign‑In)
 - Ensure your production URL matches the OAuth redirect URI (`https://host-bridge.com/auth/google/callback`).
 - Run with a production server (e.g., gunicorn behind nginx) and HTTPS enabled.
 

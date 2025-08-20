@@ -53,6 +53,8 @@ def privacy():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'GET' and session.get('user_id'):
+        return redirect(url_for('home'))
     if request.method == 'POST':
         email = request.form.get('email', '').strip()
         password = request.form.get('password', '')
@@ -71,6 +73,8 @@ def forgotpassword():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if request.method == 'GET' and session.get('user_id'):
+        return redirect(url_for('home'))
     if request.method == 'POST':
         first_name = request.form.get('name')
         last_name = request.form.get('lastname')
@@ -138,7 +142,7 @@ def _current_redirect_uri() -> str:
 
 
 def _build_flow() -> Flow:
-    return Flow(
+    flow = Flow.from_client_config(
         client_config={
             'web': {
                 'client_id': GOOGLE_CLIENT_ID,
@@ -148,19 +152,22 @@ def _build_flow() -> Flow:
             }
         },
         scopes=['openid', 'email', 'profile'],
-        redirect_uri=_current_redirect_uri(),
     )
+    flow.redirect_uri = _current_redirect_uri()
+    return flow
 
 
 @app.route('/login/google')
 def login_google():
     if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
-        flash('Google OAuth is not configured. Set GOOGLE_OAUTH_WEB_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET.', 'error')
+        flash('Google OAuth is not configured. Set GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET.', 'error')
         return redirect(url_for('login'))
 
     flow = _build_flow()
     state = secrets.token_urlsafe(32)
     session['oauth_state'] = state
+    next_url = request.args.get('next') or url_for('home')
+    session['oauth_next'] = next_url
     auth_url, _ = flow.authorization_url(
         access_type='offline',
         include_granted_scopes='true',
@@ -200,8 +207,14 @@ def auth_google_callback():
     name = idinfo.get('name')
     picture = idinfo.get('picture')
 
-    user = create_or_link_google_user(google_sub=google_sub, email=email, name=name, picture_url=picture)
-    session['user_id'] = user['id']
-    session['user_email'] = user.get('email')
-    flash('Signed in with Google.', 'success')
-    return redirect(url_for('home'))
+    try:
+        user = create_or_link_google_user(google_sub=google_sub, email=email, name=name, picture_url=picture)
+        session['user_id'] = user['id']
+        session['user_email'] = user.get('email')
+        session.pop('oauth_state', None)
+        session.pop('oauth_next', None)
+        flash('Signed in with Google.', 'success')
+        return redirect(url_for('home'))
+    except Exception as e:
+        flash(f'Failed to create user account: {e}', 'error')
+        return redirect(url_for('login'))
