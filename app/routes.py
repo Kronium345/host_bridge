@@ -151,7 +151,11 @@ def _build_flow() -> Flow:
                 'token_uri': 'https://oauth2.googleapis.com/token',
             }
         },
-        scopes=['openid', 'email', 'profile'],
+        scopes=[
+            'https://www.googleapis.com/auth/userinfo.profile',
+            'https://www.googleapis.com/auth/userinfo.email',
+            'openid'
+        ],
     )
     flow.redirect_uri = _current_redirect_uri()
     return flow
@@ -187,6 +191,7 @@ def auth_google_callback():
     try:
         flow.fetch_token(authorization_response=request.url)
     except Exception as e:
+        print(f"DEBUG: Google auth failed during token fetch: {e}")
         flash(f'Google auth failed: {e}', 'error')
         return redirect(url_for('login'))
 
@@ -197,8 +202,10 @@ def auth_google_callback():
             credentials.id_token,
             request_adapter,
             GOOGLE_CLIENT_ID,
+            clock_skew_in_seconds=120
         )
     except Exception as e:
+        print(f"DEBUG: Google ID token verification failed: {e}")
         flash(f'Could not verify Google ID token: {e}', 'error')
         return redirect(url_for('login'))
 
@@ -214,7 +221,9 @@ def auth_google_callback():
         session.pop('oauth_state', None)
         session.pop('oauth_next', None)
         flash('Signed in with Google.', 'success')
+        print(f"DEBUG: Google auth successful, redirecting to home")
         return redirect(url_for('home'))
     except Exception as e:
+        print(f"DEBUG: Failed to create user account: {e}")
         flash(f'Failed to create user account: {e}', 'error')
         return redirect(url_for('login'))
