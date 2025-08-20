@@ -1,4 +1,4 @@
-
+// EmailJS logic
 const EMAILJS_CONFIG = {
     serviceId: process.env.EMAILJS_SERVICE_ID,
     templateId: process.env.EMAILJS_TEMPLATE_ID,
