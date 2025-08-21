@@ -4,6 +4,111 @@
 
 <script src="https://kit.fontawesome.com/2c64fe788e.js" crossorigin="anonymous"></script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('register-form');
+        const nameInput = document.getElementById('name');
+        const lastnameInput = document.getElementById('lastname');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm_password');
+
+        // Show flash messages if they exist (e.g., from failed registration attempts)
+        if (window.showFlashMessages) {
+            window.showFlashMessages();
+            window.clearFlashMessages();
+        }
+
+        // Client-side validation
+        form.addEventListener('submit', function (e) {
+            const name = nameInput.value.trim();
+            const lastname = lastnameInput.value.trim();
+            const email = emailInput.value.trim();
+            const phone = phoneInput.value.trim();
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            if (!name) {
+                e.preventDefault();
+                if (window.toast) {
+                    window.toast('Please enter your first name', 'failure');
+                }
+                nameInput.focus();
+                return false;
+            }
+
+            if (!lastname) {
+                e.preventDefault();
+                if (window.toast) {
+                    window.toast('Please enter your last name', 'failure');
+                }
+                lastnameInput.focus();
+                return false;
+            }
+
+            if (!email) {
+                e.preventDefault();
+                if (window.toast) {
+                    window.toast('Please enter your email address', 'failure');
+                }
+                emailInput.focus();
+                return false;
+            }
+
+            // Basic email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                e.preventDefault();
+                if (window.toast) {
+                    window.toast('Please enter a valid email address', 'failure');
+                }
+                emailInput.focus();
+                return false;
+            }
+
+            if (!phone) {
+                e.preventDefault();
+                if (window.toast) {
+                    window.toast('Please enter your phone number', 'failure');
+                }
+                phoneInput.focus();
+                return false;
+            }
+
+            if (!password) {
+                e.preventDefault();
+                if (window.toast) {
+                    window.toast('Please enter a password', 'failure');
+                }
+                passwordInput.focus();
+                return false;
+            }
+
+            if (password.length < 6) {
+                e.preventDefault();
+                if (window.toast) {
+                    window.toast('Password must be at least 6 characters long', 'failure');
+                }
+                passwordInput.focus();
+                return false;
+            }
+
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                if (window.toast) {
+                    window.toast('Passwords do not match', 'failure');
+                }
+                confirmPasswordInput.focus();
+                return false;
+            }
+
+            // Form is valid, allow submission
+            return true;
+        });
+    });
+</script>
+
 <section class="auth-wrapper">
     <aside class="auth-side">
         <div class="quote">
@@ -27,31 +132,31 @@
             </a>
             <div class="or-sep">or</div>
 
-            <form action="{{ url_for('register') }}" method="post" class="auth-grid">
+            <form action="{{ url_for('register') }}" method="post" class="auth-grid" id="register-form">
                 <div class="field">
                     <i class="fa-regular fa-user"></i>
-                    <input class="input" type="text" id="name" name="name" placeholder="First name" required>
+                    <input class="input" type="text" id="name" name="name" placeholder="First name">
                 </div>
                 <div class="field">
                     <i class="fa-regular fa-user"></i>
-                    <input class="input" type="text" id="lastname" name="lastname" placeholder="Last name" required>
+                    <input class="input" type="text" id="lastname" name="lastname" placeholder="Last name">
                 </div>
                 <div class="field span-2">
                     <i class="fa-regular fa-envelope"></i>
-                    <input class="input" type="email" id="email" name="email" placeholder="Email" required>
+                    <input class="input" type="email" id="email" name="email" placeholder="Email">
                 </div>
                 <div class="field span-2">
                     <i class="fa-solid fa-phone"></i>
-                    <input class="input" type="tel" id="phone" name="phone" placeholder="Phone number" required>
+                    <input class="input" type="tel" id="phone" name="phone" placeholder="Phone number">
                 </div>
                 <div class="field">
                     <i class="fa-solid fa-lock"></i>
-                    <input class="input" type="password" id="password" name="password" placeholder="Password" required>
+                    <input class="input" type="password" id="password" name="password" placeholder="Password">
                 </div>
                 <div class="field">
                     <i class="fa-solid fa-lock"></i>
                     <input class="input" type="password" id="confirm_password" name="confirm_password"
-                        placeholder="Confirm password" required>
+                        placeholder="Confirm password">
                 </div>
                 <button class="submit-btn span-2" type="submit">Create account</button>
             </form>

@@ -29,7 +29,7 @@ def open_conn(db_path: str = DB_PATH):
 
 
 def init_db():
-    """Create required tables if they do not exist."""
+    """Create required tables if they do not exist and run lightweight migrations."""
     with open_conn() as conn:
         conn.execute(
             """
@@ -42,6 +42,12 @@ def init_db():
                 phone TEXT,
                 google_sub TEXT UNIQUE,
                 picture_url TEXT,
+                -- RBAC fields (added via migrations if missing)
+                role TEXT DEFAULT 'user', -- one of: user, admin, superadmin
+                approval_status TEXT DEFAULT 'approved', -- pending/approved/rejected
+                email_verified INTEGER DEFAULT 0, -- 0/1
+                approved_by INTEGER, -- user id of approver (nullable)
+                approved_at TEXT, -- timestamp
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP
             )
             """
@@ -56,6 +62,17 @@ def init_db():
         if 'picture_url' not in existing_cols:
             conn.execute('ALTER TABLE users ADD COLUMN picture_url TEXT')
 
+        if 'role' not in existing_cols:
+            conn.execute("ALTER TABLE users ADD COLUMN role TEXT DEFAULT 'user'")
+        if 'approval_status' not in existing_cols:
+            conn.execute("ALTER TABLE users ADD COLUMN approval_status TEXT DEFAULT 'approved'")
+        if 'email_verified' not in existing_cols:
+            conn.execute("ALTER TABLE users ADD COLUMN email_verified INTEGER DEFAULT 0")
+        if 'approved_by' not in existing_cols:
+            conn.execute("ALTER TABLE users ADD COLUMN approved_by INTEGER")
+        if 'approved_at' not in existing_cols:
+            conn.execute("ALTER TABLE users ADD COLUMN approved_at TEXT")
+
 
 # -----------------------
 # User helpers (Auth)
@@ -68,15 +85,17 @@ def find_user_by_email(email: str) -> Optional[Dict]:
 
 
 def create_user(email: str, password: str, first_name: Optional[str] = None,
-                last_name: Optional[str] = None, phone: Optional[str] = None) -> int:
+                last_name: Optional[str] = None, phone: Optional[str] = None,
+                role: str = 'user', approval_status: str = 'approved',
+                email_verified: int = 0) -> int:
     password_hash = generate_password_hash(password)
     with open_conn() as conn:
         cur = conn.execute(
             """
-            INSERT INTO users (email, password_hash, first_name, last_name, phone)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO users (email, password_hash, first_name, last_name, phone, role, approval_status, email_verified)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """,
-            (email, password_hash, first_name, last_name, phone),
+            (email, password_hash, first_name, last_name, phone, role, approval_status, email_verified),
         )
         return cur.lastrowid
 
@@ -132,3 +151,43 @@ def create_or_link_google_user(google_sub: str, email: Optional[str], name: Opti
         )
         new_row = conn.execute('SELECT * FROM users WHERE id = ?', (cur.lastrowid,)).fetchone()
         return dict(new_row)
+
+
+# -----------------------
+# Admin/RBAC helpers
+# -----------------------
+
+ALLOWED_ROLES = {'user', 'admin', 'superadmin'}
+
+
+def set_user_role(target_user_id: int, new_role: str, approved_by: Optional[int] = None) -> None:
+    if new_role not in ALLOWED_ROLES:
+        raise ValueError(f"Invalid role: {new_role}")
+    with open_conn() as conn:
+        conn.execute(
+            "UPDATE users SET role = ?, approved_by = COALESCE(?, approved_by), approved_at = CURRENT_TIMESTAMP WHERE id = ?",
+            (new_role, approved_by, target_user_id),
+        )
+
+
+def ensure_super_admin(email: str = 'superadmin@hostbridge.local', password: str = 'admin123',
+                       first_name: str = 'Super', last_name: str = 'Admin') -> Dict:
+    """Idempotently create a super admin if not present. Returns the user row as dict."""
+    with open_conn() as conn:
+        row = conn.execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()
+        if row:
+            return dict(row)
+    user_id = create_user(email=email, password=password, first_name=first_name, last_name=last_name,
+                          role='superadmin', approval_status='approved', email_verified=1)
+    return find_user_by_email(email)
+
+
+def grant_admin(granter_email: str, target_email: str, role: str = 'admin') -> None:
+    """Grant admin or user role to a target email. Only a superadmin can grant admin roles."""
+    granter = find_user_by_email(granter_email)
+    if not granter or granter.get('role') != 'superadmin':
+        raise PermissionError('Only superadmin can grant roles')
+    target = find_user_by_email(target_email)
+    if not target:
+        raise ValueError('Target user not found')
+    set_user_role(target['id'], role, approved_by=granter['id'])

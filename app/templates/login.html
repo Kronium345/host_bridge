@@ -179,6 +179,58 @@
 
 <script src="https://kit.fontawesome.com/2c64fe788e.js" crossorigin="anonymous"></script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('login-form');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+
+        // Show flash messages if they exist (e.g., from failed login attempts)
+        if (window.showFlashMessages) {
+            window.showFlashMessages();
+            window.clearFlashMessages();
+        }
+
+        // Client-side validation
+        form.addEventListener('submit', function (e) {
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!email) {
+                e.preventDefault();
+                if (window.toast) {
+                    window.toast('Please enter your email address', 'failure');
+                }
+                emailInput.focus();
+                return false;
+            }
+
+            if (!password) {
+                e.preventDefault();
+                if (window.toast) {
+                    window.toast('Please enter your password', 'failure');
+                }
+                passwordInput.focus();
+                return false;
+            }
+
+            // Basic email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                e.preventDefault();
+                if (window.toast) {
+                    window.toast('Please enter a valid email address', 'failure');
+                }
+                emailInput.focus();
+                return false;
+            }
+
+            // Form is valid, allow submission
+            return true;
+        });
+    });
+</script>
+
 <section class="auth-wrapper">
     <aside class="auth-side">
         <div class="quote">
@@ -202,15 +254,14 @@
             </a>
             <div class="or-sep">or</div>
 
-            <form class="form" action="{{ url_for('login') }}" method="post">
+            <form class="form" action="{{ url_for('login') }}" method="post" id="login-form">
                 <div class="field">
                     <i class="fa-regular fa-envelope"></i>
-                    <input class="input" type="text" id="email" name="email" placeholder="Email or phone number"
-                        required>
+                    <input class="input" type="text" id="email" name="email" placeholder="Email or phone number">
                 </div>
                 <div class="field">
                     <i class="fa-solid fa-lock"></i>
-                    <input class="input" type="password" id="password" name="password" placeholder="Password" required>
+                    <input class="input" type="password" id="password" name="password" placeholder="Password">
                 </div>
                 <div class="form-row">
                     <label class="checkbox-inline">

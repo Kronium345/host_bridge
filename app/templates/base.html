@@ -23,11 +23,6 @@
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 
-    <!-- EmailJS SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-
-    <!-- EmailJS Integration Script -->
-    <script src="{{ url_for('static', filename='js/email.js') }}"></script>
 </head>
 
 <body>
@@ -89,10 +84,32 @@
 
     <!-- Leaflet JS (fixed) -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="{{ url_for('static', filename='js/email.js') }}"></script>
 
     <!-- Page-Specific Scripts -->
     {% block scripts %}{% endblock %}
+
+    <script src="{{ url_for('static', filename='js/toast.js') }}"></script>
+    <script>
+        window.flashMessages = {{ get_flashed_messages(with_categories = true) | tojson | safe }};
+
+        window.showFlashMessages = function () {
+            if (Array.isArray(window.flashMessages)) {
+                window.flashMessages.forEach(function (pair) {
+                    var category = pair[0] || 'info';
+                    var message = pair[1] || '';
+                    if (typeof window.toast === 'function') {
+                        var extraClass = category === 'error' ? 'failure' : category;
+                        window.toast(message, extraClass);
+                    }
+                });
+            }
+        };
+
+        // Clear flash messages after showing them
+        window.clearFlashMessages = function () {
+            window.flashMessages = [];
+        };
+    </script>
 
 </body>
 

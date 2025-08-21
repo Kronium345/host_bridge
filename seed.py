@@ -1,6 +1,15 @@
 import os
 import argparse
-from app.db import init_db, create_user, create_or_link_google_user, find_user_by_email, open_conn, DB_PATH
+from app.db import (
+    init_db,
+    create_user,
+    create_or_link_google_user,
+    find_user_by_email,
+    open_conn,
+    DB_PATH,
+    ensure_super_admin,
+    grant_admin,
+)
 
 
 def reset_database() -> None:
@@ -53,6 +62,18 @@ def upsert_demo_users() -> None:
         name="Gina OAuth",
         picture_url=None,
     )
+
+    # Ensures a super admin exists and grants admin role to demo admin
+    super_admin = ensure_super_admin(
+        email=os.environ.get('HB_SUPERADMIN_EMAIL', 'superadmin@hostbridge.local'),
+        password=os.environ.get('HB_SUPERADMIN_PASSWORD', 'admin123'),
+        first_name='Super',
+        last_name='Admin',
+    )
+    try:
+        grant_admin(super_admin['email'], 'admin@example.com', role='admin')
+    except Exception:
+        pass
 
 
 if __name__ == "__main__":

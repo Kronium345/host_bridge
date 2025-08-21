@@ -20,6 +20,7 @@ let nameInput;
 let emailInput;
 let roleSelect;
 let submitButton;
+let otherRoleInput;
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function () {
@@ -32,6 +33,7 @@ function initializeForm() {
     emailInput = document.querySelector('input[name="email"]') || document.querySelector('#email');
     roleSelect = document.querySelector('select[name="role"]') || document.querySelector('#role');
     submitButton = document.querySelector('button[type="submit"]') || document.querySelector('.submit-btn');
+    otherRoleInput = document.querySelector('#other_role');
 
     if (!formRef || !nameInput || !emailInput || !roleSelect || !submitButton) {
         console.warn('Some form elements not found. Please check your HTML structure.');
@@ -41,8 +43,11 @@ function initializeForm() {
     formRef.addEventListener('submit', handleSubmit);
     nameInput.addEventListener('input', handleChange);
     emailInput.addEventListener('input', handleChange);
-    roleSelect.addEventListener('change', handleChange);
-
+    roleSelect.addEventListener('change', handleRoleChange);
+    if (otherRoleInput) {
+        otherRoleInput.addEventListener('input', handleChange);
+    }
+    handleRoleChange({ target: roleSelect });
     console.log('EmailJS form initialized successfully');
 }
 
@@ -53,6 +58,22 @@ function handleChange(e) {
         ...formData,
         [name]: value
     };
+}
+
+function handleRoleChange(e) {
+    handleChange(e);
+    const otherGroup = document.getElementById('other-role-group');
+    if (!otherGroup) return;
+
+    const isOther = e.target.value === 'Other';
+    otherGroup.style.display = isOther ? 'block' : 'none';
+    if (otherRoleInput) {
+        otherRoleInput.required = isOther;
+    }
+    if (!isOther && otherRoleInput) {
+        otherRoleInput.value = '';
+        delete formData.other_role;
+    }
 }
 
 function handleSubmit(e) {
@@ -72,10 +93,14 @@ function handleSubmit(e) {
 
     setLoading(true);
 
+    const selectedRole = formData.role === 'Other' && otherRoleInput && otherRoleInput.value.trim()
+        ? `Other: ${otherRoleInput.value.trim()}`
+        : formData.role;
+
     const templateParams = {
         name: formData.name.trim(),
         email: formData.email.trim(),
-        role: formData.role,
+        role: selectedRole,
         time: new Date().toLocaleString('en-GB', {
             day: '2-digit',
             month: '2-digit',
