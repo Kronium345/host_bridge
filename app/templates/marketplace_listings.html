@@ -1,14 +1,112 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marketplace Listings</title>
-</head>
+{% block content %}
 
-<body>
-    <h1>Marketplace Listings</h1>
-</body>
+<div class="marketplace-container">
+    <div class="marketplace-header">
+        <h1 class="marketplace-title">FIND VERIFIED PROPERTIES</h1>
+    </div>
 
-</html>
+    <div class="search-filter-section">
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search by city or Postcode" id="search-input">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+        <button class="filter-btn">
+            <i class="fas fa-filter"></i> Filter
+        </button>
+    </div>
+
+    <div class="listings-grid" id="listings-grid">
+        <!-- Sample Property Cards -->
+        <a class="property-card" href="{{ url_for('view_property', property_id=1) }}">
+            <div class="property-image">
+                <img src="{{ url_for('static', filename='images/pattern.png') }}" alt="Property Image">
+            </div>
+            <div class="property-content">
+                <div class="property-price">£1200/mo</div>
+                <div class="property-details">
+                    <span><i class="fas fa-bed"></i><span>3 beds</span></span>
+                    <span><i class="fas fa-bath"></i><span>1 bath</span></span>
+                    <span><i class="fas fa-couch"></i><span>F/U</span></span>
+                </div>
+                <div class="property-listed">Listed yesterday</div>
+                <div class="property-address">
+                    <strong>Address:</strong><br>
+                    123 Main Street, London, SW1A 1AA
+                </div>
+            </div>
+        </a>
+
+        <a class="property-card" href="{{ url_for('view_property', property_id=2) }}">
+            <div class="property-image">
+                <img src="{{ url_for('static', filename='images/pattern.png') }}" alt="Property Image">
+            </div>
+            <div class="property-content">
+                <div class="property-price">£2000/mo</div>
+                <div class="property-details">
+                    <span><i class="fas fa-bed"></i><span>1 bed</span></span>
+                    <span><i class="fas fa-bath"></i><span>1 bath</span></span>
+                    <span><i class="fas fa-couch"></i><span>F</span></span>
+                </div>
+                <div class="property-listed">Listed 2 days ago</div>
+                <div class="property-address">
+                    <strong>Address:</strong><br>
+                    456 High Street, Manchester, M1 1AA
+                </div>
+            </div>
+        </a>
+
+        <a class="property-card" href="{{ url_for('view_property', property_id=3) }}">
+            <div class="property-image">
+                <img src="{{ url_for('static', filename='images/pattern.png') }}" alt="Property Image">
+            </div>
+            <div class="property-content">
+                <div class="property-price">£1800/mo</div>
+                <div class="property-details">
+                    <span><i class="fas fa-bed"></i><span>2 beds</span></span>
+                    <span><i class="fas fa-bath"></i><span>2 baths</span></span>
+                    <span><i class="fas fa-couch"></i><span>U</span></span>
+                </div>
+                <div class="property-listed">Listed 3 days ago</div>
+                <div class="property-address">
+                    <strong>Address:</strong><br>
+                    789 Queen Street, Birmingham, B1 1AA
+                </div>
+            </div>
+        </a>
+
+        <a class="property-card" href="{{ url_for('view_property', property_id=4) }}">
+            <div class="property-image">
+                <img src="{{ url_for('static', filename='images/pattern.png') }}" alt="Property Image">
+            </div>
+            <div class="property-content">
+                <div class="property-price">£1500/mo</div>
+                <div class="property-details">
+                    <span><i class="fas fa-bed"></i><span>2 beds</span></span>
+                    <span><i class="fas fa-bath"></i><span>1 bath</span></span>
+                    <span><i class="fas fa-couch"></i><span>F/U</span></span>
+                </div>
+                <div class="property-listed">Listed 1 week ago</div>
+                <div class="property-address">
+                    <strong>Address:</strong><br>
+                    321 Park Lane, Liverpool, L1 1AA
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<script>
+    document.getElementById('search-input').addEventListener('input', function (e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const propertyCards = document.querySelectorAll('.property-card');
+        propertyCards.forEach(card => {
+            const address = card.querySelector('.property-address').textContent.toLowerCase();
+            const price = card.querySelector('.property-price').textContent.toLowerCase();
+            const details = card.querySelector('.property-details').textContent.toLowerCase();
+            card.style.display = (address.includes(searchTerm) || price.includes(searchTerm) || details.includes(searchTerm)) ? 'block' : 'none';
+        });
+    });
+</script>
+{% endblock %}

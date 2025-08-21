@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="property-details-container">
+    <div class="property-header">
+        <a href="{{ url_for('marketplace_listings') }}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> BACK
+        </a>
+        <h1 class="page-title">PROPERTY DETAILS</h1>
+    </div>
+
+    <div class="property-content">
+        <div class="property-image-section">
+            <div class="property-image">
+                <img src="{{ url_for('static', filename='images/pattern.png') }}" alt="Property Image">
+            </div>
+            <div class="property-info">
+                <div class="property-price">£1200/mo</div>
+                <div class="property-specs">
+                    <span><i class="fas fa-bed"></i> 3 beds</span>
+                    <span><i class="fas fa-bath"></i> 1 bath</span>
+                    <span><i class="fas fa-couch"></i> F/U</span>
+                </div>
+                <div class="property-address">
+                    <strong>Address:</strong><br>
+                    123 Main Street, London, SW1A 1AA
+                </div>
+            </div>
+        </div>
+
+        <div class="financial-summary">
+            <h3 class="financial-title">Financial Summary:</h3>
+            <div class="financial-item">
+                <span class="financial-label">Monthly Revenue:</span>
+                <span class="financial-value">£2,400</span>
+            </div>
+            <div class="financial-item">
+                <span class="financial-label">Profit / month:</span>
+                <span class="financial-value">£1,200</span>
+            </div>
+            <div class="financial-item">
+                <span class="financial-label">Upfront costs:</span>
+                <span class="financial-value">£3,600</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="connect-section">
+        <h3 class="connect-title">Connect with landlord</h3>
+        <button class="submit-enquiry-btn">
+            <i class="fas fa-paper-plane"></i> Submit enquiry
+        </button>
+    </div>
+
+    <div class="regulations-section">
+        <div class="regulation-item">
+            <span class="regulation-label">STR Regulations</span>
+            <span class="regulation-status">Y</span>
+        </div>
+        <div class="regulation-item">
+            <span class="regulation-label">Property Setup</span>
+            <span class="regulation-status">Y</span>
+        </div>
+    </div>
+
+    {% if session.get('user_id') and session.get('user_role') in ['admin', 'super_admin'] %}
+    <div class="admin-dashboard show" id="admin-dashboard">
+        <h3 class="admin-title">
+            <i class="fas fa-shield-alt"></i> Admin Dashboard
+        </h3>
+        <div class="admin-actions">
+            <button class="admin-btn" onclick="openLandlordForm()">
+                <i class="fas fa-user-plus"></i> Landlord Form
+            </button>
+            <button class="admin-btn secondary" onclick="updateContact()">
+                <i class="fas fa-phone"></i> Update Contact
+            </button>
+            <button class="admin-btn secondary" onclick="editDetails()">
+                <i class="fas fa-edit"></i> Edit Details
+            </button>
+            <button class="admin-btn danger" onclick="deleteProperty()">
+                <i class="fas fa-trash"></i> Delete Property
+            </button>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    function openLandlordForm() {
+        if (window.toast) window.toast('Opening landlord form...', 'info');
+    }
+    function updateContact() {
+        if (window.toast) window.toast('Opening contact update form...', 'info');
+    }
+    function editDetails() {
+        if (window.toast) window.toast('Opening property edit form...', 'info');
+    }
+    function deleteProperty() {
+        if (confirm('Are you sure you want to delete this property? This action cannot be undone.')) {
+            if (window.toast) window.toast('Property deleted successfully', 'success');
+            setTimeout(() => { window.location.href = "{{ url_for('marketplace_listings') }}"; }, 1500);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const userRole = '{{ session.get("user_role", "") }}';
+        if (userRole === 'admin' || userRole === 'super_admin') {
+            const adminDashboard = document.getElementById('admin-dashboard');
+            if (adminDashboard) adminDashboard.classList.add('show');
+        }
+    });
+</script>
+{% endblock %}

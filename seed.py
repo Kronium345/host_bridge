@@ -37,10 +37,10 @@ def upsert_demo_users() -> None:
             "phone": "+44 7700 900002",
         },
         {
-            "email": "admin@example.com",
-            "password": "Password123!",
-            "first_name": "Ada",
-            "last_name": "Min",
+            "email": "hostbridge@gmail.com",
+            "password": "Oned@2010",
+            "first_name": "Host",
+            "last_name": "Bridge",
             "phone": "+44 7700 900003",
         },
     ]
@@ -63,7 +63,6 @@ def upsert_demo_users() -> None:
         picture_url=None,
     )
 
-    # Ensures a super admin exists and grants admin role to demo admin
     super_admin = ensure_super_admin(
         email=os.environ.get('HB_SUPERADMIN_EMAIL', 'superadmin@hostbridge.local'),
         password=os.environ.get('HB_SUPERADMIN_PASSWORD', 'admin123'),
@@ -71,7 +70,7 @@ def upsert_demo_users() -> None:
         last_name='Admin',
     )
     try:
-        grant_admin(super_admin['email'], 'admin@example.com', role='admin')
+        grant_admin(super_admin['email'], 'hostbridge@gmail.com', role='admin')
     except Exception:
         pass
 
