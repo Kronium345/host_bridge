@@ -38,7 +38,7 @@ def upsert_demo_users() -> None:
         },
         {
             "email": "hostbridge@gmail.com",
-            "password": "Oned@2010",
+            "password": "Password123!",
             "first_name": "Host",
             "last_name": "Bridge",
             "phone": "+44 7700 900003",
