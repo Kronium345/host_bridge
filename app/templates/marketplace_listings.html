@@ -19,9 +19,11 @@
 
     <div class="listings-grid" id="listings-grid">
         <!-- Sample Property Cards -->
-        <a class="property-card" href="{{ url_for('view_property', property_id=1) }}">
+        <a class="property-card" href="{{ url_for('view_property', property_id=1) }}"
+            data-image="{{ url_for('static', filename='images/house-1.jpg') }}" data-price="1200" data-beds="3"
+            data-baths="1" data-furnishing="F/U" data-address="123 Main Street, London, SW1A 1AA">
             <div class="property-image">
-                <img src="{{ url_for('static', filename='images/pattern.png') }}" alt="Property Image">
+                <img src="{{ url_for('static', filename='images/house-1.jpg') }}" alt="Property Image">
             </div>
             <div class="property-content">
                 <div class="property-price">£1200/mo</div>
@@ -38,9 +40,11 @@
             </div>
         </a>
 
-        <a class="property-card" href="{{ url_for('view_property', property_id=2) }}">
+        <a class="property-card" href="{{ url_for('view_property', property_id=2) }}"
+            data-image="{{ url_for('static', filename='images/house-2.jpg') }}" data-price="2000" data-beds="1"
+            data-baths="1" data-furnishing="F" data-address="456 High Street, Manchester, M1 1AA">
             <div class="property-image">
-                <img src="{{ url_for('static', filename='images/pattern.png') }}" alt="Property Image">
+                <img src="{{ url_for('static', filename='images/house-2.jpg') }}" alt="Property Image">
             </div>
             <div class="property-content">
                 <div class="property-price">£2000/mo</div>
@@ -57,9 +61,11 @@
             </div>
         </a>
 
-        <a class="property-card" href="{{ url_for('view_property', property_id=3) }}">
+        <a class="property-card" href="{{ url_for('view_property', property_id=3) }}"
+            data-image="{{ url_for('static', filename='images/house-3.jpg') }}" data-price="1800" data-beds="2"
+            data-baths="2" data-furnishing="U" data-address="789 Queen Street, Birmingham, B1 1AA">
             <div class="property-image">
-                <img src="{{ url_for('static', filename='images/pattern.png') }}" alt="Property Image">
+                <img src="{{ url_for('static', filename='images/house-3.jpg') }}" alt="Property Image">
             </div>
             <div class="property-content">
                 <div class="property-price">£1800/mo</div>
@@ -76,16 +82,18 @@
             </div>
         </a>
 
-        <a class="property-card" href="{{ url_for('view_property', property_id=4) }}">
+        <a class="property-card" href="{{ url_for('view_property', property_id=4) }}"
+            data-image="{{ url_for('static', filename='images/house-4.jpg') }}" data-price="1500" data-beds="2"
+            data-baths="1" data-furnishing="F/U" data-address="321 Park Lane, Liverpool, L1 1AA">
             <div class="property-image">
-                <img src="{{ url_for('static', filename='images/pattern.png') }}" alt="Property Image">
+                <img src="{{ url_for('static', filename='images/house-4.jpg') }}" alt="Property Image">
             </div>
             <div class="property-content">
                 <div class="property-price">£1500/mo</div>
                 <div class="property-details">
-                    <span><i class="fas fa-bed"></i><span class="detail-count">2</span></span>
-                    <span><i class="fas fa-bath"></i><span class="detail-count">1</span></span>
-                    <span><i class="fas fa-couch"></i><span class="detail-count">F/U</span></span>
+                    <span><i class="fas fa-bed"></i><span class="detail-count"></span></span>
+                    <span><i class="fas fa-bath"></i><span class="detail-count"></span></span>
+                    <span><i class="fas fa-couch"></i><span class="detail-count"></span></span>
                 </div>
                 <div class="property-listed">Listed 1 week ago</div>
                 <div class="property-address">
@@ -106,6 +114,27 @@
             const price = card.querySelector('.property-price').textContent.toLowerCase();
             const details = card.querySelector('.property-details').textContent.toLowerCase();
             card.style.display = (address.includes(searchTerm) || price.includes(searchTerm) || details.includes(searchTerm)) ? 'block' : 'none';
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const cards = document.querySelectorAll('.property-card');
+        cards.forEach(card => {
+            card.addEventListener('click', function (e) {
+                const data = {
+                    image: this.getAttribute('data-image') || '',
+                    price: this.getAttribute('data-price') || '',
+                    beds: this.getAttribute('data-beds') || '',
+                    baths: this.getAttribute('data-baths') || '',
+                    furnishing: this.getAttribute('data-furnishing') || '',
+                    address: this.getAttribute('data-address') || ''
+                };
+                try { sessionStorage.setItem('selectedProperty', JSON.stringify(data)); } catch (_) { }
+                // Ensure data is stored before navigation
+                e.preventDefault();
+                window.location.href = this.getAttribute('href');
+            });
         });
     });
 </script>

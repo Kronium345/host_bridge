@@ -13,16 +13,16 @@
     <div class="property-content">
         <div class="property-image-section">
             <div class="property-image">
-                <img src="{{ url_for('static', filename='images/pattern.png') }}" alt="Property Image">
+                <img id="pd-image" src="{{ url_for('static', filename='images/pattern.png') }}" alt="Property Image">
             </div>
             <div class="property-info">
-                <div class="property-price">£1200/mo</div>
+                <div class="property-price" id="pd-price">£1200/mo</div>
                 <div class="property-specs">
-                    <span><i class="fas fa-bed"></i> 3 beds</span>
-                    <span><i class="fas fa-bath"></i> 1 bath</span>
-                    <span><i class="fas fa-couch"></i> F/U</span>
+                    <span><i class="fas fa-bed"></i> <span id="pd-beds">3</span></span>
+                    <span><i class="fas fa-bath"></i> <span id="pd-baths">1</span></span>
+                    <span><i class="fas fa-couch"></i> <span id="pd-furnishing">F/U</span></span>
                 </div>
-                <div class="property-address">
+                <div class="property-address" id="pd-address">
                     <strong>Address:</strong><br>
                     123 Main Street, London, SW1A 1AA
                 </div>
@@ -110,6 +110,27 @@
             const adminDashboard = document.getElementById('admin-dashboard');
             if (adminDashboard) adminDashboard.classList.add('show');
         }
+
+        // Load selected property from sessionStorage
+        try {
+            const raw = sessionStorage.getItem('selectedProperty');
+            if (raw) {
+                const data = JSON.parse(raw);
+                const img = document.getElementById('pd-image');
+                const price = document.getElementById('pd-price');
+                const beds = document.getElementById('pd-beds');
+                const baths = document.getElementById('pd-baths');
+                const furn = document.getElementById('pd-furnishing');
+                const addr = document.getElementById('pd-address');
+
+                if (img && data.image) img.src = data.image;
+                if (price && data.price) price.textContent = `£${Number(data.price).toLocaleString()}/mo`;
+                if (beds && data.beds) beds.textContent = data.beds;
+                if (baths && data.baths) baths.textContent = data.baths;
+                if (furn && data.furnishing) furn.textContent = data.furnishing;
+                if (addr && data.address) addr.innerHTML = `<strong>Address:</strong><br>${data.address}`;
+            }
+        } catch (_) { }
     });
 </script>
 {% endblock %}
