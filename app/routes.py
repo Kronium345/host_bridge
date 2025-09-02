@@ -51,6 +51,45 @@ def services():
 def privacy():
 	return render_template('privacypolicy.html')
 
+@app.route('/landlord/submit', methods=['POST'])
+def submit_property():
+	"""Receive landlord property submissions. Stores or logs for now, then flashes feedback."""
+	rent = request.form.get('rent', '').strip()
+	deposit = request.form.get('deposit', '').strip()
+	furnishing = request.form.get('furnishing', '').strip()
+	beds = request.form.get('beds', '').strip()
+	baths = request.form.get('baths', '').strip()
+	area = request.form.get('area', '').strip()
+	has_cleaner = request.form.get('has_cleaner', '').strip()
+	notes = request.form.get('notes', '').strip()
+
+	missing = []
+	if not rent: missing.append('rent')
+	if not deposit: missing.append('deposit')
+	if not furnishing: missing.append('furnishing')
+	if not beds: missing.append('beds')
+	if not baths: missing.append('baths')
+	if not area: missing.append('area')
+	if not has_cleaner: missing.append('existing cleaner')
+
+	if missing:
+		flash(f"Please provide: {', '.join(missing)}.", 'error')
+		return redirect(url_for('how_landlords'))
+
+	print('DEBUG: Landlord submission:', {
+		'rent': rent,
+		'deposit': deposit,
+		'furnishing': furnishing,
+		'beds': beds,
+		'baths': baths,
+		'area': area,
+		'has_cleaner': has_cleaner,
+		'notes': notes,
+	})
+
+	flash('Thanks! Your property details were submitted. We will be in touch shortly.', 'success')
+	return redirect(url_for('how_landlords'))
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	if request.method == 'GET' and session.get('user_id'):

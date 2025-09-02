@@ -1763,6 +1763,106 @@ body {
     flex-wrap: wrap;
 }
 
+.landlord-form-section {
+    max-width: 1400px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.landlord-form-section .section-title {
+    color: #2E8B57;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.landlord-form-section .section-subtitle {
+    color: #6b7280;
+    margin-bottom: 16px;
+}
+
+.landlord-form {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+}
+
+.landlord-form .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 40px;
+    row-gap: 20px;
+}
+
+.landlord-form .form-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.landlord-form .form-field label {
+    display: block;
+    color: #374151;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.landlord-form .form-field input,
+.landlord-form .form-field select,
+.landlord-form .form-field textarea {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: #f9fafb;
+}
+
+.landlord-form .form-field input,
+.landlord-form .form-field select {
+    min-height: initial;
+}
+
+.landlord-form .form-field textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.landlord-form .form-field.form-full {
+    grid-column: 1 / -1;
+}
+
+.landlord-form .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+}
+
+.btn-primary {
+    background: #2E8B57;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: #1f5f3f;
+}
+
+@media (max-width: 640px) {
+    .landlord-form .form-grid {
+        grid-template-columns: 1fr;
+        row-gap: 14px;
+    }
+
+    .landlord-form {
+        padding: 16px;
+    }
+}
+
 .property-header {
     display: flex;
     align-items: center;
