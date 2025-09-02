@@ -63,7 +63,8 @@
         <h2 class="contact-title">Get Early Access</h2>
         <p class="contact-subtitle">Join our exclusive waitlist for first access to HostBridge</p>
 
-        <form id="newsletter-form" class="contact-form">
+        <form id="newsletter-form" class="contact-form" data-emailjs-service="{{ EMAILJS_SERVICE }}"
+            data-emailjs-template="{{ EMAILJS_TEMPLATE }}" data-emailjs-public="{{ EMAILJS_PUBLIC }}">
             <div class="form-row">
                 <div class="form-group">
                     <label for="name">Name</label>
@@ -92,7 +93,7 @@
                 <input type="text" id="other_role" name="other_role" placeholder="Tell us your role" />
             </div>
 
-            <button type="submit" class="submit-btn">
+            <button type="submit" class="submit-btn" data-idle-label="Join Waitlist">
                 <span class="btn-text">Join Waitlist</span>
                 <span class="btn-loading" style="display: none;">Sending...</span>
             </button>

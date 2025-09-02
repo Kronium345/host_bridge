@@ -9,7 +9,15 @@ import secrets
 
 @app.route('/')
 def home():
-	return render_template('index.html')
+	emailjs_public = os.getenv('EMAILJS_PUBLIC_KEY', '')
+	emailjs_service = os.getenv('EMAILJS_SERVICE_ID', '')
+	emailjs_template = os.getenv('EMAILJS_TEMPLATE_ID', '')
+	return render_template(
+		'index.html',
+		EMAILJS_PUBLIC=emailjs_public,
+		EMAILJS_SERVICE=emailjs_service,
+		EMAILJS_TEMPLATE=emailjs_template,
+	)
 
 @app.route('/how-it-works/landlords')
 def how_landlords():

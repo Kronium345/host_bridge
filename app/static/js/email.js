@@ -1,9 +1,17 @@
-// EmailJS logic
-const EMAILJS_CONFIG = {
-    serviceId: process.env.EMAILJS_SERVICE_ID,
-    templateId: process.env.EMAILJS_TEMPLATE_ID,
-    publicKey: process.env.EMAILJS_PUBLIC_KEY
-};
+const EMAILJS_CONFIG = (function () {
+    if (window.EMAILJS_CONFIG && window.EMAILJS_CONFIG.serviceId) {
+        return window.EMAILJS_CONFIG;
+    }
+    const formEl = document.getElementById('newsletter-form');
+    if (formEl) {
+        return {
+            serviceId: formEl.getAttribute('data-emailjs-service') || '',
+            templateId: formEl.getAttribute('data-emailjs-template') || '',
+            publicKey: formEl.getAttribute('data-emailjs-public') || ''
+        };
+    }
+    return { serviceId: '', templateId: '', publicKey: '' };
+})();
 
 // Form state management
 let formData = {
@@ -22,9 +30,15 @@ let roleSelect;
 let submitButton;
 let otherRoleInput;
 
-// Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function () {
     initializeForm();
+    try {
+        if (typeof emailjs !== 'undefined' && EMAILJS_CONFIG.publicKey) {
+            emailjs.init(EMAILJS_CONFIG.publicKey);
+        }
+    } catch (e) {
+        console.warn('EmailJS init failed:', e);
+    }
 });
 
 function initializeForm() {
@@ -38,6 +52,10 @@ function initializeForm() {
     if (!formRef || !nameInput || !emailInput || !roleSelect || !submitButton) {
         console.warn('Some form elements not found. Please check your HTML structure.');
         return;
+    }
+
+    if (!EMAILJS_CONFIG.serviceId || !EMAILJS_CONFIG.templateId || !EMAILJS_CONFIG.publicKey) {
+        console.warn('EmailJS config missing. Ensure serviceId, templateId, and publicKey are set.');
     }
 
     formRef.addEventListener('submit', handleSubmit);
@@ -110,6 +128,12 @@ function handleSubmit(e) {
         })
     };
 
+    if (!EMAILJS_CONFIG.serviceId || !EMAILJS_CONFIG.templateId || !EMAILJS_CONFIG.publicKey) {
+        setLoading(false);
+        notify('Email service is not configured. Please try again later.', 'error');
+        return;
+    }
+
     emailjs.send(
         EMAILJS_CONFIG.serviceId,
         EMAILJS_CONFIG.templateId,
@@ -120,13 +144,13 @@ function handleSubmit(e) {
             (response) => {
                 console.log('SUCCESS!', response.status, response.text);
                 setLoading(false);
-                showAlert('Thank you! You\'ve been added to our early access list.', 'success');
+                notify('Thank you! You\'ve been added to our early access list.', 'success');
                 resetForm();
             },
             (error) => {
                 console.error('FAILED...', error);
                 setLoading(false);
-                showAlert('Something went wrong. Please try again.', 'error');
+                notify('Something went wrong. Please try again.', 'error');
             }
         );
 }
@@ -136,7 +160,7 @@ function setLoading(loading) {
 
     if (submitButton) {
         submitButton.disabled = loading;
-        submitButton.textContent = loading ? 'Sending...' : 'Register Interest';
+        submitButton.textContent = loading ? 'Sending...' : (submitButton.getAttribute('data-idle-label') || 'Register Interest');
 
         if (loading) {
             submitButton.style.opacity = '0.7';
@@ -165,7 +189,12 @@ function isValidEmail(email) {
     return emailRegex.test(email);
 }
 
-function showAlert(message, type = 'info') {
+function notify(message, type = 'info') {
+    if (window.toast) {
+        const variant = type === 'error' ? 'error' : (type === 'success' ? 'success' : 'info');
+        try { toast(message, variant); return; } catch (_) { }
+    }
+
     const alertDiv = document.createElement('div');
     alertDiv.className = `alert alert-${type}`;
     alertDiv.style.cssText = `
@@ -239,5 +268,5 @@ window.HostBridgeEmailJS = {
     initializeForm,
     handleSubmit,
     resetForm,
-    showAlert
+    notify
 };
