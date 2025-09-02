@@ -1764,7 +1764,7 @@ body {
 }
 
 .landlord-form-section {
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 40px auto;
     padding: 0 20px;
 }
@@ -1811,7 +1811,7 @@ body {
 .landlord-form .form-field input,
 .landlord-form .form-field select,
 .landlord-form .form-field textarea {
-    width: 100%;
+    width: 96%;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
     padding: 10px 12px;
