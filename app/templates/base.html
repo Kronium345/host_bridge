@@ -36,7 +36,13 @@
                         <img src="{{ url_for('static', filename='images/final.png') }}" alt="Logo">
                     </a>
                 </div>
-                <ul class="nav-links">
+                <button class="hamburger" id="nav-toggle" aria-label="Open menu" aria-expanded="false"
+                    aria-controls="primary-nav">
+                    <span></span><span></span><span></span>
+                </button>
+                <ul class="nav-links" id="primary-nav">
+                    <li class="drawer-logo"><a href="{{ url_for('home') }}" aria-label="HostBridge Home"><img
+                                src="{{ url_for('static', filename='images/final.png') }}" alt="Logo"></a></li>
                     <li><a href="{{ url_for('home') }}">Home</a></li>
                     <li class="dropdown">
                         <a href="#">How It Works</a>
@@ -61,6 +67,15 @@
                         </ul>
                     </li>
                     <li><a href="{{ url_for('services') }}">Services</a></li>
+                    <li class="mobile-auth">
+                        {% if session.get('user_id') %}
+                        <div class="mobile-auth-email">{{ session.get('user_email') or 'Signed in' }}</div>
+                        <a href="{{ url_for('logout') }}" class="nav-button register-btn">Logout</a>
+                        {% else %}
+                        <a href="{{ url_for('login') }}" class="nav-button login-btn">Login</a>
+                        <a href="{{ url_for('register') }}" class="nav-button register-btn">Register</a>
+                        {% endif %}
+                    </li>
                 </ul>
             </div>
             <div class="navbar-right">
@@ -82,6 +97,9 @@
         {% block content %}{% endblock %}
     </main>
 
+    <!-- Mobile nav backdrop -->
+    <div class="nav-backdrop" id="nav-backdrop" tabindex="-1" aria-hidden="true"></div>
+
     <!-- Leaflet JS (fixed) -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -90,6 +108,18 @@
 
     <script src="{{ url_for('static', filename='js/toast.js') }}"></script>
     <script>
+        // Mobile nav toggle
+        (function () {
+            var toggle = document.getElementById('nav-toggle');
+            var backdrop = document.getElementById('nav-backdrop');
+            var nav = document.getElementById('primary-nav');
+            function closeNav() { document.body.classList.remove('nav-open'); if (toggle) toggle.setAttribute('aria-expanded', 'false'); }
+            function openNav() { document.body.classList.add('nav-open'); if (toggle) toggle.setAttribute('aria-expanded', 'true'); }
+            if (toggle) { toggle.addEventListener('click', function () { document.body.classList.contains('nav-open') ? closeNav() : openNav(); }); }
+            if (backdrop) { backdrop.addEventListener('click', closeNav); }
+            if (nav) { nav.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', closeNav); }); }
+        })();
+
         window.flashMessages = {{ get_flashed_messages(with_categories = true) | tojson | safe }};
 
         window.showFlashMessages = function () {
