@@ -13,7 +13,7 @@
 
     <!-- Filters -->
     <div class="filters-box">
-      <form method="POST" action="/filter-properties" class="filters">
+      <form id="filters-form" class="filters">
         <div class="form-group">
           <label>Region</label>
           <select class="filter-select" name="region" required>
@@ -82,19 +82,52 @@
     attribution: '© OpenStreetMap contributors'
   }).addTo(map);
 
-  // Sample UK Listings
-  const listings = [
-    { name: "London Studio", lat: 51.5074, lng: -0.1278 },
-    { name: "Manchester Apartment", lat: 53.4808, lng: -2.2426 },
-    { name: "Edinburgh Flat", lat: 55.9533, lng: -3.1883 },
-    { name: "Belfast House", lat: 54.5973, lng: -5.9301 },
-    { name: "Cardiff Loft", lat: 51.4816, lng: -3.1791 }
+  // Sample dataset with filterable fields
+  const allListings = [
+    { name: 'London Studio', region: 'England', type: 'Studio', str: 'Compliant', furnishing: 'Fully Furnished', lat: 51.5074, lng: -0.1278 },
+    { name: 'Manchester Apartment', region: 'England', type: 'Apartment', str: 'Pending', furnishing: 'Semi Furnished', lat: 53.4808, lng: -2.2426 },
+    { name: 'Edinburgh Flat', region: 'Scotland', type: 'Apartment', str: 'Compliant', furnishing: 'Fully Furnished', lat: 55.9533, lng: -3.1883 },
+    { name: 'Belfast House', region: 'Northern Ireland', type: 'Villa', str: 'Compliant', furnishing: 'Unfurnished', lat: 54.5973, lng: -5.9301 },
+    { name: 'Cardiff Loft', region: 'Wales', type: 'Apartment', str: 'Pending', furnishing: 'Fully Furnished', lat: 51.4816, lng: -3.1791 }
   ];
 
-  listings.forEach(p => {
-    L.marker([p.lat, p.lng])
-      .addTo(map)
-      .bindPopup(`<b>${p.name}</b>`);
-  });
+  const markers = [];
+  function clearMarkers() { markers.forEach(m => map.removeLayer(m)); markers.length = 0; }
+  function addMarker(p) { const m = L.marker([p.lat, p.lng]).addTo(map).bindPopup(`<b>${p.name}</b>`); markers.push(m); }
+
+  function applyFilters() {
+    const region = document.querySelector('select[name="region"]').value;
+    const type = document.querySelector('select[name="property_type"]').value;
+    const str = document.querySelector('select[name="str_status"]').value;
+    const furnishing = document.querySelector('select[name="furnishing"]').value;
+
+    const norm = v => (v || '').toLowerCase();
+
+    const filtered = allListings.filter(p => {
+      const okRegion = !region || region === 'Select Region' ? true : norm(p.region) === norm(region);
+      const okType = !type || type === 'Select Property Type' ? true : norm(p.type) === norm(type);
+      const okStr = !str || str === 'Select STR Regulation Status' ? true : norm(p.str) === norm(str);
+      const okFurn = !furnishing || furnishing === 'Select Furnishing' ? true : norm(p.furnishing) === norm(furnishing);
+      return okRegion && okType && okStr && okFurn;
+    });
+
+    clearMarkers();
+    filtered.forEach(addMarker);
+
+    // Auto-fit bounds to filtered markers
+    if (filtered.length) {
+      const group = L.featureGroup(markers);
+      map.fitBounds(group.getBounds().pad(0.2));
+    }
+  }
+
+  // Initial render
+  allListings.forEach(addMarker);
+
+  // Hook form submit
+  const filtersForm = document.getElementById('filters-form');
+  if (filtersForm) {
+    filtersForm.addEventListener('submit', function (e) { e.preventDefault(); applyFilters(); });
+  }
 </script>
 {% endblock %}
