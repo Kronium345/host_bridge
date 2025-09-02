@@ -324,17 +324,25 @@ body {
 }
 
 .step-box {
-    width: 280px;
+    width: 320px;
     background: #f0faf6;
     border-radius: 12px;
-    padding: 30px;
+    padding: 0;
     text-align: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
 }
 
 .step-box img {
-    height: 70px;
-    margin-bottom: 20px;
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+}
+
+.step-box h3,
+.step-box p {
+    padding: 0 20px 16px;
 }
 
 .step-box h3 {
