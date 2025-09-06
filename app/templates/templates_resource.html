@@ -1,14 +1,201 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Templates Resource</title>
-</head>
+{% block title %}Templates & Resources - HostBridge{% endblock %}
 
-<body>
-    <h1>Templates Resource</h1>
-</body>
+{% block content %}
+<!-- Hero Section -->
+<section class="templates-hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">Templates & Resources</h1>
+            <p class="hero-subtitle">Empower your STR business with our comprehensive library of downloadable templates,
+                expert guides, and insightful webinars.</p>
+        </div>
+    </div>
+</section>
 
-</html>
+<!-- Downloadable Templates Section -->
+<section class="templates-section">
+    <div class="container">
+        <h2 class="section-title">Downloadable Templates</h2>
+        <div class="templates-grid">
+            <!-- STR Lease Agreement -->
+            <div class="template-card premium-card">
+                <div class="template-icon">
+                    <i class="fas fa-file-contract"></i>
+                </div>
+                <div class="premium-badge">
+                    <i class="fas fa-star"></i> Premium
+                </div>
+                <h3 class="template-title">STR Lease Agreement</h3>
+                <p class="template-description">Editable Word/PDF template for secure property leasing with all
+                    essential clauses and legal protections.</p>
+                <a href="#" class="template-btn disabled">Download (Premium)</a>
+            </div>
+
+            <!-- Subletting Permission Letter -->
+            <div class="template-card">
+                <div class="template-icon">
+                    <i class="fas fa-envelope-open-text"></i>
+                </div>
+                <h3 class="template-title">Subletting Permission Letter</h3>
+                <p class="template-description">Formal letter template to obtain landlord's consent for subletting your
+                    property for STR purposes.</p>
+                <a href="#" class="template-btn">Download Free</a>
+            </div>
+
+            <!-- Compliance Checklist -->
+            <div class="template-card premium-card">
+                <div class="template-icon">
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+                <div class="premium-badge">
+                    <i class="fas fa-star"></i> Premium
+                </div>
+                <h3 class="template-title">Compliance Checklist</h3>
+                <p class="template-description">Comprehensive checklist to ensure your property meets all local STR
+                    regulations and requirements.</p>
+                <a href="#" class="template-btn disabled">Download (Premium)</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Guides & Articles Section -->
+<section class="guides-section">
+    <div class="container">
+        <h2 class="section-title">Guides & Articles</h2>
+        <div class="guides-grid">
+            <!-- How to Pitch STR to a Landlord -->
+            <div class="guide-card">
+                <div class="guide-image">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <div class="guide-content">
+                    <h3 class="guide-title">How to Pitch STR to a Landlord</h3>
+                    <p class="guide-description">Master the art of convincing landlords to embrace short-term rentals
+                        with our proven strategies and templates.</p>
+                    <a href="#" class="guide-link">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- STR Regulations in the UK Explained -->
+            <div class="guide-card">
+                <div class="guide-image">
+                    <i class="fas fa-gavel"></i>
+                </div>
+                <div class="guide-content">
+                    <h3 class="guide-title">STR Regulations in the UK Explained</h3>
+                    <p class="guide-description">Navigate the complex landscape of UK short-term rental laws with our
+                        comprehensive regulatory guide.</p>
+                    <a href="#" class="guide-link">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- 5 Steps to Launching Your First Airbnb -->
+            <div class="guide-card">
+                <div class="guide-image">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <div class="guide-content">
+                    <h3 class="guide-title">5 Steps to Launching Your First Airbnb</h3>
+                    <p class="guide-description">A beginner's complete guide to successfully setting up and launching
+                        your first Airbnb listing.</p>
+                    <a href="#" class="guide-link">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Webinars Section -->
+<section class="webinars-section">
+    <div class="container">
+        <h2 class="section-title">Webinars & Video Tutorials</h2>
+        <p class="section-subtitle">Short clips explaining contracts, compliance, and business growth strategies.</p>
+        <div class="webinars-grid">
+            <!-- Understanding STR Contracts -->
+            <div class="webinar-card">
+                <div class="webinar-thumbnail">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <div class="webinar-content">
+                    <h3 class="webinar-title">Understanding STR Contracts</h3>
+                    <p class="webinar-description">Essential clauses and legal considerations for your STR agreements.
+                    </p>
+                    <div class="webinar-meta">
+                        <span class="duration"><i class="fas fa-clock"></i> 15 min</span>
+                        <span class="level">Beginner</span>
+                    </div>
+                    <a href="#" class="webinar-btn">Watch Now <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Compliance Best Practices -->
+            <div class="webinar-card">
+                <div class="webinar-thumbnail">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <div class="webinar-content">
+                    <h3 class="webinar-title">Compliance Best Practices</h3>
+                    <p class="webinar-description">Stay ahead of regulations and avoid common pitfalls in STR
+                        operations.</p>
+                    <div class="webinar-meta">
+                        <span class="duration"><i class="fas fa-clock"></i> 20 min</span>
+                        <span class="level">Intermediate</span>
+                    </div>
+                    <a href="#" class="webinar-btn">Watch Now <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Scaling Your STR Business -->
+            <div class="webinar-card">
+                <div class="webinar-thumbnail">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <div class="webinar-content">
+                    <h3 class="webinar-title">Scaling Your STR Business</h3>
+                    <p class="webinar-description">Strategies for growth, automation, and maximizing profits in your STR
+                        portfolio.</p>
+                    <div class="webinar-meta">
+                        <span class="duration"><i class="fas fa-clock"></i> 25 min</span>
+                        <span class="level">Advanced</span>
+                    </div>
+                    <a href="#" class="webinar-btn">Watch Now <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Airbtics Integration Section -->
+<section class="airbtics-section">
+    <div class="container">
+        <div class="airbtics-content">
+            <div class="airbtics-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h2 class="airbtics-title">Integration with Airbtics</h2>
+            <p class="airbtics-subtitle">"See market insights while preparing your deal."</p>
+            <div class="premium-badge-large">
+                <i class="fas fa-star"></i> Premium Feature
+            </div>
+            <a href="#" class="airbtics-btn">Learn More</a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="templates-cta">
+    <div class="container">
+        <div class="cta-content">
+            <h2 class="cta-title">Unlock Premium Content</h2>
+            <p class="cta-subtitle">Sign up for Pro to unlock premium templates & legal updates.</p>
+            <div class="cta-buttons">
+                <a href="/register" class="btn btn-primary">Sign Up for Pro</a>
+                <a href="/services" class="btn btn-outline">Learn More</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,14 +1,157 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Services</title>
-</head>
+{% block title %}Services - HostBridge{% endblock %}
 
-<body>
-    <h1>Services</h1>
-</body>
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">Everything you need to scale your STR business in one place</h1>
+            <p class="hero-subtitle">Connect with vetted partners, access exclusive discounts, and manage your entire
+                STR operation through our integrated platform.</p>
+        </div>
+    </div>
+</section>
 
-</html>
+<!-- Service Categories Section -->
+<section class="services-section">
+    <div class="container">
+        <h2 class="section-title">Our Services</h2>
+        <div class="services-grid">
+            <!-- Cleaning & Turnover Services -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-broom"></i>
+                </div>
+                <h3 class="service-title">Cleaning & Turnover Services</h3>
+                <p class="service-description">Professional cleaning and property preparation services to ensure your
+                    STR is guest-ready between bookings.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Deep cleaning & sanitization</li>
+                    <li><i class="fas fa-check"></i> Linen & towel management</li>
+                    <li><i class="fas fa-check"></i> Inventory restocking</li>
+                    <li><i class="fas fa-check"></i> Key handover services</li>
+                </ul>
+                <a href="#" class="service-btn">Learn More</a>
+            </div>
+
+            <!-- Property Management Partners -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <h3 class="service-title">Property Management Partners</h3>
+                <p class="service-description">Connect with experienced property managers who specialize in STR
+                    operations and guest relations.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Guest communication</li>
+                    <li><i class="fas fa-check"></i> Booking management</li>
+                    <li><i class="fas fa-check"></i> Maintenance coordination</li>
+                    <li><i class="fas fa-check"></i> Revenue optimization</li>
+                </ul>
+                <a href="#" class="service-btn">Learn More</a>
+            </div>
+
+            <!-- Legal & Compliance Services -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-gavel"></i>
+                </div>
+                <h3 class="service-title">Legal & Compliance Services</h3>
+                <p class="service-description">Stay compliant with local regulations and navigate the complex legal
+                    landscape of short-term rentals.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> License applications</li>
+                    <li><i class="fas fa-check"></i> Tax compliance</li>
+                    <li><i class="fas fa-check"></i> Legal consultations</li>
+                    <li><i class="fas fa-check"></i> Documentation support</li>
+                </ul>
+                <a href="#" class="service-btn">Learn More</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works-section">
+    <div class="container">
+        <h2 class="section-title">How It Works</h2>
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3 class="step-title">Browse Vetted Partners</h3>
+                    <p class="step-description">Explore our curated network of verified service providers, each with
+                        proven track records in STR operations.</p>
+                </div>
+            </div>
+
+            <div class="step-arrow">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3 class="step-title">Request a Quote</h3>
+                    <p class="step-description">Get instant quotes from multiple providers and compare services,
+                        pricing, and availability in real-time.</p>
+                </div>
+            </div>
+
+            <div class="step-arrow">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3 class="step-title">Manage Directly via HostBridge</h3>
+                    <p class="step-description">Coordinate all services, track performance, and manage payments through
+                        our integrated platform dashboard.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pro Benefits Section -->
+<section class="pro-benefits-section">
+    <div class="container">
+        <div class="pro-content">
+            <div class="pro-text">
+                <h2 class="pro-title">Smart operators don't just connect - they save</h2>
+                <p class="pro-subtitle">Unlock exclusive discounts with HostBridge Pro</p>
+                <ul class="pro-features">
+                    <li><i class="fas fa-star"></i> Up to 20% off cleaning services</li>
+                    <li><i class="fas fa-star"></i> Priority support & consultation</li>
+                    <li><i class="fas fa-star"></i> Advanced analytics & reporting</li>
+                    <li><i class="fas fa-star"></i> Exclusive partner access</li>
+                </ul>
+                <a href="#" class="pro-btn">Upgrade to Pro</a>
+            </div>
+            <div class="pro-visual">
+                <div class="discount-badge">
+                    <span class="discount-text">Save up to</span>
+                    <span class="discount-amount">20%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-content">
+            <h2 class="cta-title">Ready to scale your STR business?</h2>
+            <p class="cta-subtitle">Join thousands of successful operators who trust HostBridge for their STR needs.</p>
+            <div class="cta-buttons">
+                <a href="/register" class="btn btn-primary">Get Started Free</a>
+                <a href="/resources/marketplace-listings" class="btn btn-outline">Browse Services</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
