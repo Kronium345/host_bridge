@@ -313,6 +313,11 @@ body {
     margin: 0 auto;
 }
 
+/* Override for services page hero subtitle */
+.hero-section .hero-subtitle {
+    color: white !important;
+}
+
 /* Steps Wrapper */
 .steps-wrapper {
     display: flex;
@@ -2721,9 +2726,9 @@ body {
     line-height: 1.2;
 }
 
-.hero-subtitle {
+.hero-section .hero-subtitle {
     font-size: 1.25rem;
-    opacity: 0.9;
+    color: white !important;
     max-width: 800px;
     margin: 0 auto;
     line-height: 1.6;
@@ -2906,6 +2911,7 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 60px;
     align-items: center;
+    margin-left: 40px;
 }
 
 .pro-title {
@@ -2918,7 +2924,7 @@ body {
 
 .pro-subtitle {
     font-size: 1.25rem;
-    color: #FFD700;
+    color: white;
     font-weight: 600;
     margin-bottom: 32px;
 }
@@ -2995,7 +3001,7 @@ body {
 /* CTA Section */
 .cta-section {
     padding: 100px 0;
-    background: #2c3e50;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
     color: white;
     text-align: center;
 }
@@ -3003,12 +3009,13 @@ body {
 .cta-title {
     font-size: 2.5rem;
     font-weight: 700;
+    color: white;
     margin-bottom: 16px;
 }
 
 .cta-subtitle {
     font-size: 1.25rem;
-    opacity: 0.9;
+    color: #e9ecef;
     margin-bottom: 40px;
     max-width: 600px;
     margin-left: auto;
@@ -3068,6 +3075,7 @@ body {
         grid-template-columns: 1fr;
         gap: 40px;
         text-align: center;
+        margin-left: 0;
     }
 
     .pro-title {
