@@ -67,6 +67,7 @@
                         </ul>
                     </li>
                     <li><a href="{{ url_for('services') }}">Services</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
                     <li class="mobile-auth">
                         {% if session.get('user_id') %}
                         <div class="mobile-auth-email">{{ session.get('user_email') or 'Signed in' }}</div>

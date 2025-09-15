@@ -11,7 +11,8 @@ import secrets
 def home():
 	emailjs_public = os.getenv('EMAILJS_PUBLIC_KEY', '')
 	emailjs_service = os.getenv('EMAILJS_SERVICE_ID', '')
-	emailjs_template = os.getenv('EMAILJS_TEMPLATE_ID', '')
+	# Prefer a dedicated newsletter template; fall back to general template
+	emailjs_template = os.getenv('EMAILJS_NEWSLETTER_TEMPLATE_ID', os.getenv('EMAILJS_TEMPLATE_ID', ''))
 	return render_template(
 		'index.html',
 		EMAILJS_PUBLIC=emailjs_public,
@@ -54,6 +55,19 @@ def templates_page():
 @app.route('/services')
 def services():
 	return render_template('services.html')
+
+@app.route('/contact')
+def contact():
+	emailjs_public = os.getenv('EMAILJS_PUBLIC_KEY', '')
+	emailjs_service = os.getenv('EMAILJS_SERVICE_ID', '')
+	# Prefer a dedicated contact template; fall back to general template
+	emailjs_template = os.getenv('EMAILJS_CONTACT_TEMPLATE_ID', os.getenv('EMAILJS_TEMPLATE_ID', ''))
+	return render_template(
+		'contact.html',
+		EMAILJS_PUBLIC=emailjs_public,
+		EMAILJS_SERVICE=emailjs_service,
+		EMAILJS_TEMPLATE=emailjs_template,
+	)
 
 @app.route('/privacy')
 def privacy():

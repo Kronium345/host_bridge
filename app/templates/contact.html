@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Contact - HostBridge{% endblock %}
+
+{% block content %}
+<section class="hero-section" style="padding: 80px 0 40px; text-align:center;">
+    <div class="container">
+        <h1 class="hero-title">Contact Us</h1>
+        <p class="hero-subtitle">We'd love to hear from you. Reach out directly or use the form below.</p>
+    </div>
+</section>
+
+<section class="services-section" style="padding-top:40px;">
+    <div class="container" style="max-width:1000px;">
+        <div class="services-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="service-card" style="padding:24px;">
+                <h3 class="service-title" style="margin-bottom:16px;">Direct Contact</h3>
+                <ul class="service-features" style="margin-top:8px;">
+                    <li>
+                        <strong>Information</strong><br>
+                        General enquiries, partnerships, press/media, and platform information.<br>
+                        <a href="mailto:info@host-bridge.com">info@host-bridge.com</a>
+                    </li>
+                    <li>
+                        <strong>Support</strong><br>
+                        Account issues, billing questions, technical support, and incident reports.<br>
+                        <a href="mailto:support@host-bridge.com">support@host-bridge.com</a>
+                    </li>
+                    <li>
+                        <strong>Phone</strong><br>
+                        <a href="tel:01617062460">01617062460</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="service-card" style="padding:24px;">
+                <h3 class="service-title" style="margin-bottom:16px;">Send us a message</h3>
+                <form id="contact-form" data-emailjs-service="{{ EMAILJS_SERVICE }}"
+                    data-emailjs-template="{{ EMAILJS_TEMPLATE }}" data-emailjs-public="{{ EMAILJS_PUBLIC }}">
+                    <div class="form-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+                        <div class="form-field"><label for="name">Name</label><input id="name" name="name" type="text"
+                                placeholder="Your name"></div>
+                        <div class="form-field"><label for="email">Email</label><input id="email" name="email"
+                                type="email" placeholder="you@example.com"></div>
+                    </div>
+                    <div class="form-grid"
+                        style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-top:12px;">
+                        <div class="form-field">
+                            <label for="category">Category</label>
+                            <select id="category" name="category">
+                                <option>General</option>
+                                <option>Support</option>
+                                <option>Partnership</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-field"><label for="subject">Subject</label><input id="subject" name="subject"
+                                type="text" placeholder="How can we help?"></div>
+                    </div>
+                    <div class="form-field" style="margin-top:12px;">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="5" placeholder="Write your message..."></textarea>
+                    </div>
+                    <button type="submit" class="service-btn" id="contact-submit" data-idle-label="Send Message"
+                        style="width:100%; margin-top:16px;">Send Message</button>
+                </form>
+                <p style="font-size:12px;color:#6c757d;margin-top:8px;">By submitting, you consent to us contacting you
+                    about your enquiry.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+    (function () {
+        var form = document.getElementById('contact-form');
+        if (!form) return;
+
+        var serviceId = form.getAttribute('data-emailjs-service') || '';
+        var templateId = form.getAttribute('data-emailjs-template') || '';
+        var publicKey = form.getAttribute('data-emailjs-public') || '';
+
+        try { if (publicKey) emailjs.init(publicKey); } catch (e) { console.warn('EmailJS init failed', e); }
+
+        var submitBtn = document.getElementById('contact-submit');
+        function setLoading(loading) {
+            if (!submitBtn) return;
+            submitBtn.disabled = loading;
+            submitBtn.textContent = loading ? 'Sending...' : (submitBtn.getAttribute('data-idle-label') || 'Send Message');
+            submitBtn.style.opacity = loading ? '0.7' : '1';
+            submitBtn.style.cursor = loading ? 'not-allowed' : 'pointer';
+        }
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            var name = document.getElementById('name').value.trim();
+            var email = document.getElementById('email').value.trim();
+            var category = document.getElementById('category').value;
+            var subject = document.getElementById('subject').value.trim();
+            var message = document.getElementById('message').value.trim();
+
+            if (!name || !email || !message) {
+                if (window.toast) toast('Please fill in name, email and message.', 'error');
+                return;
+            }
+
+            if (!serviceId || !templateId || !publicKey) {
+                if (window.toast) toast('Email service is not configured.', 'error');
+                return;
+            }
+
+            setLoading(true);
+            var params = {
+                name: name,
+                email: email,
+                category: category,
+                subject: subject || ('New ' + category + ' enquiry'),
+                message: message,
+                time: new Date().toISOString()
+            };
+
+            emailjs.send(serviceId, templateId, params, publicKey)
+                .then(function () {
+                    setLoading(false);
+                    if (window.toast) toast('Message sent. We will get back to you shortly.', 'success');
+                    form.reset();
+                })
+                .catch(function (err) {
+                    console.error('EmailJS failed', err);
+                    setLoading(false);
+                    if (window.toast) toast('Something went wrong. Please try again.', 'error');
+                });
+        });
+    })();
+</script>
+{% endblock %}
