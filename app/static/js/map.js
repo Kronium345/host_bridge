@@ -270,11 +270,11 @@ document.addEventListener('DOMContentLoaded', function () {
         'Ards and North Down': 'permitted'
     };
 
-    // Color mapping
+    // Color mapping - more vibrant colors for better visibility
     const zoneColors = {
-        'permitted': '#2E8B57',
-        'restricted': '#f59e0b',
-        'not-permitted': '#ef4444'
+        'permitted': '#10b981',      // Bright green (emerald)
+        'restricted': '#f59e0b',     // Amber/Orange
+        'not-permitted': '#ef4444'   // Red
     };
 
     // Helper: normalize names to improve matches with mapping
@@ -283,10 +283,51 @@ document.addEventListener('DOMContentLoaded', function () {
         return String(raw)
             .toLowerCase()
             .replace(/\s*\([^)]*\)\s*/g, ' ') // remove parentheticals
-            .replace(/[,']/g, ' ')              // remove commas/apostrophes
-            .replace(/\b(city|county|district|borough|metropolitan|royal|london|upon|and|of|the|council|isles|isle)\b/g, '')
+            .replace(/[,']/g, '')              // remove commas/apostrophes
+            .replace(/\b(county|district|borough|metropolitan|royal|council)\b/g, '') // remove specific admin words but keep "city", "of", "upon", "and"
             .replace(/\s+/g, ' ')              // collapse spaces
             .trim();
+    }
+
+    // Helper: try multiple normalization strategies for better matching
+    function findZoneType(rawName) {
+        if (!rawName) return 'restricted';
+
+        // Strategy 1: Try exact match first
+        if (strZoneMapping[rawName]) {
+            return strZoneMapping[rawName];
+        }
+
+        // Strategy 2: Try normalized match
+        const normalized = normalizeName(rawName);
+        if (normalizedZoneMapping[normalized]) {
+            return normalizedZoneMapping[normalized];
+        }
+
+        // Strategy 3: Try partial matching - check if the raw name contains any mapped area
+        for (const [key, value] of Object.entries(strZoneMapping)) {
+            const normalizedKey = normalizeName(key);
+            if (normalized.includes(normalizedKey) || normalizedKey.includes(normalized)) {
+                return value;
+            }
+        }
+
+        // Strategy 4: Check for key cities/regions by keyword
+        const nameLower = rawName.toLowerCase();
+        if (nameLower.includes('edinburgh') || nameLower.includes('aberdeen') ||
+            nameLower.includes('glasgow') || nameLower.includes('dundee') ||
+            nameLower.includes('highland') || nameLower.includes('fife') ||
+            nameLower.includes('perth') || nameLower.includes('stirling') ||
+            nameLower.includes('belfast') || nameLower.includes('newcastle')) {
+            return 'permitted';
+        }
+
+        if (nameLower.includes('manchester') || nameLower.includes('sheffield')) {
+            return 'not-permitted';
+        }
+
+        // Default to restricted if no match found
+        return 'restricted';
     }
 
     // Build normalized lookup from provided mapping
@@ -341,26 +382,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const geoJsonLayer = L.geoJSON(validGeoJSON, {
                 style: function (feature) {
-                    const rawName = feature.properties.LAD25NM || feature.properties.CTYUA24NM || feature.properties.NAME || feature.properties.name || feature.properties.County;
-                    const norm = normalizeName(rawName);
-                    const zoneType = normalizedZoneMapping[norm] || 'restricted';
-                    if (!normalizedZoneMapping[norm]) {
-                        console.debug(`Unmapped area -> defaulting to restricted: ${rawName} (normalized: ${norm})`);
-                    } else {
-                        console.log(`Area: ${rawName}, Zone: ${zoneType}, Color: ${zoneColors[zoneType]}`);
-                    }
+                    const rawName = feature.properties.LAD25NM || feature.properties.CTYUA24NM || feature.properties.NAME || feature.properties.name || feature.properties.County || 'Unknown';
+                    const zoneType = findZoneType(rawName);
+
+                    console.log(`Area: ${rawName}, Zone: ${zoneType}, Color: ${zoneColors[zoneType]}`);
+
                     return {
-                        color: zoneColors[zoneType],
+                        color: '#334155',           // Dark border for all regions
                         fillColor: zoneColors[zoneType],
-                        fillOpacity: 0.8,
-                        weight: 3,
+                        fillOpacity: 0.75,          // Good opacity to see colors
+                        weight: 1.5,                // Thinner borders
                         opacity: 1
                     };
                 },
                 onEachFeature: function (feature, layer) {
-                    const rawName = feature.properties.LAD25NM || feature.properties.CTYUA24NM || feature.properties.NAME || feature.properties.name || feature.properties.County;
-                    const norm = normalizeName(rawName);
-                    const zoneType = normalizedZoneMapping[norm] || 'restricted';
+                    const rawName = feature.properties.LAD25NM || feature.properties.CTYUA24NM || feature.properties.NAME || feature.properties.name || feature.properties.County || 'Unknown';
+                    const zoneType = findZoneType(rawName);
 
                     // Add tooltip
                     layer.bindTooltip(rawName, {
@@ -372,11 +409,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Add click popup
                     layer.on('click', function () {
                         showAreaPopup({
-                            name: areaName,
+                            name: rawName,
                             type: zoneType,
                             description: getDescription(zoneType),
-                            rate: getRate(areaName),
-                            council: getCouncil(areaName)
+                            rate: getRate(rawName),
+                            council: getCouncil(rawName)
                         });
                     });
                 }

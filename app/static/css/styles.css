@@ -2982,15 +2982,18 @@ body {
 }
 
 .legend-color.permitted {
-    background: #2E8B57;
+    background: #10b981;
+    /* Bright emerald green */
 }
 
 .legend-color.restricted {
     background: #f59e0b;
+    /* Amber/Orange */
 }
 
 .legend-color.not-permitted {
     background: #ef4444;
+    /* Red */
 }
 
 .area-popup {
@@ -3144,6 +3147,7 @@ body {
     font-size: 3.5rem;
     font-weight: 700;
     margin-bottom: 24px;
+    color: white;
     line-height: 1.2;
 }
 

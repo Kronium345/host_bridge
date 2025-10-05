@@ -40,23 +40,27 @@
                         </div>
                         <div class="mockup-cards">
                             <div class="mockup-card">
-                                <div class="card-image"></div>
+                                <div class="card-image"
+                                    style="background-image: url('{{ url_for('static', filename='images/house-1.jpg') }}'); background-size: cover; background-position: center;">
+                                </div>
                                 <div class="card-content">
-                                    <div class="card-title"></div>
+                                    <div class="card-title-text">Modern Apartment in Westminster</div>
                                     <div class="card-details">
-                                        <span class="detail-badge">2 bed</span>
-                                        <span class="detail-badge">1 bath</span>
+                                        <span class="detail-badge"><i class="fas fa-bed"></i> 2 bed</span>
+                                        <span class="detail-badge"><i class="fas fa-bath"></i> 1 bath</span>
                                     </div>
                                     <div class="card-price">£1,800/mo</div>
                                 </div>
                             </div>
                             <div class="mockup-card">
-                                <div class="card-image"></div>
+                                <div class="card-image"
+                                    style="background-image: url('{{ url_for('static', filename='images/house-2.jpg') }}'); background-size: cover; background-position: center;">
+                                </div>
                                 <div class="card-content">
-                                    <div class="card-title"></div>
+                                    <div class="card-title-text">Cozy Studio in Shoreditch</div>
                                     <div class="card-details">
-                                        <span class="detail-badge">1 bed</span>
-                                        <span class="detail-badge">1 bath</span>
+                                        <span class="detail-badge"><i class="fas fa-bed"></i> 1 bed</span>
+                                        <span class="detail-badge"><i class="fas fa-bath"></i> 1 bath</span>
                                     </div>
                                     <div class="card-price">£1,500/mo</div>
                                 </div>
@@ -83,8 +87,8 @@
                                 <i class="fas fa-user"></i>
                             </div>
                             <div class="profile-info">
-                                <div class="profile-name"></div>
-                                <div class="profile-role"></div>
+                                <div class="profile-name-text">Sarah Johnson</div>
+                                <div class="profile-role-text">STR Operator • London</div>
                                 <div class="verification-badge">
                                     <i class="fas fa-check-circle"></i>
                                     <span>Verified</span>
@@ -126,33 +130,33 @@
                     <div class="preview-mockup messaging-mockup">
                         <div class="message-list">
                             <div class="message-item active">
-                                <div class="message-avatar"></div>
+                                <div class="message-avatar">JD</div>
                                 <div class="message-preview">
-                                    <div class="message-sender"></div>
-                                    <div class="message-text"></div>
+                                    <div class="message-sender-text">John Davidson</div>
+                                    <div class="message-text-content">Hi, I'm interested in the property...</div>
                                 </div>
                                 <div class="message-time">2m</div>
                             </div>
                             <div class="message-item">
-                                <div class="message-avatar"></div>
+                                <div class="message-avatar">SP</div>
                                 <div class="message-preview">
-                                    <div class="message-sender"></div>
-                                    <div class="message-text"></div>
+                                    <div class="message-sender-text">Sarah Peterson</div>
+                                    <div class="message-text-content">When can we schedule a viewing?</div>
                                 </div>
                                 <div class="message-time">1h</div>
                             </div>
                             <div class="message-item">
-                                <div class="message-avatar"></div>
+                                <div class="message-avatar">MK</div>
                                 <div class="message-preview">
-                                    <div class="message-sender"></div>
-                                    <div class="message-text"></div>
+                                    <div class="message-sender-text">Michael Kumar</div>
+                                    <div class="message-text-content">Thank you for the quick response!</div>
                                 </div>
                                 <div class="message-time">3h</div>
                             </div>
                         </div>
                         <div class="message-input">
                             <i class="fas fa-paperclip"></i>
-                            <div class="input-placeholder"></div>
+                            <div class="input-placeholder-text">Type your message...</div>
                             <i class="fas fa-paper-plane"></i>
                         </div>
                     </div>
@@ -176,18 +180,22 @@
                                 <span>STR Lease Agreement</span>
                             </div>
                             <div class="doc-content">
-                                <div class="doc-line"></div>
-                                <div class="doc-line"></div>
-                                <div class="doc-line short"></div>
-                                <div class="doc-section"></div>
-                                <div class="doc-line"></div>
-                                <div class="doc-line"></div>
+                                <div class="doc-text">This Short-Term Rental Agreement is entered into between:</div>
+                                <div class="doc-text"><strong>Landlord:</strong> [Property Owner Name]</div>
+                                <div class="doc-text"><strong>Operator:</strong> [STR Operator Name]</div>
+                                <div class="doc-section-title">1. Property Details</div>
+                                <div class="doc-text">The property located at [Address] is hereby leased for short-term
+                                    rental purposes.</div>
+                                <div class="doc-text">This agreement includes all terms and conditions required by UK
+                                    law...</div>
                                 <div class="doc-signature">
                                     <div class="signature-box">
-                                        <i class="fas fa-signature"></i>
+                                        <div class="signature-line"></div>
+                                        <div class="signature-label">Landlord Signature</div>
                                     </div>
                                     <div class="signature-box">
-                                        <i class="fas fa-signature"></i>
+                                        <div class="signature-line"></div>
+                                        <div class="signature-label">Operator Signature</div>
                                     </div>
                                 </div>
                             </div>
@@ -215,25 +223,35 @@
                             <i class="fas fa-search"></i>
                             <span>Search location...</span>
                         </div>
-                        <div class="map-view">
-                            <div class="map-marker" style="top: 30%; left: 40%;">
-                                <i class="fas fa-map-marker-alt"></i>
-                            </div>
-                            <div class="map-marker" style="top: 50%; left: 60%;">
-                                <i class="fas fa-map-marker-alt"></i>
-                            </div>
-                            <div class="map-marker" style="top: 65%; left: 35%;">
-                                <i class="fas fa-map-marker-alt"></i>
+                        <div class="map-view-interactive">
+                            <!-- Embedded mini map preview -->
+                            <iframe
+                                src="https://www.openstreetmap.org/export/embed.html?bbox=-0.489,51.28,0.236,51.686&layer=mapnik&marker=51.5074,-0.1278"
+                                style="border: none; width: 100%; height: 180px; border-radius: 8px;"
+                                frameborder="0"></iframe>
+                            <div class="map-overlay-markers">
+                                <div class="map-marker permitted-marker" style="top: 30%; left: 40%;"
+                                    title="London - Permitted">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="map-marker restricted-marker" style="top: 50%; left: 60%;"
+                                    title="Manchester - Restricted">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="map-marker permitted-marker" style="top: 65%; left: 35%;"
+                                    title="Birmingham - Permitted">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
                             </div>
                         </div>
                         <div class="map-legend">
                             <div class="legend-item permitted">
                                 <div class="legend-dot"></div>
-                                <span>Permitted</span>
+                                <span>Permitted (e.g., Edinburgh)</span>
                             </div>
                             <div class="legend-item restricted">
                                 <div class="legend-dot"></div>
-                                <span>Restricted</span>
+                                <span>Restricted (e.g., Manchester)</span>
                             </div>
                         </div>
                     </div>
