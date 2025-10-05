@@ -3635,11 +3635,13 @@ body {
 
 .template-btn.disabled {
     background: #6c757d;
+    color: white;
     cursor: not-allowed;
 }
 
 .template-btn.disabled:hover {
     background: #6c757d;
+    color: white;
 }
 
 /* Guides Section */
@@ -3899,6 +3901,7 @@ body {
 .cta-content {
     max-width: 600px;
     margin: 0 auto;
+    text-align: center;
 }
 
 .cta-title {
@@ -3906,12 +3909,14 @@ body {
     font-weight: 700;
     color: #2c3e50;
     margin-bottom: 16px;
+    text-align: center;
 }
 
 .cta-subtitle {
     font-size: 1.25rem;
     color: #6c757d;
     margin-bottom: 40px;
+    text-align: center;
 }
 
 .cta-buttons {
@@ -3919,6 +3924,29 @@ body {
     gap: 20px;
     justify-content: center;
     flex-wrap: wrap;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.templates-cta .btn-outline {
+    background: transparent;
+    color: #2E8B57;
+    border: 2px solid #2E8B57;
+}
+
+.templates-cta .btn-outline:hover {
+    background: #2E8B57;
+    color: white;
+}
+
+.templates-cta .btn-primary,
+.templates-cta .btn-outline {
+    display: inline-block;
+    padding: 16px 32px;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
 }
 
 /* Responsive Design for Templates & Resources */
