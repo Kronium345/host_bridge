@@ -3,77 +3,152 @@
 {% block title %}Contact - HostBridge{% endblock %}
 
 {% block content %}
-<section class="hero-section" style="padding: 80px 0 40px; text-align:center;">
+<!-- Hero Section -->
+<section class="hero-section"
+    style="padding: 100px 0 60px; text-align: center; background: linear-gradient(135deg, #2E8B57 0%, #3CB371 100%);">
     <div class="container">
-        <h1 class="hero-title">Contact Us</h1>
-        <p class="hero-subtitle">We'd love to hear from you. Reach out directly or use the form below.</p>
+        <h1 class="hero-title" style="color: white; font-size: 3rem; margin-bottom: 20px;">Contact Us</h1>
+        <p class="hero-subtitle" style="color: white; font-size: 1.25rem; max-width: 700px; margin: 0 auto;">We'd love
+            to hear from you. Reach out directly or use the form below.</p>
     </div>
 </section>
 
-<section class="contact-form-section">
-    <div class="contact-container" style="max-width:1000px;">
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px;">
-            <div class="contact-form">
-                <h3 class="service-title" style="margin-bottom:16px;">Direct Contact</h3>
-                <ul class="service-features" style="margin-top:8px;">
-                    <li>
-                        <strong>Information</strong><br>
-                        General enquiries, partnerships, press/media, and platform information.<br>
-                        <a href="mailto:info@host-bridge.com">info@host-bridge.com</a>
-                    </li>
-                    <li>
-                        <strong>Support</strong><br>
-                        Account issues, billing questions, technical support, and incident reports.<br>
-                        <a href="mailto:support@host-bridge.com">support@host-bridge.com</a>
-                    </li>
-                    <li>
-                        <strong>Phone</strong><br>
-                        <a href="tel:01617062460">01617062460</a>
-                    </li>
-                </ul>
-            </div>
-            <div>
-                <form id="contact-form" class="contact-form" data-emailjs-service="{{ EMAILJS_SERVICE }}"
-                    data-emailjs-template="{{ EMAILJS_TEMPLATE }}" data-emailjs-public="{{ EMAILJS_PUBLIC }}">
-                    <h3 class="service-title" style="margin-bottom:16px;">Send us a message</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input id="name" name="name" type="text" placeholder="Enter your full name">
+<!-- Contact Section -->
+<section class="contact-page-section">
+    <div class="contact-page-container">
+        <div class="contact-grid">
+            <!-- Direct Contact Card -->
+            <div class="direct-contact-card">
+                <div class="contact-card-header">
+                    <div class="contact-icon">
+                        <i class="fas fa-address-book"></i>
+                    </div>
+                    <h2>Direct Contact</h2>
+                </div>
+
+                <div class="contact-methods">
+                    <div class="contact-method">
+                        <div class="method-icon">
+                            <i class="fas fa-info-circle"></i>
                         </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input id="email" name="email" type="email" placeholder="Enter your email address">
+                        <div class="method-content">
+                            <h3>Information</h3>
+                            <p>General enquiries, partnerships, press/media, and platform information.</p>
+                            <a href="mailto:info@host-bridge.com" class="contact-link">
+                                <i class="fas fa-envelope"></i> info@host-bridge.com
+                            </a>
                         </div>
                     </div>
+
+                    <div class="contact-method">
+                        <div class="method-icon">
+                            <i class="fas fa-life-ring"></i>
+                        </div>
+                        <div class="method-content">
+                            <h3>Support</h3>
+                            <p>Account issues, billing questions, technical support, and incident reports.</p>
+                            <a href="mailto:support@host-bridge.com" class="contact-link">
+                                <i class="fas fa-envelope"></i> support@host-bridge.com
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="contact-method">
+                        <div class="method-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="method-content">
+                            <h3>Phone</h3>
+                            <p>Call us for urgent inquiries Monday-Friday, 9am-5pm GMT</p>
+                            <a href="tel:01617062460" class="contact-link">
+                                <i class="fas fa-phone"></i> 0161 706 2460
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Info -->
+                <div class="contact-additional">
+                    <div class="additional-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <strong>Business Hours</strong>
+                            <p>Monday - Friday: 9:00 AM - 5:00 PM GMT</p>
+                        </div>
+                    </div>
+                    <div class="additional-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <strong>Location</strong>
+                            <p>United Kingdom</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message Form Card -->
+            <div class="message-form-card">
+                <div class="contact-card-header">
+                    <div class="contact-icon">
+                        <i class="fas fa-paper-plane"></i>
+                    </div>
+                    <h2>Send us a message</h2>
+                    <p>Fill out the form below and we'll get back to you within 24 hours</p>
+                </div>
+
+                <form id="contact-form" class="modern-contact-form" data-emailjs-service="{{ EMAILJS_SERVICE }}"
+                    data-emailjs-template="{{ EMAILJS_TEMPLATE }}" data-emailjs-public="{{ EMAILJS_PUBLIC }}">
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Name <span class="required">*</span></label>
+                            <input id="name" name="name" type="text" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email <span class="required">*</span></label>
+                            <input id="email" name="email" type="email" placeholder="Enter your email address" required>
+                        </div>
+                    </div>
+
                     <div class="form-row">
                         <div class="form-group">
                             <label for="category">Category</label>
                             <div class="select-wrapper">
                                 <select id="category" name="category">
-                                    <option>General</option>
-                                    <option>Support</option>
-                                    <option>Partnership</option>
-                                    <option>Other</option>
+                                    <option value="General">General Inquiry</option>
+                                    <option value="Support">Technical Support</option>
+                                    <option value="Partnership">Partnership</option>
+                                    <option value="Billing">Billing</option>
+                                    <option value="Other">Other</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="subject">Subject</label>
-                            <input id="subject" name="subject" type="text" placeholder="How can we help?">
+                            <input id="subject" name="subject" type="text" placeholder="What's this about?">
                         </div>
                     </div>
+
                     <div class="form-group">
-                        <label for="message">Message</label>
-                        <textarea id="message" name="message" rows="5" placeholder="Write your message..."></textarea>
+                        <label for="message">Message <span class="required">*</span></label>
+                        <textarea id="message" name="message" rows="6" placeholder="Tell us how we can help you..."
+                            required></textarea>
                     </div>
+
                     <button type="submit" class="submit-btn" id="contact-submit" data-idle-label="Send Message">
-                        <span class="btn-text">Send Message</span>
-                        <span class="btn-loading" style="display:none;">Sending...</span>
+                        <span class="btn-text">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </span>
+                        <span class="btn-loading" style="display:none;">
+                            <i class="fas fa-spinner fa-spin"></i> Sending...
+                        </span>
                     </button>
+
+                    <p class="form-disclaimer">
+                        <i class="fas fa-lock"></i> Your information is secure and will never be shared with third
+                        parties.
+                    </p>
                 </form>
-                <p style="font-size:12px;color:#6c757d;margin-top:8px;text-align:center;">By submitting, you consent to
-                    us contacting you about your enquiry.</p>
             </div>
         </div>
     </div>
