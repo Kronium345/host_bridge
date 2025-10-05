@@ -22,11 +22,27 @@ def home():
 
 @app.route('/how-it-works/landlords')
 def how_landlords():
-	return render_template('how_landlords.html')
+	emailjs_public = os.getenv('EMAILJS_PUBLIC_KEY', '')
+	emailjs_service = os.getenv('EMAILJS_SERVICE_ID', '')
+	emailjs_template = os.getenv('EMAILJS_NEWSLETTER_TEMPLATE_ID', os.getenv('EMAILJS_TEMPLATE_ID', ''))
+	return render_template(
+		'how_landlords.html',
+		EMAILJS_PUBLIC=emailjs_public,
+		EMAILJS_SERVICE=emailjs_service,
+		EMAILJS_TEMPLATE=emailjs_template,
+	)
 
 @app.route('/how-it-works/operators')
 def how_operators():
-	return render_template('how_operators.html')
+	emailjs_public = os.getenv('EMAILJS_PUBLIC_KEY', '')
+	emailjs_service = os.getenv('EMAILJS_SERVICE_ID', '')
+	emailjs_template = os.getenv('EMAILJS_NEWSLETTER_TEMPLATE_ID', os.getenv('EMAILJS_TEMPLATE_ID', ''))
+	return render_template(
+		'how_operators.html',
+		EMAILJS_PUBLIC=emailjs_public,
+		EMAILJS_SERVICE=emailjs_service,
+		EMAILJS_TEMPLATE=emailjs_template,
+	)
 
 @app.route('/resources/legality-map')
 def legality_map():
@@ -54,7 +70,15 @@ def templates_page():
 
 @app.route('/services')
 def services():
-	return render_template('services.html')
+	emailjs_public = os.getenv('EMAILJS_PUBLIC_KEY', '')
+	emailjs_service = os.getenv('EMAILJS_SERVICE_ID', '')
+	emailjs_template = os.getenv('EMAILJS_NEWSLETTER_TEMPLATE_ID', os.getenv('EMAILJS_TEMPLATE_ID', ''))
+	return render_template(
+		'services.html',
+		EMAILJS_PUBLIC=emailjs_public,
+		EMAILJS_SERVICE=emailjs_service,
+		EMAILJS_TEMPLATE=emailjs_template,
+	)
 
 @app.route('/contact')
 def contact():
@@ -179,6 +203,10 @@ def property_details():
 @app.route('/property/<int:property_id>')
 def view_property(property_id: int):
 	return render_template('property_details.html', property_id=property_id)
+
+@app.route('/verify')
+def verify():
+	return render_template('verify.html')
 
 
 # ----------------------------

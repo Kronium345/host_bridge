@@ -1182,6 +1182,419 @@ body {
 }
 
 /* =============================== */
+/* VERIFICATION SECTION                                              */
+/* =============================== */
+.verification-section {
+    background: linear-gradient(135deg, #eaf5f2 0%, #f8fdfb 100%);
+    padding: 80px 20px;
+    margin-top: 60px;
+}
+
+.verification-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.verification-title {
+    color: #004c46;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+    line-height: 1.2;
+}
+
+.verification-subtitle {
+    color: #2b7c6c;
+    font-size: 1.1rem;
+    margin: 0 0 60px 0;
+    line-height: 1.5;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.verification-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+.verification-card {
+    background: #ffffff;
+    padding: 40px 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    border: 2px solid #e0f0ea;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.verification-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(46, 139, 87, 0.15);
+    border-color: #2E8B57;
+}
+
+.verification-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #2E8B57, #3CB371);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    color: white;
+    font-size: 2rem;
+}
+
+.verification-card-title {
+    color: #004c46;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+}
+
+.verification-card-text {
+    color: #334155;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.verification-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #e8f5f0;
+    color: #2E8B57;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.verification-badge i {
+    font-size: 0.9rem;
+}
+
+/* Verification Process Timeline */
+.verification-process {
+    background: #ffffff;
+    padding: 50px 40px;
+    border-radius: 16px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.process-title {
+    color: #004c46;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 40px 0;
+}
+
+.process-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.process-step {
+    text-align: center;
+    max-width: 200px;
+}
+
+.step-number-circle {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #2E8B57, #3CB371);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 auto 16px;
+}
+
+.process-step h4 {
+    color: #004c46;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+}
+
+.process-step p {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.process-arrow {
+    color: #2E8B57;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.verification-cta {
+    background: linear-gradient(135deg, #2E8B57, #3CB371);
+    padding: 40px;
+    border-radius: 16px;
+    text-align: center;
+}
+
+.verification-cta-text {
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0 0 24px 0;
+}
+
+.verification-cta-button {
+    display: inline-block;
+    background: white;
+    color: #2E8B57;
+    padding: 16px 40px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.verification-cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+    text-decoration: none;
+}
+
+/* Responsive Design for Verification */
+@media (max-width: 768px) {
+    .verification-section {
+        padding: 60px 20px;
+    }
+
+    .verification-title {
+        font-size: 2rem;
+    }
+
+    .verification-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .process-steps {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .process-arrow {
+        transform: rotate(90deg);
+    }
+
+    .verification-process {
+        padding: 40px 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .verification-card {
+        padding: 30px 24px;
+    }
+
+    .verification-cta {
+        padding: 30px 20px;
+    }
+}
+
+/* =============================== */
+/* TESTIMONIALS SECTION                                              */
+/* =============================== */
+.testimonials-section {
+    background: #ffffff;
+    padding: 80px 20px;
+    margin-top: 60px;
+}
+
+.testimonials-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.testimonials-title {
+    color: #004c46;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+    line-height: 1.2;
+}
+
+.testimonials-subtitle {
+    color: #2b7c6c;
+    font-size: 1.1rem;
+    margin: 0 0 60px 0;
+    line-height: 1.5;
+}
+
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 40px;
+    margin-bottom: 60px;
+}
+
+.testimonial-card {
+    background: #f8fdfb;
+    padding: 40px 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e0f0ea;
+    transition: all 0.3s ease;
+    text-align: left;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(46, 139, 87, 0.12);
+}
+
+.testimonial-stars {
+    color: #FFD700;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 4px;
+}
+
+.testimonial-text {
+    color: #334155;
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 24px;
+    font-style: italic;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.author-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #2E8B57;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.author-info {
+    text-align: left;
+}
+
+.author-name {
+    color: #004c46;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.author-role {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+/* Trust Logos Section */
+.trust-logos-section {
+    background: #eaf5f2;
+    padding: 40px 30px;
+    border-radius: 16px;
+    margin-top: 20px;
+}
+
+.trust-logos-title {
+    color: #004c46;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0 0 30px 0;
+}
+
+.trust-logos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    align-items: center;
+    justify-items: center;
+}
+
+.trust-logo-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: #2E8B57;
+    font-weight: 600;
+}
+
+.trust-logo-item i {
+    font-size: 2.5rem;
+    color: #2E8B57;
+}
+
+.trust-logo-item span {
+    color: #004c46;
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+/* Responsive Design for Testimonials */
+@media (max-width: 768px) {
+    .testimonials-section {
+        padding: 60px 20px;
+    }
+
+    .testimonials-title {
+        font-size: 2rem;
+    }
+
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .trust-logos-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .testimonials-container {
+        padding: 0 10px;
+    }
+
+    .testimonial-card {
+        padding: 30px 24px;
+    }
+
+    .trust-logos-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =============================== */
 /* CONTACT FORM SECTION                                              */
 /* =============================== */
 .contact-form-section {
@@ -2194,7 +2607,8 @@ body {
 }
 
 .form-group input,
-.form-group select {
+.form-group select,
+.form-group textarea {
     width: 100%;
     padding: 14px 16px;
     border: 2px solid #e0f0ea;
@@ -2205,6 +2619,11 @@ body {
     background: #ffffff;
     transition: all 0.3s ease;
     box-sizing: border-box;
+}
+
+.form-group textarea {
+    min-height: 140px;
+    resize: vertical;
 }
 
 .select-wrapper {
@@ -2234,13 +2653,15 @@ body {
 }
 
 .form-group input:focus,
-.form-group select:focus {
+.form-group select:focus,
+.form-group textarea:focus {
     outline: none;
     border-color: #2E8B57;
     box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.1);
 }
 
-.form-group input::placeholder {
+.form-group input::placeholder,
+.form-group textarea::placeholder {
     color: #9ca3af;
 }
 

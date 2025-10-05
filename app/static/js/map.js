@@ -277,6 +277,27 @@ document.addEventListener('DOMContentLoaded', function () {
         'not-permitted': '#ef4444'
     };
 
+    // Helper: normalize names to improve matches with mapping
+    function normalizeName(raw) {
+        if (!raw) return '';
+        return String(raw)
+            .toLowerCase()
+            .replace(/\s*\([^)]*\)\s*/g, ' ') // remove parentheticals
+            .replace(/[,']/g, ' ')              // remove commas/apostrophes
+            .replace(/\b(city|county|district|borough|metropolitan|royal|london|upon|and|of|the|council|isles|isle)\b/g, '')
+            .replace(/\s+/g, ' ')              // collapse spaces
+            .trim();
+    }
+
+    // Build normalized lookup from provided mapping
+    const normalizedZoneMapping = (() => {
+        const out = {};
+        Object.keys(strZoneMapping).forEach(key => {
+            out[normalizeName(key)] = strZoneMapping[key];
+        });
+        return out;
+    })();
+
     // Load and display GeoJSON
     fetch('/static/data/uk-countries.geojson')
         .then(response => {
@@ -320,9 +341,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const geoJsonLayer = L.geoJSON(validGeoJSON, {
                 style: function (feature) {
-                    const areaName = feature.properties.LAD25NM || feature.properties.CTYUA24NM || feature.properties.NAME || feature.properties.name || feature.properties.County;
-                    const zoneType = strZoneMapping[areaName] || 'permitted';
-                    console.log(`Area: ${areaName}, Zone: ${zoneType}, Color: ${zoneColors[zoneType]}`);
+                    const rawName = feature.properties.LAD25NM || feature.properties.CTYUA24NM || feature.properties.NAME || feature.properties.name || feature.properties.County;
+                    const norm = normalizeName(rawName);
+                    const zoneType = normalizedZoneMapping[norm] || 'restricted';
+                    if (!normalizedZoneMapping[norm]) {
+                        console.debug(`Unmapped area -> defaulting to restricted: ${rawName} (normalized: ${norm})`);
+                    } else {
+                        console.log(`Area: ${rawName}, Zone: ${zoneType}, Color: ${zoneColors[zoneType]}`);
+                    }
                     return {
                         color: zoneColors[zoneType],
                         fillColor: zoneColors[zoneType],
@@ -332,11 +358,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     };
                 },
                 onEachFeature: function (feature, layer) {
-                    const areaName = feature.properties.LAD25NM || feature.properties.CTYUA24NM || feature.properties.NAME || feature.properties.name || feature.properties.County;
-                    const zoneType = strZoneMapping[areaName] || 'permitted';
+                    const rawName = feature.properties.LAD25NM || feature.properties.CTYUA24NM || feature.properties.NAME || feature.properties.name || feature.properties.County;
+                    const norm = normalizeName(rawName);
+                    const zoneType = normalizedZoneMapping[norm] || 'restricted';
 
                     // Add tooltip
-                    layer.bindTooltip(areaName, {
+                    layer.bindTooltip(rawName, {
                         permanent: false,
                         direction: 'center',
                         className: 'custom-tooltip'

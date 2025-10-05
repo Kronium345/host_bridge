@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+
+{% block title %}Account Verification - HostBridge{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/verification.css') }}">
+<!-- Verification Hero -->
+<section class="hero">
+    <h1>Complete Your Account Verification</h1>
+    <p>Upload your documents to gain full access to the HostBridge platform</p>
+</section>
+
+<!-- Verification Status -->
+<section class="verify-status-section">
+    <div class="verify-container">
+        {% if session.get('user_id') %}
+        <div class="status-card">
+            <div class="status-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <h3>Verification Status: <span class="status-pending">Pending</span></h3>
+            <p>Complete the steps below to verify your account</p>
+        </div>
+        {% else %}
+        <div class="status-card">
+            <div class="status-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3>Please Login First</h3>
+            <p>You need to be logged in to complete verification</p>
+            <a href="{{ url_for('login') }}" class="btn-primary">Login to Continue</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% if session.get('user_id') %}
+<!-- Verification Form -->
+<section class="verify-form-section">
+    <div class="verify-container">
+        <div class="verify-steps">
+            <!-- Step 1: Identity Verification -->
+            <div class="verify-step" id="step-identity">
+                <div class="step-header">
+                    <div class="step-icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <div class="step-info">
+                        <h3>Step 1: Identity Verification</h3>
+                        <p>Upload a government-issued ID document</p>
+                    </div>
+                    <div class="step-status">
+                        <i class="fas fa-circle"></i>
+                    </div>
+                </div>
+                <div class="step-content">
+                    <form id="identity-form" class="upload-form" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="id-type">ID Document Type</label>
+                            <div class="select-wrapper">
+                                <select id="id-type" name="id_type" required>
+                                    <option value="">Select document type</option>
+                                    <option value="passport">Passport</option>
+                                    <option value="driving_license">Driving License</option>
+                                    <option value="national_id">National ID Card</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="id-document">Upload Document (Front)</label>
+                            <div class="file-upload-area">
+                                <input type="file" id="id-document" name="id_document" accept="image/*,.pdf" required>
+                                <div class="file-upload-label">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload or drag and drop</p>
+                                    <span>JPG, PNG or PDF (Max 5MB)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="id-document-back">Upload Document (Back) - Optional</label>
+                            <div class="file-upload-area">
+                                <input type="file" id="id-document-back" name="id_document_back" accept="image/*,.pdf">
+                                <div class="file-upload-label">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload or drag and drop</p>
+                                    <span>JPG, PNG or PDF (Max 5MB)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary">Upload & Continue</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Step 2: Address Verification -->
+            <div class="verify-step" id="step-address">
+                <div class="step-header">
+                    <div class="step-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="step-info">
+                        <h3>Step 2: Address Verification</h3>
+                        <p>Upload a proof of address (utility bill, bank statement, etc.)</p>
+                    </div>
+                    <div class="step-status">
+                        <i class="fas fa-circle"></i>
+                    </div>
+                </div>
+                <div class="step-content">
+                    <form id="address-form" class="upload-form" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="address">Your Address</label>
+                            <textarea id="address" name="address" rows="3" placeholder="Enter your full address"
+                                required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="address-document">Upload Proof of Address</label>
+                            <div class="file-upload-area">
+                                <input type="file" id="address-document" name="address_document" accept="image/*,.pdf"
+                                    required>
+                                <div class="file-upload-label">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload or drag and drop</p>
+                                    <span>Utility bill, bank statement (Max 5MB)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary">Upload & Continue</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Step 3: Role-Specific Verification -->
+            <div class="verify-step" id="step-role">
+                <div class="step-header">
+                    <div class="step-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="step-info">
+                        <h3>Step 3: Role-Specific Verification</h3>
+                        <p>Additional documents based on your role</p>
+                    </div>
+                    <div class="step-status">
+                        <i class="fas fa-circle"></i>
+                    </div>
+                </div>
+                <div class="step-content">
+                    <form id="role-form" class="upload-form" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="user-role">Your Role</label>
+                            <div class="select-wrapper">
+                                <select id="user-role" name="user_role" required>
+                                    <option value="">Select your role</option>
+                                    <option value="property_owner">Property Owner</option>
+                                    <option value="str_operator">STR Operator</option>
+                                    <option value="property_manager">Property Manager</option>
+                                    <option value="investor">Investor</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Property Owner Documents -->
+                        <div id="owner-documents" class="role-documents" style="display: none;">
+                            <div class="form-group">
+                                <label for="ownership-proof">Proof of Property Ownership</label>
+                                <div class="file-upload-area">
+                                    <input type="file" id="ownership-proof" name="ownership_proof"
+                                        accept="image/*,.pdf">
+                                    <div class="file-upload-label">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <p>Title deed, land registry document</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Operator Documents -->
+                        <div id="operator-documents" class="role-documents" style="display: none;">
+                            <div class="form-group">
+                                <label for="business-registration">Business Registration</label>
+                                <div class="file-upload-area">
+                                    <input type="file" id="business-registration" name="business_registration"
+                                        accept="image/*,.pdf">
+                                    <div class="file-upload-label">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <p>Companies House certificate</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="insurance-cert">Insurance Certificate</label>
+                                <div class="file-upload-area">
+                                    <input type="file" id="insurance-cert" name="insurance_cert" accept="image/*,.pdf">
+                                    <div class="file-upload-label">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <p>Public liability insurance</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary">Submit for Review</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Section -->
+        <div class="verify-help">
+            <div class="help-card">
+                <h3><i class="fas fa-question-circle"></i> Need Help?</h3>
+                <p>Our verification process typically takes 24-48 hours. If you have questions or need assistance,
+                    please contact us.</p>
+                <a href="{{ url_for('contact') }}" class="help-link">Contact Support</a>
+            </div>
+            <div class="help-card">
+                <h3><i class="fas fa-shield-alt"></i> Your Data is Safe</h3>
+                <p>All documents are encrypted and stored securely. We comply with GDPR and never share your personal
+                    information.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Role-specific document toggle
+        const roleSelect = document.getElementById('user-role');
+        if (roleSelect) {
+            roleSelect.addEventListener('change', function () {
+                document.querySelectorAll('.role-documents').forEach(el => el.style.display = 'none');
+
+                if (this.value === 'property_owner') {
+                    document.getElementById('owner-documents').style.display = 'block';
+                } else if (this.value === 'str_operator' || this.value === 'property_manager') {
+                    document.getElementById('operator-documents').style.display = 'block';
+                }
+            });
+        }
+
+        // File upload preview
+        document.querySelectorAll('input[type="file"]').forEach(input => {
+            input.addEventListener('change', function () {
+                const label = this.nextElementSibling;
+                if (this.files.length > 0) {
+                    const fileName = this.files[0].name;
+                    label.querySelector('p').textContent = '✓ ' + fileName;
+                    label.style.borderColor = '#2E8B57';
+                    label.style.backgroundColor = '#e8f5f0';
+                }
+            });
+        });
+
+        // Form submissions (simulated for now)
+        ['identity-form', 'address-form', 'role-form'].forEach(formId => {
+            const form = document.getElementById(formId);
+            if (form) {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const step = this.closest('.verify-step');
+                    const statusIcon = step.querySelector('.step-status i');
+                    statusIcon.className = 'fas fa-check-circle';
+                    statusIcon.style.color = '#2E8B57';
+
+                    if (window.toast) {
+                        toast('Documents uploaded successfully! Moving to next step.', 'success');
+                    }
+
+                    // Expand next step
+                    const nextStep = step.nextElementSibling;
+                    if (nextStep && nextStep.classList.contains('verify-step')) {
+                        nextStep.querySelector('.step-content').style.display = 'block';
+                    }
+                });
+            }
+        });
+    });
+</script>
+{% endif %}
+
+{% endblock %}

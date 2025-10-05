@@ -22,6 +22,7 @@
 
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/showcase.css') }}">
 
 </head>
 
@@ -64,6 +65,7 @@
                             <li><a href="{{ url_for('legality_map') }}">STR Legality Map</a></li>
                             <li><a href="{{ url_for('marketplace_listings') }}">Marketplace Listings</a></li>
                             <li><a href="{{ url_for('templates_resource') }}">Templates</a></li>
+                            <li><a href="{{ url_for('verify') }}">Get Verified</a></li>
                         </ul>
                     </li>
                     <li><a href="{{ url_for('services') }}">Services</a></li>

@@ -10,10 +10,10 @@
     </div>
 </section>
 
-<section class="services-section" style="padding-top:40px;">
-    <div class="container" style="max-width:1000px;">
-        <div class="services-grid" style="grid-template-columns: 1fr 1fr;">
-            <div class="service-card" style="padding:24px;">
+<section class="contact-form-section">
+    <div class="contact-container" style="max-width:1000px;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px;">
+            <div class="contact-form">
                 <h3 class="service-title" style="margin-bottom:16px;">Direct Contact</h3>
                 <ul class="service-features" style="margin-top:8px;">
                     <li>
@@ -32,39 +32,48 @@
                     </li>
                 </ul>
             </div>
-            <div class="service-card" style="padding:24px;">
-                <h3 class="service-title" style="margin-bottom:16px;">Send us a message</h3>
-                <form id="contact-form" data-emailjs-service="{{ EMAILJS_SERVICE }}"
+            <div>
+                <form id="contact-form" class="contact-form" data-emailjs-service="{{ EMAILJS_SERVICE }}"
                     data-emailjs-template="{{ EMAILJS_TEMPLATE }}" data-emailjs-public="{{ EMAILJS_PUBLIC }}">
-                    <div class="form-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
-                        <div class="form-field"><label for="name">Name</label><input id="name" name="name" type="text"
-                                placeholder="Your name"></div>
-                        <div class="form-field"><label for="email">Email</label><input id="email" name="email"
-                                type="email" placeholder="you@example.com"></div>
-                    </div>
-                    <div class="form-grid"
-                        style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-top:12px;">
-                        <div class="form-field">
-                            <label for="category">Category</label>
-                            <select id="category" name="category">
-                                <option>General</option>
-                                <option>Support</option>
-                                <option>Partnership</option>
-                                <option>Other</option>
-                            </select>
+                    <h3 class="service-title" style="margin-bottom:16px;">Send us a message</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input id="name" name="name" type="text" placeholder="Enter your full name">
                         </div>
-                        <div class="form-field"><label for="subject">Subject</label><input id="subject" name="subject"
-                                type="text" placeholder="How can we help?"></div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input id="email" name="email" type="email" placeholder="Enter your email address">
+                        </div>
                     </div>
-                    <div class="form-field" style="margin-top:12px;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <div class="select-wrapper">
+                                <select id="category" name="category">
+                                    <option>General</option>
+                                    <option>Support</option>
+                                    <option>Partnership</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input id="subject" name="subject" type="text" placeholder="How can we help?">
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="message">Message</label>
                         <textarea id="message" name="message" rows="5" placeholder="Write your message..."></textarea>
                     </div>
-                    <button type="submit" class="service-btn" id="contact-submit" data-idle-label="Send Message"
-                        style="width:100%; margin-top:16px;">Send Message</button>
+                    <button type="submit" class="submit-btn" id="contact-submit" data-idle-label="Send Message">
+                        <span class="btn-text">Send Message</span>
+                        <span class="btn-loading" style="display:none;">Sending...</span>
+                    </button>
                 </form>
-                <p style="font-size:12px;color:#6c757d;margin-top:8px;">By submitting, you consent to us contacting you
-                    about your enquiry.</p>
+                <p style="font-size:12px;color:#6c757d;margin-top:8px;text-align:center;">By submitting, you consent to
+                    us contacting you about your enquiry.</p>
             </div>
         </div>
     </div>

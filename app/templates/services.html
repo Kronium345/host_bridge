@@ -141,6 +141,45 @@
     </div>
 </section>
 
+<!-- Register Interest for Services Section -->
+<section class="contact-form-section" style="margin-top: 0;">
+    <div class="contact-container">
+        <h2 class="contact-title">Get Early Access to Services</h2>
+        <p class="contact-subtitle">Be the first to know when our service marketplace launches</p>
+
+        <form id="services-waitlist-form" class="contact-form" data-emailjs-service="{{ EMAILJS_SERVICE }}"
+            data-emailjs-template="{{ EMAILJS_TEMPLATE }}" data-emailjs-public="{{ EMAILJS_PUBLIC }}">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="role">Service Interest</label>
+                <div class="select-wrapper">
+                    <select id="role" name="role" required>
+                        <option value="Cleaning Services">Cleaning Services</option>
+                        <option value="Property Management">Property Management</option>
+                        <option value="Legal & Compliance">Legal & Compliance</option>
+                        <option value="All Services">All Services</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" data-idle-label="Notify Me">
+                <span class="btn-text">Notify Me</span>
+                <span class="btn-loading" style="display: none;">Sending...</span>
+            </button>
+        </form>
+    </div>
+</section>
+
 <!-- CTA Section -->
 <section class="cta-section">
     <div class="container">
@@ -154,4 +193,9 @@
         </div>
     </div>
 </section>
+{% endblock %}
+{% block scripts %}
+<!-- EmailJS SDK and integration loaded only on pages that need it -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="{{ url_for('static', filename='js/email.js') }}"></script>
 {% endblock %}

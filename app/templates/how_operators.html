@@ -161,10 +161,54 @@
   </div>
 </section>
 
+<!-- Register Interest Section -->
+<section class="contact-form-section">
+  <div class="contact-container">
+    <h2 class="contact-title">Join the Operators Waitlist</h2>
+    <p class="contact-subtitle">Be among the first operators to access premium property listings</p>
+
+    <form id="operator-waitlist-form" class="contact-form" data-emailjs-service="{{ EMAILJS_SERVICE }}"
+      data-emailjs-template="{{ EMAILJS_TEMPLATE }}" data-emailjs-public="{{ EMAILJS_PUBLIC }}">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="role">I am a</label>
+        <div class="select-wrapper">
+          <select id="role" name="role" required>
+            <option value="STR Operator">STR Operator</option>
+            <option value="Property Manager">Property Manager</option>
+            <option value="Investor">Investor</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" data-idle-label="Join Operators Waitlist">
+        <span class="btn-text">Join Operators Waitlist</span>
+        <span class="btn-loading" style="display: none;">Sending...</span>
+      </button>
+    </form>
+  </div>
+</section>
+
 <!-- CTA Section -->
 <section class="cta-section">
   <h2>Looking for Your Next STR Unit?</h2>
   <a href="{{ url_for('find_property') }}" class="cta-button">Start Exploring</a>
 </section>
 
+{% endblock %}
+{% block scripts %}
+<!-- EmailJS SDK and integration loaded only on pages that need it -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="{{ url_for('static', filename='js/email.js') }}"></script>
 {% endblock %}
