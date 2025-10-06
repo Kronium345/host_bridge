@@ -1,11 +1,16 @@
 from app import app
-from flask import render_template, request, redirect, url_for, session, flash
-from app.db import verify_credentials, create_user, find_user_by_email, create_or_link_google_user
+from flask import render_template, request, redirect, url_for, session, flash, jsonify
+from app.db import (verify_credentials, create_user, find_user_by_email, create_or_link_google_user,
+                     save_verification_document, get_user_verification_status, 
+                     get_user_verification_documents, check_verification_completion)
 import os
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 from google_auth_oauthlib.flow import Flow
 import secrets
+from werkzeug.utils import secure_filename
+import hashlib
+from datetime import datetime
 
 @app.route('/')
 def home():
@@ -206,7 +211,188 @@ def view_property(property_id: int):
 
 @app.route('/verify')
 def verify():
-	return render_template('verify.html')
+	user_id = session.get('user_id')
+	verification_status = None
+	verification_docs = []
+	
+	if user_id:
+		verification_status = get_user_verification_status(user_id)
+		verification_docs = get_user_verification_documents(user_id)
+	
+	return render_template('verify.html', 
+	                      verification_status=verification_status,
+	                      verification_docs=verification_docs)
+
+
+# ----------------------------
+# File Upload Configuration
+# ----------------------------
+
+# Configure upload folder
+UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'uploads', 'verification')
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# Allowed file extensions
+ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
+MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
+
+def allowed_file(filename):
+	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def validate_file_size(file):
+	"""Check if file size is within limits."""
+	file.seek(0, os.SEEK_END)
+	file_size = file.tell()
+	file.seek(0)  # Reset file pointer
+	return file_size <= MAX_FILE_SIZE
+
+def generate_unique_filename(original_filename, user_id):
+	"""Generate a unique filename using hash and timestamp."""
+	timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+	ext = original_filename.rsplit('.', 1)[1].lower() if '.' in original_filename else 'bin'
+	hash_str = hashlib.md5(f"{user_id}_{timestamp}_{original_filename}".encode()).hexdigest()[:8]
+	return f"{user_id}_{timestamp}_{hash_str}.{ext}"
+
+
+# ----------------------------
+# Verification Upload Routes
+# ----------------------------
+
+@app.route('/api/verify/upload/<document_type>', methods=['POST'])
+def upload_verification_document(document_type):
+	"""Handle file upload for verification documents."""
+	if 'user_id' not in session:
+		return jsonify({'success': False, 'message': 'Please login first'}), 401
+	
+	user_id = session['user_id']
+	
+	# Validate document type
+	valid_types = ['identity', 'address', 'role']
+	if document_type not in valid_types:
+		return jsonify({'success': False, 'message': 'Invalid document type'}), 400
+	
+	# Check for files in request
+	if document_type == 'identity':
+		file_keys = ['id_document', 'id_document_back']
+	elif document_type == 'address':
+		file_keys = ['address_document']
+	else:  # role
+		file_keys = ['role_document']
+	
+	uploaded_files = []
+	errors = []
+	
+	for file_key in file_keys:
+		if file_key not in request.files:
+			if file_key.endswith('_back'):  # Optional back document
+				continue
+			errors.append(f'No file provided for {file_key}')
+			continue
+		
+		file = request.files[file_key]
+		
+		if file.filename == '':
+			if file_key.endswith('_back'):  # Optional back document
+				continue
+			errors.append(f'No file selected for {file_key}')
+			continue
+		
+		# Validate file type
+		if not allowed_file(file.filename):
+			errors.append(f'Invalid file type for {file.filename}. Only PDF, PNG, JPG, JPEG allowed')
+			continue
+		
+		# Validate file size
+		if not validate_file_size(file):
+			errors.append(f'File {file.filename} is too large. Maximum size is 5MB')
+			continue
+		
+		# Generate unique filename and save
+		original_filename = secure_filename(file.filename)
+		unique_filename = generate_unique_filename(original_filename, user_id)
+		file_path = os.path.join(UPLOAD_FOLDER, unique_filename)
+		
+		try:
+			file.save(file_path)
+			file_size = os.path.getsize(file_path)
+			
+			# Get document subtype from form data
+			document_subtype = None
+			if document_type == 'identity':
+				document_subtype = request.form.get('id_type')
+			elif document_type == 'role':
+				document_subtype = request.form.get('role_type')
+			
+			# Save to database
+			doc_id = save_verification_document(
+				user_id=user_id,
+				document_type=document_type,
+				document_subtype=document_subtype,
+				file_path=file_path,
+				file_name=original_filename,
+				file_size=file_size
+			)
+			
+			uploaded_files.append({
+				'id': doc_id,
+				'filename': original_filename,
+				'type': document_type
+			})
+			
+		except Exception as e:
+			errors.append(f'Failed to upload {file.filename}: {str(e)}')
+			# Clean up file if database save failed
+			if os.path.exists(file_path):
+				os.remove(file_path)
+	
+	if errors and not uploaded_files:
+		return jsonify({'success': False, 'message': '; '.join(errors)}), 400
+	
+	# Check if verification is complete
+	completion_status = check_verification_completion(user_id)
+	
+	response_message = f'{len(uploaded_files)} document(s) uploaded successfully'
+	if errors:
+		response_message += f'. {len(errors)} file(s) had errors'
+	
+	if completion_status['all_complete']:
+		response_message = 'Verification complete! All documents have been uploaded and are pending review.'
+	
+	return jsonify({
+		'success': True,
+		'message': response_message,
+		'uploaded': uploaded_files,
+		'errors': errors if errors else None,
+		'completion_status': completion_status
+	}), 200
+
+
+@app.route('/api/verify/status', methods=['GET'])
+def get_verification_status():
+	"""Get current verification status for logged-in user."""
+	if 'user_id' not in session:
+		return jsonify({'success': False, 'message': 'Not logged in'}), 401
+	
+	user_id = session['user_id']
+	status = get_user_verification_status(user_id)
+	docs = get_user_verification_documents(user_id)
+	completion = check_verification_completion(user_id)
+	
+	return jsonify({
+		'success': True,
+		'status': status,
+		'documents': [
+			{
+				'id': doc['id'],
+				'type': doc['document_type'],
+				'subtype': doc['document_subtype'],
+				'filename': doc['file_name'],
+				'status': doc['status'],
+				'uploaded_at': doc['uploaded_at']
+			} for doc in docs
+		],
+		'completion': completion
+	}), 200
 
 
 # ----------------------------

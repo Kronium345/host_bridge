@@ -48,7 +48,9 @@ def init_db():
                 email_verified INTEGER DEFAULT 0, -- 0/1
                 approved_by INTEGER, -- user id of approver (nullable)
                 approved_at TEXT, -- timestamp
-                created_at TEXT DEFAULT CURRENT_TIMESTAMP
+                created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                -- Verification status
+                verification_status TEXT DEFAULT 'pending' -- pending/verified/rejected
             )
             """
         )
@@ -72,6 +74,45 @@ def init_db():
             conn.execute("ALTER TABLE users ADD COLUMN approved_by INTEGER")
         if 'approved_at' not in existing_cols:
             conn.execute("ALTER TABLE users ADD COLUMN approved_at TEXT")
+        if 'verification_status' not in existing_cols:
+            conn.execute("ALTER TABLE users ADD COLUMN verification_status TEXT DEFAULT 'pending'")
+
+        # Create verification_documents table
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS verification_documents (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                document_type TEXT NOT NULL, -- 'identity', 'address', 'role'
+                document_subtype TEXT, -- 'passport', 'driving_license', etc.
+                file_path TEXT NOT NULL,
+                file_name TEXT NOT NULL,
+                file_size INTEGER,
+                status TEXT DEFAULT 'pending', -- pending/approved/rejected
+                rejection_reason TEXT,
+                uploaded_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                reviewed_at TEXT,
+                reviewed_by INTEGER,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            )
+            """
+        )
+
+        # Create verification_status table for tracking overall progress
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS user_verification_status (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER UNIQUE NOT NULL,
+                identity_verified INTEGER DEFAULT 0,
+                address_verified INTEGER DEFAULT 0,
+                role_verified INTEGER DEFAULT 0,
+                overall_status TEXT DEFAULT 'pending', -- pending/in_progress/completed/rejected
+                last_updated TEXT DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            )
+            """
+        )
 
 
 # -----------------------
@@ -191,3 +232,106 @@ def grant_admin(granter_email: str, target_email: str, role: str = 'admin') -> N
     if not target:
         raise ValueError('Target user not found')
     set_user_role(target['id'], role, approved_by=granter['id'])
+
+
+# -----------------------
+# Verification helpers
+# -----------------------
+
+def save_verification_document(user_id: int, document_type: str, document_subtype: Optional[str],
+                               file_path: str, file_name: str, file_size: int) -> int:
+    """Save a verification document record to the database."""
+    with open_conn() as conn:
+        cur = conn.execute(
+            """
+            INSERT INTO verification_documents 
+            (user_id, document_type, document_subtype, file_path, file_name, file_size, status)
+            VALUES (?, ?, ?, ?, ?, ?, 'pending')
+            """,
+            (user_id, document_type, document_subtype, file_path, file_name, file_size)
+        )
+        # Initialize or update verification status
+        conn.execute(
+            """
+            INSERT INTO user_verification_status (user_id, overall_status)
+            VALUES (?, 'in_progress')
+            ON CONFLICT(user_id) DO UPDATE SET 
+                last_updated = CURRENT_TIMESTAMP,
+                overall_status = CASE 
+                    WHEN overall_status = 'pending' THEN 'in_progress'
+                    ELSE overall_status
+                END
+            """,
+            (user_id,)
+        )
+        return cur.lastrowid
+
+
+def get_user_verification_status(user_id: int) -> Optional[Dict]:
+    """Get the verification status for a user."""
+    with open_conn() as conn:
+        row = conn.execute(
+            "SELECT * FROM user_verification_status WHERE user_id = ?",
+            (user_id,)
+        ).fetchone()
+        return dict(row) if row else None
+
+
+def get_user_verification_documents(user_id: int, document_type: Optional[str] = None) -> list:
+    """Get all verification documents for a user, optionally filtered by type."""
+    with open_conn() as conn:
+        if document_type:
+            rows = conn.execute(
+                "SELECT * FROM verification_documents WHERE user_id = ? AND document_type = ? ORDER BY uploaded_at DESC",
+                (user_id, document_type)
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                "SELECT * FROM verification_documents WHERE user_id = ? ORDER BY uploaded_at DESC",
+                (user_id,)
+            ).fetchall()
+        return [dict(row) for row in rows]
+
+
+def check_verification_completion(user_id: int) -> Dict:
+    """Check if all verification steps are complete."""
+    docs = get_user_verification_documents(user_id)
+    
+    has_identity = any(d['document_type'] == 'identity' and d['status'] == 'approved' for d in docs)
+    has_address = any(d['document_type'] == 'address' and d['status'] == 'approved' for d in docs)
+    has_role = any(d['document_type'] == 'role' and d['status'] == 'approved' for d in docs)
+    
+    all_complete = has_identity and has_address and has_role
+    
+    with open_conn() as conn:
+        if all_complete:
+            conn.execute(
+                """
+                UPDATE user_verification_status 
+                SET identity_verified = 1, address_verified = 1, role_verified = 1,
+                    overall_status = 'completed', last_updated = CURRENT_TIMESTAMP
+                WHERE user_id = ?
+                """,
+                (user_id,)
+            )
+            conn.execute(
+                "UPDATE users SET verification_status = 'verified' WHERE id = ?",
+                (user_id,)
+            )
+        else:
+            conn.execute(
+                """
+                UPDATE user_verification_status 
+                SET identity_verified = ?, address_verified = ?, role_verified = ?,
+                    last_updated = CURRENT_TIMESTAMP
+                WHERE user_id = ?
+                """,
+                (int(has_identity), int(has_address), int(has_role), user_id)
+            )
+    
+    return {
+        'identity_verified': has_identity,
+        'address_verified': has_address,
+        'role_verified': has_role,
+        'all_complete': all_complete
+    }

@@ -6,6 +6,10 @@ HostBridge is a web app for connecting landlords and short‑term rental (STR) o
 - Account registration/login with hashed passwords (SQLite)
 - Optional Google Sign‑In (server‑side OAuth 2.0 / OIDC)
 - Clean seagreen/white theme with a responsive navbar
+- Complete verification system with file uploads and document management
+- Interactive STR legality map with UK region coloring
+- Multiple contact forms with EmailJS integration
+- Feature showcase with mockups on homepage
 
 
 ## Project structure
@@ -14,14 +18,23 @@ HostBridge is a web app for connecting landlords and short‑term rental (STR) o
 Host_bridge/Host_bridge/
   app/
     __init__.py          # Flask app factory and DB init
-    db.py                # SQLite helpers and user auth utilities
-    routes.py            # All routes (pages + auth + Google OAuth)
+    db.py                # SQLite helpers, user auth, and verification utilities
+    routes.py            # All routes (pages + auth + Google OAuth + verification)
     static/
-      css/styles.css     # Global styles (includes auth + privacy styles)
+      css/
+        styles.css       # Global styles (includes auth + privacy + contact styles)
+        showcase.css     # Feature showcase mockups styling
+        verification.css # Verification page styling
+      js/
+        email.js         # EmailJS form handling
+        map.js           # Interactive STR legality map
+        verification.js  # Verification form handling and AJAX
       images/            # Static images (logos, icons)
     templates/           # Jinja templates extending base.html
   database/
     hostbridge.db        # SQLite DB file (auto-created on first run)
+  uploads/
+    verification/        # Uploaded verification documents (auto-created)
   run.py                 # Entry point (python run.py)
 ```
 
@@ -60,10 +73,13 @@ Open `http://127.0.0.1:5000/` in your browser.
 
 - The file `database/hostbridge.db` is created automatically.
 - `app/db.py` provides:
-  - `init_db()` — creates the `users` table if missing
+  - `init_db()` — creates the `users`, `verification_documents`, and `user_verification_status` tables
   - `create_user(email, password, ...)` — stores a hashed password
   - `verify_credentials(email, password)` — checks login
   - `create_or_link_google_user(google_sub, email, name, picture_url)` — links or creates a Google user
+  - `save_verification_document()` — saves uploaded verification documents
+  - `get_user_verification_status()` — retrieves verification progress
+  - `check_verification_completion()` — validates if all verification steps are complete
 
 You can inspect the DB using the SQLite CLI or a GUI (e.g., DB Browser for SQLite).
 
@@ -112,14 +128,51 @@ References:
 - `GOOGLE_OAUTH_CLIENT_ID` — OAuth client ID (Google Cloud)
 - `GOOGLE_OAUTH_CLIENT_SECRET` — OAuth client secret (Google Cloud)
 - `OAUTHLIB_INSECURE_TRANSPORT` — set to `1` only in development for `http://127.0.0.1:5000`
+- `EMAILJS_PUBLIC_KEY` — EmailJS public key for contact forms
+- `EMAILJS_SERVICE_ID` — EmailJS service ID
+- `EMAILJS_TEMPLATE_ID` — EmailJS template ID for general forms
+- `EMAILJS_NEWSLETTER_TEMPLATE_ID` — EmailJS template ID for newsletter signup
 
+
+## Features
+
+### Verification System
+- **Complete document upload workflow** for identity, address, and role verification
+- **File validation** (PDF, PNG, JPG, JPEG up to 5MB)
+- **Secure file storage** with unique filenames and database tracking
+- **Real-time status updates** with AJAX and toast notifications
+- **Multi-step progress tracking** with visual indicators
+
+### Interactive Map
+- **STR Legality Map** showing UK regions with color-coded permissions
+- **Dynamic region coloring** (Green: Permitted, Orange: Restricted, Red: Not Permitted)
+- **Clickable regions** with popup information
+- **Postcode search** functionality
+
+### Contact Forms
+- **Multiple EmailJS-integrated forms** across different pages
+- **Role-specific registration forms** for landlords, operators, and services
+- **Modern contact page** with direct contact info and message form
+
+### Homepage Showcase
+- **Feature mockups** showing key platform capabilities
+- **Interactive previews** of listings, profiles, messaging, templates, map, and calendar
+- **Real content integration** with actual images and data
 
 ## Styling
 
-Styles live in `app/static/css/styles.css` and include sections for:
+Styles are organized across multiple CSS files:
+- `app/static/css/styles.css` — Global styles, auth, contact, templates, verification
+- `app/static/css/showcase.css` — Homepage feature showcase mockups
+- `app/static/css/verification.css` — Verification page specific styling
+
+Sections include:
 - Navbar, hero, sections
 - Auth pages (login/register/forgot password)
 - Privacy policy (`/privacy`)
+- Contact page with modern card design
+- Verification system with step-by-step workflow
+- Templates page with premium/free document distinction
 
 
 ## Deployment notes
@@ -129,6 +182,18 @@ Styles live in `app/static/css/styles.css` and include sections for:
   - `GOOGLE_OAUTH_CLIENT_ID` and `GOOGLE_OAUTH_CLIENT_SECRET` (if using Google Sign‑In)
 - Ensure your production URL matches the OAuth redirect URI (`https://host-bridge.com/auth/google/callback`).
 - Run with a production server (e.g., gunicorn behind nginx) and HTTPS enabled.
+
+## API Endpoints
+
+### Verification System
+- `POST /api/verify/upload/<document_type>` — Upload verification documents (identity/address/role)
+- `GET /api/verify/status` — Get current verification status for logged-in user
+
+### File Upload
+- **Supported formats**: PDF, PNG, JPG, JPEG
+- **Max file size**: 5MB per file
+- **Storage location**: `uploads/verification/` (auto-created)
+- **Security**: Unique filenames, secure file handling, database tracking
 
 ## Seeding Database
 - To have test data for logging in/signing up, you can seed the database. To do this WITHOUT resetting database:

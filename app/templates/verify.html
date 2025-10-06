@@ -165,11 +165,13 @@
                             <div class="form-group">
                                 <label for="ownership-proof">Proof of Property Ownership</label>
                                 <div class="file-upload-area">
-                                    <input type="file" id="ownership-proof" name="ownership_proof"
-                                        accept="image/*,.pdf">
+                                    <input type="file" id="ownership-proof" name="role_document" accept="image/*,.pdf"
+                                        required>
+                                    <input type="hidden" name="role_type" value="property_owner">
                                     <div class="file-upload-label">
                                         <i class="fas fa-cloud-upload-alt"></i>
                                         <p>Title deed, land registry document</p>
+                                        <span>JPG, PNG or PDF (Max 5MB)</span>
                                     </div>
                                 </div>
                             </div>
@@ -180,27 +182,19 @@
                             <div class="form-group">
                                 <label for="business-registration">Business Registration</label>
                                 <div class="file-upload-area">
-                                    <input type="file" id="business-registration" name="business_registration"
-                                        accept="image/*,.pdf">
+                                    <input type="file" id="business-registration" name="role_document"
+                                        accept="image/*,.pdf" required>
+                                    <input type="hidden" name="role_type" value="str_operator">
                                     <div class="file-upload-label">
                                         <i class="fas fa-cloud-upload-alt"></i>
-                                        <p>Companies House certificate</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="insurance-cert">Insurance Certificate</label>
-                                <div class="file-upload-area">
-                                    <input type="file" id="insurance-cert" name="insurance_cert" accept="image/*,.pdf">
-                                    <div class="file-upload-label">
-                                        <i class="fas fa-cloud-upload-alt"></i>
-                                        <p>Public liability insurance</p>
+                                        <p>Companies House certificate or Business registration</p>
+                                        <span>JPG, PNG or PDF (Max 5MB)</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <button type="submit" class="btn-primary">Submit for Review</button>
+                        <button type="submit" class="btn-primary">Upload & Continue</button>
                     </form>
                 </div>
             </div>
@@ -223,9 +217,10 @@
     </div>
 </section>
 
+<script src="{{ url_for('static', filename='js/verification.js') }}"></script>
 <script>
+    // Role-specific document toggle
     document.addEventListener('DOMContentLoaded', function () {
-        // Role-specific document toggle
         const roleSelect = document.getElementById('user-role');
         if (roleSelect) {
             roleSelect.addEventListener('change', function () {
@@ -238,43 +233,6 @@
                 }
             });
         }
-
-        // File upload preview
-        document.querySelectorAll('input[type="file"]').forEach(input => {
-            input.addEventListener('change', function () {
-                const label = this.nextElementSibling;
-                if (this.files.length > 0) {
-                    const fileName = this.files[0].name;
-                    label.querySelector('p').textContent = '✓ ' + fileName;
-                    label.style.borderColor = '#2E8B57';
-                    label.style.backgroundColor = '#e8f5f0';
-                }
-            });
-        });
-
-        // Form submissions (simulated for now)
-        ['identity-form', 'address-form', 'role-form'].forEach(formId => {
-            const form = document.getElementById(formId);
-            if (form) {
-                form.addEventListener('submit', function (e) {
-                    e.preventDefault();
-                    const step = this.closest('.verify-step');
-                    const statusIcon = step.querySelector('.step-status i');
-                    statusIcon.className = 'fas fa-check-circle';
-                    statusIcon.style.color = '#2E8B57';
-
-                    if (window.toast) {
-                        toast('Documents uploaded successfully! Moving to next step.', 'success');
-                    }
-
-                    // Expand next step
-                    const nextStep = step.nextElementSibling;
-                    if (nextStep && nextStep.classList.contains('verify-step')) {
-                        nextStep.querySelector('.step-content').style.display = 'block';
-                    }
-                });
-            }
-        });
     });
 </script>
 {% endif %}
