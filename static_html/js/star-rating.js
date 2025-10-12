@@ -92,6 +92,8 @@ class StarRating {
     highlightStars(rating) {
         const labels = this.container.querySelectorAll('.star');
         labels.forEach((label, index) => {
+            // index is 0-4, rating is 1-5
+            // So if rating=4, we want to highlight stars 0,1,2,3 (which are stars 1,2,3,4)
             if (index < rating) {
                 label.classList.add('active');
             } else {
@@ -264,8 +266,7 @@ const starRatingCSS = `
 
 .stars-container {
     display: flex;
-    flex-direction: row-reverse;
-    justify-content: flex-end;
+    flex-direction: row;
     gap: 2px;
     margin-bottom: 10px;
 }
@@ -283,10 +284,6 @@ const starRatingCSS = `
 
 .star-rating-widget .star:hover,
 .star-rating-widget .star.active {
-    color: #ffd700;
-}
-
-.star-rating-widget .star:hover ~ .star {
     color: #ffd700;
 }
 
