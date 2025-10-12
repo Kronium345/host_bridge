@@ -8,7 +8,7 @@ anychart.onDocumentReady(function () {
 
     // Load data from JSON file
     anychart.data.loadJsonFile(
-        '/static/data/uk_str_regulations.json',
+        './data/uk_str_regulations.json',
         function (data) {
             // Create a choropleth series with the data directly
             let series = map.choropleth(data);
