@@ -87,7 +87,7 @@
     </p>
   </div>
   <div class="visual-image">
-    <img src="{{ url_for('static', filename='images/landlord_illustration.png') }}" alt="Landlord Illustration">
+    <img src="{{ url_for('static', filename='images/handshake.jpg') }}" alt="Landlord Illustration">
   </div>
 </section>
 
@@ -230,52 +230,6 @@
   <a href="{{ url_for('list_property') }}" class="cta-button">Get Started</a>
 </section>
 
-<script>
-  (function () {
-    const captions = { 1: "Very dissatisfied", 2: "Dissatisfied", 3: "Neutral", 4: "Satisfied", 5: "Delighted" };
-    const form = document.getElementById('operator-review-form');
-    const caption = document.getElementById('rating-caption');
-    const notes = document.getElementById('rating-notes');
-    const radios = document.querySelectorAll('.star-widget input[type="radio"]');
-    const labels = document.querySelectorAll('.star-widget label.fas.fa-star');
-
-    function applyActiveStars(val) {
-      labels.forEach(l => {
-        const v = Number(l.getAttribute('data-value'));
-        l.classList.remove('active');
-        if (v <= val && val > 0) { l.classList.add('active'); }
-      });
-      caption.textContent = val > 0 ? (captions[val] || '') : '';
-    }
-
-    labels.forEach(l => {
-      l.addEventListener('click', () => {
-        const val = Number(l.getAttribute('data-value'));
-        const radio = document.getElementById('rate-' + val);
-        if (radio) radio.checked = true;
-        applyActiveStars(val);
-      });
-    });
-
-    radios.forEach(r => r.addEventListener('change', () => applyActiveStars(Number(r.value))));
-
-    // Start with no stars selected
-    applyActiveStars(0);
-
-    if (form) {
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        const selected = Array.from(radios).find(r => r.checked);
-        if (!selected) { if (window.toast) toast('Please select a rating.', 'warn'); return; }
-        if (window.toast) toast('Thank you. Your feedback has been recorded.', 'success');
-        caption.textContent = '';
-        notes.value = '';
-        radios.forEach(r => r.checked = false);
-        applyActiveStars(0);
-      });
-    }
-  })();
-</script>
 
 {% endblock %}
 {% block scripts %}
