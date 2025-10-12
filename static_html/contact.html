@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>HostBridge</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HostBridge - Marketplace for short-term rental operators and landlords">
+    <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/favicon.ico">
+
+    <!-- Fonts and Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Leaflet Map CSS (fixed) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/showcase.css">
+
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-left">
+                <div class="logo">
+                    <a href="./index.html" aria-label="HostBridge Home">
+                        <img src="./images/final.png" alt="Logo">
+                    </a>
+                </div>
+                <button class="hamburger" id="nav-toggle" aria-label="Open menu" aria-expanded="false"
+                    aria-controls="primary-nav">
+                    <span></span><span></span><span></span>
+                </button>
+                <ul class="nav-links" id="primary-nav">
+                    <li class="drawer-logo"><a href="./index.html" aria-label="HostBridge Home"><img
+                                src="./images/final.png" alt="Logo"></a></li>
+                    <li><a href="./index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">How It Works</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./how_landlords.html">Landlords</a></li>
+                            <li><a href="./how_operators.html">Operators</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#">Listings</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./list_property.html">List Your Property</a></li>
+                            <li><a href="./find_property.html">Find a Property</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#">Resources</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./legality_map.html">STR Legality Map</a></li>
+                            <li><a href="./marketplace_listings.html">Marketplace Listings</a></li>
+                            <li><a href="./templates_resource.html">Templates</a></li>
+                            <li><a href="./verify.html">Get Verified</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="./services.html">Services</a></li>
+                    <li><a href="./contact.html">Contact</a></li>
+                    <li class="mobile-auth">
+                        <a href="./login.html" class="nav-button login-btn">Login</a>
+                        <a href="./register.html" class="nav-button register-btn">Register</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="navbar-right">
+                <a href="./login.html" class="nav-button login-btn">Login</a>
+                <a href="./register.html" class="nav-button register-btn">Register</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+<section class="hero-section"
+    style="padding: 100px 0 60px; text-align: center; background: linear-gradient(135deg, #2E8B57 0%, #3CB371 100%);">
+    <div class="container">
+        <h1 class="hero-title" style="color: white; font-size: 3rem; margin-bottom: 20px;">Contact Us</h1>
+        <p class="hero-subtitle" style="color: white; font-size: 1.25rem; max-width: 700px; margin: 0 auto;">We'd love
+            to hear from you. Reach out directly or use the form below.</p>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact-page-section">
+    <div class="contact-page-container">
+        <div class="contact-grid">
+            <!-- Direct Contact Card -->
+            <div class="direct-contact-card">
+                <div class="contact-card-header">
+                    <div class="contact-icon">
+                        <i class="fas fa-address-book"></i>
+                    </div>
+                    <h2>Direct Contact</h2>
+                </div>
+
+                <div class="contact-methods">
+                    <div class="contact-method">
+                        <div class="method-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <div class="method-content">
+                            <h3>Information</h3>
+                            <p>General enquiries, partnerships, press/media, and platform information.</p>
+                            <a href="mailto:info@host-bridge.com" class="contact-link">
+                                <i class="fas fa-envelope"></i> info@host-bridge.com
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="contact-method">
+                        <div class="method-icon">
+                            <i class="fas fa-life-ring"></i>
+                        </div>
+                        <div class="method-content">
+                            <h3>Support</h3>
+                            <p>Account issues, billing questions, technical support, and incident reports.</p>
+                            <a href="mailto:support@host-bridge.com" class="contact-link">
+                                <i class="fas fa-envelope"></i> support@host-bridge.com
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="contact-method">
+                        <div class="method-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="method-content">
+                            <h3>Phone</h3>
+                            <p>Call us for urgent inquiries Monday-Friday, 9am-5pm GMT</p>
+                            <a href="tel:01617062460" class="contact-link">
+                                <i class="fas fa-phone"></i> 0161 706 2460
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Info -->
+                <div class="contact-additional">
+                    <div class="additional-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <strong>Business Hours</strong>
+                            <p>Monday - Friday: 9:00 AM - 5:00 PM GMT</p>
+                        </div>
+                    </div>
+                    <div class="additional-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <strong>Location</strong>
+                            <p>United Kingdom</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message Form Card -->
+            <div class="message-form-card">
+                <div class="contact-card-header">
+                    <div class="contact-icon">
+                        <i class="fas fa-paper-plane"></i>
+                    </div>
+                    <h2>Send us a message</h2>
+                    <p>Fill out the form below and we'll get back to you within 24 hours</p>
+                </div>
+
+                <form id="contact-form" class="modern-contact-form" data-emailjs-service="service_jkqc0a3"
+                    data-emailjs-template="template_bcdin9c" data-emailjs-public="Ii74HDqv0DgwxKC2u">
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Name <span class="required">*</span></label>
+                            <input id="name" name="name" type="text" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email <span class="required">*</span></label>
+                            <input id="email" name="email" type="email" placeholder="Enter your email address" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <div class="select-wrapper">
+                                <select id="category" name="category">
+                                    <option value="General">General Inquiry</option>
+                                    <option value="Support">Technical Support</option>
+                                    <option value="Partnership">Partnership</option>
+                                    <option value="Billing">Billing</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input id="subject" name="subject" type="text" placeholder="What's this about?">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message <span class="required">*</span></label>
+                        <textarea id="message" name="message" rows="6" placeholder="Tell us how we can help you..."
+                            required></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="contact-submit" data-idle-label="Send Message">
+                        <span class="btn-text">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </span>
+                        <span class="btn-loading" style="display:none;">
+                            <i class="fas fa-spinner fa-spin"></i> Sending...
+                        </span>
+                    </button>
+
+                    <p class="form-disclaimer">
+                        <i class="fas fa-lock"></i> Your information is secure and will never be shared with third
+                        parties.
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <!-- Company Info -->
+                <div class="footer-column">
+                    <h3 class="footer-heading">HostBridge</h3>
+                    <p class="footer-description">Your trusted partner in short-term rental compliance and onboarding.
+                        Connecting verified property owners with professional STR operators.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-column">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="./index.html">Home</a></li>
+                        <li><a href="./how_landlords.html">For Landlords</a></li>
+                        <li><a href="./how_operators.html">For Operators</a></li>
+                        <li><a href="./list_property.html">List Property</a></li>
+                        <li><a href="./find_property.html">Find Property</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources -->
+                <div class="footer-column">
+                    <h4 class="footer-heading">Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="./legality_map.html">STR Legality Map</a></li>
+                        <li><a href="./templates_resource.html">Legal Templates</a></li>
+                        <li><a href="./verify.html">Get Verified</a></li>
+                        <li><a href="./services.html">Services</a></li>
+                        <li><a href="./marketplace_listings.html">Marketplace</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact & Legal -->
+                <div class="footer-column">
+                    <h4 class="footer-heading">Contact & Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="./contact.html">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p class="footer-copyright">&copy; 2025 HostBridge. All rights reserved.</p>
+                    <div class="footer-badges">
+                        <span class="footer-badge"><i class="fas fa-shield-alt"></i> SSL Secured</span>
+                        <span class="footer-badge"><i class="fas fa-lock"></i> GDPR Compliant</span>
+                        <span class="footer-badge"><i class="fas fa-check-circle"></i> Verified</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile nav backdrop -->
+    <div class="nav-backdrop" id="nav-backdrop" tabindex="-1" aria-hidden="true"></div>
+
+    <!-- Leaflet JS (fixed) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Page-Specific Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+    (function () {
+        var form = document.getElementById('contact-form');
+        if (!form) return;
+
+        var serviceId = form.getAttribute('data-emailjs-service') || '';
+        var templateId = form.getAttribute('data-emailjs-template') || '';
+        var publicKey = form.getAttribute('data-emailjs-public') || '';
+
+        try { if (publicKey) emailjs.init(publicKey); } catch (e) { console.warn('EmailJS init failed', e); }
+
+        var submitBtn = document.getElementById('contact-submit');
+        function setLoading(loading) {
+            if (!submitBtn) return;
+            submitBtn.disabled = loading;
+            submitBtn.textContent = loading ? 'Sending...' : (submitBtn.getAttribute('data-idle-label') || 'Send Message');
+            submitBtn.style.opacity = loading ? '0.7' : '1';
+            submitBtn.style.cursor = loading ? 'not-allowed' : 'pointer';
+        }
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            var name = document.getElementById('name').value.trim();
+            var email = document.getElementById('email').value.trim();
+            var category = document.getElementById('category').value;
+            var subject = document.getElementById('subject').value.trim();
+            var message = document.getElementById('message').value.trim();
+
+            if (!name || !email || !message) {
+                if (window.toast) toast('Please fill in name, email and message.', 'error');
+                return;
+            }
+
+            if (!serviceId || !templateId || !publicKey) {
+                if (window.toast) toast('Email service is not configured.', 'error');
+                return;
+            }
+
+            setLoading(true);
+            var params = {
+                name: name,
+                email: email,
+                category: category,
+                subject: subject || ('New ' + category + ' enquiry'),
+                message: message,
+                time: new Date().toISOString()
+            };
+
+            emailjs.send(serviceId, templateId, params, publicKey)
+                .then(function () {
+                    setLoading(false);
+                    if (window.toast) toast('Message sent. We will get back to you shortly.', 'success');
+                    form.reset();
+                })
+                .catch(function (err) {
+                    console.error('EmailJS failed', err);
+                    setLoading(false);
+                    if (window.toast) toast('Something went wrong. Please try again.', 'error');
+                });
+        });
+    })();
+</script>
+
+    <script src="./js/toast.js"></script>
+    <script>
+        // Mobile nav toggle
+        (function () {
+            var toggle = document.getElementById('nav-toggle');
+            var backdrop = document.getElementById('nav-backdrop');
+            var nav = document.getElementById('primary-nav');
+            function closeNav() { document.body.classList.remove('nav-open'); if (toggle) toggle.setAttribute('aria-expanded', 'false'); }
+            function openNav() { document.body.classList.add('nav-open'); if (toggle) toggle.setAttribute('aria-expanded', 'true'); }
+            if (toggle) { toggle.addEventListener('click', function () { document.body.classList.contains('nav-open') ? closeNav() : openNav(); }); }
+            if (backdrop) { backdrop.addEventListener('click', closeNav); }
+            if (nav) { nav.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', closeNav); }); }
+        })();
+
+        window.flashMessages = [];
+
+        window.showFlashMessages = function () {
+            if (Array.isArray(window.flashMessages)) {
+                window.flashMessages.forEach(function (pair) {
+                    var category = pair[0] || 'info';
+                    var message = pair[1] || '';
+                    if (typeof window.toast === 'function') {
+                        var extraClass = category === 'error' ? 'failure' : category;
+                        window.toast(message, extraClass);
+                    }
+                });
+            }
+        };
+
+        // Clear flash messages after showing them
+        window.clearFlashMessages = function () {
+            window.flashMessages = [];
+        };
+    </script>
+
+</body>
+
+</html>

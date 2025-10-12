@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>HostBridge</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HostBridge - Marketplace for short-term rental operators and landlords">
+    <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/favicon.ico">
+
+    <!-- Fonts and Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Leaflet Map CSS (fixed) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/showcase.css">
+
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-left">
+                <div class="logo">
+                    <a href="./index.html" aria-label="HostBridge Home">
+                        <img src="./images/final.png" alt="Logo">
+                    </a>
+                </div>
+                <button class="hamburger" id="nav-toggle" aria-label="Open menu" aria-expanded="false"
+                    aria-controls="primary-nav">
+                    <span></span><span></span><span></span>
+                </button>
+                <ul class="nav-links" id="primary-nav">
+                    <li class="drawer-logo"><a href="./index.html" aria-label="HostBridge Home"><img
+                                src="./images/final.png" alt="Logo"></a></li>
+                    <li><a href="./index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">How It Works</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./how_landlords.html">Landlords</a></li>
+                            <li><a href="./how_operators.html">Operators</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#">Listings</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./list_property.html">List Your Property</a></li>
+                            <li><a href="./find_property.html">Find a Property</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#">Resources</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./legality_map.html">STR Legality Map</a></li>
+                            <li><a href="./marketplace_listings.html">Marketplace Listings</a></li>
+                            <li><a href="./templates_resource.html">Templates</a></li>
+                            <li><a href="./verify.html">Get Verified</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="./services.html">Services</a></li>
+                    <li><a href="./contact.html">Contact</a></li>
+                    <li class="mobile-auth">
+                        <a href="./login.html" class="nav-button login-btn">Login</a>
+                        <a href="./register.html" class="nav-button register-btn">Register</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="navbar-right">
+                <a href="./login.html" class="nav-button login-btn">Login</a>
+                <a href="./register.html" class="nav-button register-btn">Register</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <script src="https://kit.fontawesome.com/2c64fe788e.js" crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('register-form');
+        const nameInput = document.getElementById('name');
+        const lastnameInput = document.getElementById('lastname');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm_password');
+
+        // Show flash messages if they exist (e.g., from failed registration attempts)
+        if (window.showFlashMessages) {
+            window.showFlashMessages();
+            window.clearFlashMessages();
+        }
+
+        // Client-side validation
+        form.addEventListener('submit', function (e) {
+            const name = nameInput.value.trim();
+            const lastname = lastnameInput.value.trim();
+            const email = emailInput.value.trim();
+            const phone = phoneInput.value.trim();
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            if (!name) {
+                e.preventDefault();
+                if (window.toast) {
+                    window.toast('Please enter your first name', 'failure');
+                }
+                nameInput.focus();
+                return false;
+            }
+
+            if (!lastname) {
+                e.preventDefault();
+                if (window.toast) {
+                    window.toast('Please enter your last name', 'failure');
+                }
+                lastnameInput.focus();
+                return false;
+            }
+
+            if (!email) {
+                e.preventDefault();
+                if (window.toast) {
+                    window.toast('Please enter your email address', 'failure');
+                }
+                emailInput.focus();
+                return false;
+            }
+
+            // Basic email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                e.preventDefault();
+                if (window.toast) {
+                    window.toast('Please enter a valid email address', 'failure');
+                }
+                emailInput.focus();
+                return false;
+            }
+
+            if (!phone) {
+                e.preventDefault();
+                if (window.toast) {
+                    window.toast('Please enter your phone number', 'failure');
+                }
+                phoneInput.focus();
+                return false;
+            }
+
+            if (!password) {
+                e.preventDefault();
+                if (window.toast) {
+                    window.toast('Please enter a password', 'failure');
+                }
+                passwordInput.focus();
+                return false;
+            }
+
+            if (password.length < 6) {
+                e.preventDefault();
+                if (window.toast) {
+                    window.toast('Password must be at least 6 characters long', 'failure');
+                }
+                passwordInput.focus();
+                return false;
+            }
+
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                if (window.toast) {
+                    window.toast('Passwords do not match', 'failure');
+                }
+                confirmPasswordInput.focus();
+                return false;
+            }
+
+            // Form is valid, allow submission
+            return true;
+        });
+    });
+</script>
+
+<section class="auth-wrapper">
+    <aside class="auth-side">
+        <div class="quote">
+            <img src="{{ ./images/b.png }}" alt="" class="brand-mark brand-mark-invert">
+            <h2>Investing in short‑term rentals has never been easier.</h2>
+            <p>HostBridge helps small businesses and investors locate, research, and acquire opportunities. Get started
+                today.</p>
+        </div>
+    </aside>
+
+    <div class="auth-form">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1 class="auth-title">Create your account</h1>
+                <div class="auth-subtle">Already have an account? <a href="./login.html">Sign In</a></div>
+            </div>
+
+            <a class="google-btn" href="https://host-bridge.onrender.com/login/google">
+                <img src="{{ ./images/logo-google.png }}" alt="Google" class="google-logo">
+                Sign up with Google
+            </a>
+            <div class="or-sep">or</div>
+
+            <form action="./register.html" method="post" class="auth-grid" id="register-form">
+                <div class="field">
+                    <i class="fa-regular fa-user"></i>
+                    <input class="input" type="text" id="name" name="name" placeholder="First name">
+                </div>
+                <div class="field">
+                    <i class="fa-regular fa-user"></i>
+                    <input class="input" type="text" id="lastname" name="lastname" placeholder="Last name">
+                </div>
+                <div class="field span-2">
+                    <i class="fa-regular fa-envelope"></i>
+                    <input class="input" type="email" id="email" name="email" placeholder="Email">
+                </div>
+                <div class="field span-2">
+                    <i class="fa-solid fa-phone"></i>
+                    <input class="input" type="tel" id="phone" name="phone" placeholder="Phone number">
+                </div>
+                <div class="field">
+                    <i class="fa-solid fa-lock"></i>
+                    <input class="input" type="password" id="password" name="password" placeholder="Password">
+                </div>
+                <div class="field">
+                    <i class="fa-solid fa-lock"></i>
+                    <input class="input" type="password" id="confirm_password" name="confirm_password"
+                        placeholder="Confirm password">
+                </div>
+                <button class="submit-btn span-2" type="submit">Create account</button>
+            </form>
+
+            <p class="terms">By clicking Create account, you agree to our <a href="#">Terms of Use</a> and <a
+                    href="./privacypolicy.html">Privacy Policy</a>.</p>
+        </div>
+    </div>
+</section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <!-- Company Info -->
+                <div class="footer-column">
+                    <h3 class="footer-heading">HostBridge</h3>
+                    <p class="footer-description">Your trusted partner in short-term rental compliance and onboarding.
+                        Connecting verified property owners with professional STR operators.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-column">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="./index.html">Home</a></li>
+                        <li><a href="./how_landlords.html">For Landlords</a></li>
+                        <li><a href="./how_operators.html">For Operators</a></li>
+                        <li><a href="./list_property.html">List Property</a></li>
+                        <li><a href="./find_property.html">Find Property</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources -->
+                <div class="footer-column">
+                    <h4 class="footer-heading">Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="./legality_map.html">STR Legality Map</a></li>
+                        <li><a href="./templates_resource.html">Legal Templates</a></li>
+                        <li><a href="./verify.html">Get Verified</a></li>
+                        <li><a href="./services.html">Services</a></li>
+                        <li><a href="./marketplace_listings.html">Marketplace</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact & Legal -->
+                <div class="footer-column">
+                    <h4 class="footer-heading">Contact & Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="./contact.html">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p class="footer-copyright">&copy; 2025 HostBridge. All rights reserved.</p>
+                    <div class="footer-badges">
+                        <span class="footer-badge"><i class="fas fa-shield-alt"></i> SSL Secured</span>
+                        <span class="footer-badge"><i class="fas fa-lock"></i> GDPR Compliant</span>
+                        <span class="footer-badge"><i class="fas fa-check-circle"></i> Verified</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile nav backdrop -->
+    <div class="nav-backdrop" id="nav-backdrop" tabindex="-1" aria-hidden="true"></div>
+
+    <!-- Leaflet JS (fixed) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Page-Specific Scripts -->
+    
+
+    <script src="./js/toast.js"></script>
+    <script>
+        // Mobile nav toggle
+        (function () {
+            var toggle = document.getElementById('nav-toggle');
+            var backdrop = document.getElementById('nav-backdrop');
+            var nav = document.getElementById('primary-nav');
+            function closeNav() { document.body.classList.remove('nav-open'); if (toggle) toggle.setAttribute('aria-expanded', 'false'); }
+            function openNav() { document.body.classList.add('nav-open'); if (toggle) toggle.setAttribute('aria-expanded', 'true'); }
+            if (toggle) { toggle.addEventListener('click', function () { document.body.classList.contains('nav-open') ? closeNav() : openNav(); }); }
+            if (backdrop) { backdrop.addEventListener('click', closeNav); }
+            if (nav) { nav.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', closeNav); }); }
+        })();
+
+        window.flashMessages = [];
+
+        window.showFlashMessages = function () {
+            if (Array.isArray(window.flashMessages)) {
+                window.flashMessages.forEach(function (pair) {
+                    var category = pair[0] || 'info';
+                    var message = pair[1] || '';
+                    if (typeof window.toast === 'function') {
+                        var extraClass = category === 'error' ? 'failure' : category;
+                        window.toast(message, extraClass);
+                    }
+                });
+            }
+        };
+
+        // Clear flash messages after showing them
+        window.clearFlashMessages = function () {
+            window.flashMessages = [];
+        };
+    </script>
+
+</body>
+
+</html>

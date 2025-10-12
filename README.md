@@ -216,6 +216,64 @@ Sections include:
 - No refresh token: Google issues it only under certain conditions (`access_type=offline`, `prompt=consent`, first time).
 
 
+## Deployment
+
+### Backend (Render) - Already Deployed ✅
+**Live URL**: https://host-bridge.onrender.com
+
+The Flask backend is deployed on Render with:
+- Build Command: `pip install -r requirements.txt`
+- Start Command: `python run.py`
+- Environment variables configured for EmailJS and Google OAuth
+
+### Frontend (Hostinger) - Static HTML Deployment
+
+All templates have been converted to static HTML for Hostinger deployment.
+
+#### 📁 Files for Hostinger File Manager:
+
+**1. HTML Files** (from `static_html/` folder):
+- Upload all 16 `.html` files to `public_html/`
+- Files: `index.html`, `contact.html`, `how_landlords.html`, `how_operators.html`, `services.html`, `legality_map.html`, `templates_resource.html`, `verify.html`, `marketplace_listings.html`, `property_details.html`, `login.html`, `register.html`, `list_property.html`, `find_property.html`, `forgotpassword.html`, `privacypolicy.html`
+
+**2. Static Assets** (from `app/static/` folder):
+```
+public_html/
+├── css/
+│   ├── styles.css
+│   ├── showcase.css
+│   └── verification.css
+├── js/
+│   ├── email.js
+│   ├── legality_map.js
+│   ├── showcase_map.js
+│   ├── verification.js
+│   ├── toast.js
+│   └── map.js
+├── images/
+│   └── (all image files: favicon.ico, final.png, house-*.jpg, etc.)
+└── data/
+    └── uk_str_regulations.json
+```
+
+#### 🔧 Configuration (Already Done ✅):
+- All API calls in `verification.js` point to: `https://host-bridge.onrender.com`
+- EmailJS credentials hardcoded in HTML files
+- All `url_for()` calls converted to relative paths (`./page.html`)
+
+#### ✅ What Works on Hostinger:
+- All static pages and navigation
+- Contact forms (EmailJS)
+- Interactive maps (AnyChart)
+- All styling and design
+- Verification system (connects to Render backend)
+
+#### 🚀 Quick Deploy Steps:
+1. Upload all files from `static_html/` to Hostinger `public_html/`
+2. Create folders: `css/`, `js/`, `images/`, `data/`
+3. Upload `app/static/` contents to respective folders
+4. Test your site - all backend API calls automatically go to Render!
+
 ## License
 
 This project template is provided as-is for internal use. Replace with your preferred license if needed.

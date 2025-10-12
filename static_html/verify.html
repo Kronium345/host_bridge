@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>HostBridge</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HostBridge - Marketplace for short-term rental operators and landlords">
+    <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/favicon.ico">
+
+    <!-- Fonts and Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Leaflet Map CSS (fixed) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/showcase.css">
+
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-left">
+                <div class="logo">
+                    <a href="./index.html" aria-label="HostBridge Home">
+                        <img src="./images/final.png" alt="Logo">
+                    </a>
+                </div>
+                <button class="hamburger" id="nav-toggle" aria-label="Open menu" aria-expanded="false"
+                    aria-controls="primary-nav">
+                    <span></span><span></span><span></span>
+                </button>
+                <ul class="nav-links" id="primary-nav">
+                    <li class="drawer-logo"><a href="./index.html" aria-label="HostBridge Home"><img
+                                src="./images/final.png" alt="Logo"></a></li>
+                    <li><a href="./index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">How It Works</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./how_landlords.html">Landlords</a></li>
+                            <li><a href="./how_operators.html">Operators</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#">Listings</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./list_property.html">List Your Property</a></li>
+                            <li><a href="./find_property.html">Find a Property</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#">Resources</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./legality_map.html">STR Legality Map</a></li>
+                            <li><a href="./marketplace_listings.html">Marketplace Listings</a></li>
+                            <li><a href="./templates_resource.html">Templates</a></li>
+                            <li><a href="./verify.html">Get Verified</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="./services.html">Services</a></li>
+                    <li><a href="./contact.html">Contact</a></li>
+                    <li class="mobile-auth">
+                        <a href="./login.html" class="nav-button login-btn">Login</a>
+                        <a href="./register.html" class="nav-button register-btn">Register</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="navbar-right">
+                <a href="./login.html" class="nav-button login-btn">Login</a>
+                <a href="./register.html" class="nav-button register-btn">Register</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <link rel="stylesheet" href="{{ ./css/verification.css }}">
+<!-- Verification Hero -->
+<section class="hero">
+    <h1>Complete Your Account Verification</h1>
+    <p>Upload your documents to gain full access to the HostBridge platform</p>
+</section>
+
+<!-- Verification Status -->
+<section class="verify-status-section">
+    <div class="verify-container">
+        
+        <div class="status-card">
+            <div class="status-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3>Please Login First</h3>
+            <p>You need to be logged in to complete verification</p>
+            <a href="./login.html" class="btn-primary">Login to Continue</a>
+        </div>
+        
+    </div>
+</section>
+
+
+<!-- Verification Form -->
+<section class="verify-form-section">
+    <div class="verify-container">
+        <div class="verify-steps">
+            <!-- Step 1: Identity Verification -->
+            <div class="verify-step" id="step-identity">
+                <div class="step-header">
+                    <div class="step-icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <div class="step-info">
+                        <h3>Step 1: Identity Verification</h3>
+                        <p>Upload a government-issued ID document</p>
+                    </div>
+                    <div class="step-status">
+                        <i class="fas fa-circle"></i>
+                    </div>
+                </div>
+                <div class="step-content">
+                    <form id="identity-form" class="upload-form" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="id-type">ID Document Type</label>
+                            <div class="select-wrapper">
+                                <select id="id-type" name="id_type" required>
+                                    <option value="">Select document type</option>
+                                    <option value="passport">Passport</option>
+                                    <option value="driving_license">Driving License</option>
+                                    <option value="national_id">National ID Card</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="id-document">Upload Document (Front)</label>
+                            <div class="file-upload-area">
+                                <input type="file" id="id-document" name="id_document" accept="image/*,.pdf" required>
+                                <div class="file-upload-label">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload or drag and drop</p>
+                                    <span>JPG, PNG or PDF (Max 5MB)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="id-document-back">Upload Document (Back) - Optional</label>
+                            <div class="file-upload-area">
+                                <input type="file" id="id-document-back" name="id_document_back" accept="image/*,.pdf">
+                                <div class="file-upload-label">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload or drag and drop</p>
+                                    <span>JPG, PNG or PDF (Max 5MB)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary">Upload & Continue</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Step 2: Address Verification -->
+            <div class="verify-step" id="step-address">
+                <div class="step-header">
+                    <div class="step-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="step-info">
+                        <h3>Step 2: Address Verification</h3>
+                        <p>Upload a proof of address (utility bill, bank statement, etc.)</p>
+                    </div>
+                    <div class="step-status">
+                        <i class="fas fa-circle"></i>
+                    </div>
+                </div>
+                <div class="step-content">
+                    <form id="address-form" class="upload-form" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="address">Your Address</label>
+                            <textarea id="address" name="address" rows="3" placeholder="Enter your full address"
+                                required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="address-document">Upload Proof of Address</label>
+                            <div class="file-upload-area">
+                                <input type="file" id="address-document" name="address_document" accept="image/*,.pdf"
+                                    required>
+                                <div class="file-upload-label">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload or drag and drop</p>
+                                    <span>Utility bill, bank statement (Max 5MB)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary">Upload & Continue</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Step 3: Role-Specific Verification -->
+            <div class="verify-step" id="step-role">
+                <div class="step-header">
+                    <div class="step-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="step-info">
+                        <h3>Step 3: Role-Specific Verification</h3>
+                        <p>Additional documents based on your role</p>
+                    </div>
+                    <div class="step-status">
+                        <i class="fas fa-circle"></i>
+                    </div>
+                </div>
+                <div class="step-content">
+                    <form id="role-form" class="upload-form" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="user-role">Your Role</label>
+                            <div class="select-wrapper">
+                                <select id="user-role" name="user_role" required>
+                                    <option value="">Select your role</option>
+                                    <option value="property_owner">Property Owner</option>
+                                    <option value="str_operator">STR Operator</option>
+                                    <option value="property_manager">Property Manager</option>
+                                    <option value="investor">Investor</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Property Owner Documents -->
+                        <div id="owner-documents" class="role-documents" style="display: none;">
+                            <div class="form-group">
+                                <label for="ownership-proof">Proof of Property Ownership</label>
+                                <div class="file-upload-area">
+                                    <input type="file" id="ownership-proof" name="role_document" accept="image/*,.pdf"
+                                        required>
+                                    <input type="hidden" name="role_type" value="property_owner">
+                                    <div class="file-upload-label">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <p>Title deed, land registry document</p>
+                                        <span>JPG, PNG or PDF (Max 5MB)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Operator Documents -->
+                        <div id="operator-documents" class="role-documents" style="display: none;">
+                            <div class="form-group">
+                                <label for="business-registration">Business Registration</label>
+                                <div class="file-upload-area">
+                                    <input type="file" id="business-registration" name="role_document"
+                                        accept="image/*,.pdf" required>
+                                    <input type="hidden" name="role_type" value="str_operator">
+                                    <div class="file-upload-label">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <p>Companies House certificate or Business registration</p>
+                                        <span>JPG, PNG or PDF (Max 5MB)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary">Upload & Continue</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Section -->
+        <div class="verify-help">
+            <div class="help-card">
+                <h3><i class="fas fa-question-circle"></i> Need Help?</h3>
+                <p>Our verification process typically takes 24-48 hours. If you have questions or need assistance,
+                    please contact us.</p>
+                <a href="./contact.html" class="help-link">Contact Support</a>
+            </div>
+            <div class="help-card">
+                <h3><i class="fas fa-shield-alt"></i> Your Data is Safe</h3>
+                <p>All documents are encrypted and stored securely. We comply with GDPR and never share your personal
+                    information.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="{{ ./js/verification.js }}"></script>
+<script>
+    // Role-specific document toggle
+    document.addEventListener('DOMContentLoaded', function () {
+        const roleSelect = document.getElementById('user-role');
+        if (roleSelect) {
+            roleSelect.addEventListener('change', function () {
+                document.querySelectorAll('.role-documents').forEach(el => el.style.display = 'none');
+
+                if (this.value === 'property_owner') {
+                    document.getElementById('owner-documents').style.display = 'block';
+                } else if (this.value === 'str_operator' || this.value === 'property_manager') {
+                    document.getElementById('operator-documents').style.display = 'block';
+                }
+            });
+        }
+    });
+</script>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <!-- Company Info -->
+                <div class="footer-column">
+                    <h3 class="footer-heading">HostBridge</h3>
+                    <p class="footer-description">Your trusted partner in short-term rental compliance and onboarding.
+                        Connecting verified property owners with professional STR operators.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-column">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="./index.html">Home</a></li>
+                        <li><a href="./how_landlords.html">For Landlords</a></li>
+                        <li><a href="./how_operators.html">For Operators</a></li>
+                        <li><a href="./list_property.html">List Property</a></li>
+                        <li><a href="./find_property.html">Find Property</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources -->
+                <div class="footer-column">
+                    <h4 class="footer-heading">Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="./legality_map.html">STR Legality Map</a></li>
+                        <li><a href="./templates_resource.html">Legal Templates</a></li>
+                        <li><a href="./verify.html">Get Verified</a></li>
+                        <li><a href="./services.html">Services</a></li>
+                        <li><a href="./marketplace_listings.html">Marketplace</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact & Legal -->
+                <div class="footer-column">
+                    <h4 class="footer-heading">Contact & Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="./contact.html">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p class="footer-copyright">&copy; 2025 HostBridge. All rights reserved.</p>
+                    <div class="footer-badges">
+                        <span class="footer-badge"><i class="fas fa-shield-alt"></i> SSL Secured</span>
+                        <span class="footer-badge"><i class="fas fa-lock"></i> GDPR Compliant</span>
+                        <span class="footer-badge"><i class="fas fa-check-circle"></i> Verified</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile nav backdrop -->
+    <div class="nav-backdrop" id="nav-backdrop" tabindex="-1" aria-hidden="true"></div>
+
+    <!-- Leaflet JS (fixed) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Page-Specific Scripts -->
+    
+
+    <script src="./js/toast.js"></script>
+    <script>
+        // Mobile nav toggle
+        (function () {
+            var toggle = document.getElementById('nav-toggle');
+            var backdrop = document.getElementById('nav-backdrop');
+            var nav = document.getElementById('primary-nav');
+            function closeNav() { document.body.classList.remove('nav-open'); if (toggle) toggle.setAttribute('aria-expanded', 'false'); }
+            function openNav() { document.body.classList.add('nav-open'); if (toggle) toggle.setAttribute('aria-expanded', 'true'); }
+            if (toggle) { toggle.addEventListener('click', function () { document.body.classList.contains('nav-open') ? closeNav() : openNav(); }); }
+            if (backdrop) { backdrop.addEventListener('click', closeNav); }
+            if (nav) { nav.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', closeNav); }); }
+        })();
+
+        window.flashMessages = [];
+
+        window.showFlashMessages = function () {
+            if (Array.isArray(window.flashMessages)) {
+                window.flashMessages.forEach(function (pair) {
+                    var category = pair[0] || 'info';
+                    var message = pair[1] || '';
+                    if (typeof window.toast === 'function') {
+                        var extraClass = category === 'error' ? 'failure' : category;
+                        window.toast(message, extraClass);
+                    }
+                });
+            }
+        };
+
+        // Clear flash messages after showing them
+        window.clearFlashMessages = function () {
+            window.flashMessages = [];
+        };
+    </script>
+
+</body>
+
+</html>

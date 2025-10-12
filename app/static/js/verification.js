@@ -54,7 +54,7 @@ function setupIdentityForm() {
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
 
         try {
-            const response = await fetch('/api/verify/upload/identity', {
+            const response = await fetch('https://host-bridge.onrender.com/api/verify/upload/identity', {
                 method: 'POST',
                 body: formData
             });
@@ -103,7 +103,7 @@ function setupAddressForm() {
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
 
         try {
-            const response = await fetch('/api/verify/upload/address', {
+            const response = await fetch('https://host-bridge.onrender.com/api/verify/upload/address', {
                 method: 'POST',
                 body: formData
             });
@@ -149,7 +149,7 @@ function setupRoleForm() {
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
 
         try {
-            const response = await fetch('/api/verify/upload/role', {
+            const response = await fetch('https://host-bridge.onrender.com/api/verify/upload/role', {
                 method: 'POST',
                 body: formData
             });
@@ -234,7 +234,7 @@ function updateVerificationStatus(status) {
 // Load verification status on page load
 async function loadVerificationStatus() {
     try {
-        const response = await fetch('/api/verify/status');
+        const response = await fetch('https://host-bridge.onrender.com/api/verify/status');
         const data = await response.json();
 
         if (data.success && data.completion) {
