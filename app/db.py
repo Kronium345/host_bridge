@@ -131,6 +131,20 @@ def init_db():
             """
         )
 
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS password_reset_tokens (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                token TEXT UNIQUE NOT NULL,
+                expires_at TEXT NOT NULL,
+                used INTEGER DEFAULT 0,
+                created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            )
+            """
+        )
+
 
 # -----------------------
 # User helpers (Auth)
@@ -402,3 +416,74 @@ def calculate_average_rating(ratings: list) -> float:
     
     total = sum(rating['rating'] for rating in ratings)
     return round(total / len(ratings), 1)
+
+
+# -----------------------
+# Password Reset helpers
+# -----------------------
+
+def create_password_reset_token(user_id: int, token: str, expires_at: str) -> int:
+    """Create a new password reset token."""
+    with open_conn() as conn:
+        cur = conn.execute(
+            """
+            INSERT INTO password_reset_tokens (user_id, token, expires_at)
+            VALUES (?, ?, ?)
+            """,
+            (user_id, token, expires_at)
+        )
+        return cur.lastrowid
+
+
+def get_password_reset_token(token: str) -> Optional[Dict]:
+    """Get password reset token details."""
+    with open_conn() as conn:
+        row = conn.execute(
+            """
+            SELECT id, user_id, token, expires_at, used, created_at
+            FROM password_reset_tokens
+            WHERE token = ? AND used = 0
+            """,
+            (token,)
+        ).fetchone()
+        return dict(row) if row else None
+
+
+def mark_token_as_used(token: str) -> bool:
+    """Mark a password reset token as used."""
+    with open_conn() as conn:
+        conn.execute(
+            """
+            UPDATE password_reset_tokens
+            SET used = 1
+            WHERE token = ?
+            """,
+            (token,)
+        )
+        return True
+
+
+def delete_expired_tokens():
+    """Delete all expired password reset tokens."""
+    with open_conn() as conn:
+        conn.execute(
+            """
+            DELETE FROM password_reset_tokens
+            WHERE datetime(expires_at) < datetime('now')
+            """
+        )
+
+
+def update_user_password(user_id: int, new_password: str) -> bool:
+    """Update user's password."""
+    password_hash = generate_password_hash(new_password)
+    with open_conn() as conn:
+        conn.execute(
+            """
+            UPDATE users
+            SET password_hash = ?
+            WHERE id = ?
+            """,
+            (password_hash, user_id)
+        )
+        return True

@@ -140,6 +140,15 @@ References:
 
 ## Features
 
+### Authentication & Security
+- **User Registration & Login** with password hashing
+- **Google OAuth 2.0** integration for social login
+- **Password Reset System** with secure token generation
+  - Email-based reset links via EmailJS
+  - Token expiration (1 hour validity)
+  - Secure password updates
+  - Token usage tracking
+
 ### Verification System
 - **Complete document upload workflow** for identity, address, and role verification
 - **File validation** (PDF, PNG, JPG, JPEG up to 5MB)
@@ -189,9 +198,21 @@ Sections include:
 
 ## API Endpoints
 
+### Authentication
+- `POST /login` — User login with email and password
+- `POST /register` — User registration
+- `GET /login/google` — Google OAuth login initiation
+- `POST /api/forgot-password` — Request password reset (returns token and reset URL)
+- `GET /reset-password/<token>` — Validate reset token and show password reset form
+- `POST /reset-password/<token>` — Update password with valid token
+
 ### Verification System
 - `POST /api/verify/upload/<document_type>` — Upload verification documents (identity/address/role)
 - `GET /api/verify/status` — Get current verification status for logged-in user
+
+### Ratings
+- `POST /api/ratings` — Submit a new rating
+- `GET /api/ratings/<target_type>/<target_id>` — Get ratings for a specific target
 
 ### File Upload
 - **Supported formats**: PDF, PNG, JPG, JPEG

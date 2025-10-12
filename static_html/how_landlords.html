@@ -2,438 +2,482 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title>HostBridge</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="HostBridge - Marketplace for short-term rental operators and landlords">
-  <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
-  <link rel="shortcut icon" type="image/x-icon" href="./images/favicon.ico">
-  <link rel="apple-touch-icon" href="./images/favicon.ico">
+    <meta charset="UTF-8">
+    <title>HostBridge</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HostBridge - Marketplace for short-term rental operators and landlords">
+    <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/favicon.ico">
 
-  <!-- Fonts and Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+    <!-- Fonts and Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Leaflet Map CSS (fixed) -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Leaflet Map CSS (fixed) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-  <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="./css/styles.css">
-  <link rel="stylesheet" href="./css/showcase.css">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/showcase.css">
 
 </head>
 
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="navbar-container">
-      <div class="navbar-left">
-        <div class="logo">
-          <a href="./index.html" aria-label="HostBridge Home">
-            <img src="./images/final.png" alt="Logo">
-          </a>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-left">
+                <div class="logo">
+                    <a href="./index.html" aria-label="HostBridge Home">
+                        <img src="./images/final.png" alt="Logo">
+                    </a>
+                </div>
+                <button class="hamburger" id="nav-toggle" aria-label="Open menu" aria-expanded="false"
+                    aria-controls="primary-nav">
+                    <span></span><span></span><span></span>
+                </button>
+                <ul class="nav-links" id="primary-nav">
+                    <li class="drawer-logo"><a href="./index.html" aria-label="HostBridge Home"><img
+                                src="./images/final.png" alt="Logo"></a></li>
+                    <li><a href="./index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">How It Works</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./how_landlords.html">Landlords</a></li>
+                            <li><a href="./how_operators.html">Operators</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#">Listings</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./list_property.html">List Your Property</a></li>
+                            <li><a href="./find_property.html">Find a Property</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#">Resources</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./legality_map.html">STR Legality Map</a></li>
+                            <li><a href="./marketplace_listings.html">Marketplace Listings</a></li>
+                            <li><a href="./templates_resource.html">Templates</a></li>
+                            <li><a href="./verify.html">Get Verified</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="./services.html">Services</a></li>
+                    <li><a href="./contact.html">Contact</a></li>
+                    <li class="mobile-auth">
+                        <a href="./login.html" class="nav-button login-btn">Login</a>
+                        <a href="./register.html" class="nav-button register-btn">Register</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="navbar-right">
+                <a href="./login.html" class="nav-button login-btn">Login</a>
+                <a href="./register.html" class="nav-button register-btn">Register</a>
+            </div>
         </div>
-        <button class="hamburger" id="nav-toggle" aria-label="Open menu" aria-expanded="false"
-          aria-controls="primary-nav">
-          <span></span><span></span><span></span>
-        </button>
-        <ul class="nav-links" id="primary-nav">
-          <li class="drawer-logo"><a href="./index.html" aria-label="HostBridge Home"><img src="./images/final.png"
-                alt="Logo"></a></li>
-          <li><a href="./index.html">Home</a></li>
-          <li class="dropdown">
-            <a href="#">How It Works</a>
-            <ul class="dropdown-menu">
-              <li><a href="./how_landlords.html">Landlords</a></li>
-              <li><a href="./how_operators.html">Operators</a></li>
-            </ul>
-          </li>
-          <li class="dropdown">
-            <a href="#">Listings</a>
-            <ul class="dropdown-menu">
-              <li><a href="./list_property.html">List Your Property</a></li>
-              <li><a href="./find_property.html">Find a Property</a></li>
-            </ul>
-          </li>
-          <li class="dropdown">
-            <a href="#">Resources</a>
-            <ul class="dropdown-menu">
-              <li><a href="./legality_map.html">STR Legality Map</a></li>
-              <li><a href="./marketplace_listings.html">Marketplace Listings</a></li>
-              <li><a href="./templates_resource.html">Templates</a></li>
-              <li><a href="./verify.html">Get Verified</a></li>
-            </ul>
-          </li>
-          <li><a href="./services.html">Services</a></li>
-          <li><a href="./contact.html">Contact</a></li>
-          <li class="mobile-auth">
-            <a href="./login.html" class="nav-button login-btn">Login</a>
-            <a href="./register.html" class="nav-button register-btn">Register</a>
-          </li>
-        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <section class="hero">
+  <h1>Partner With Trusted STR Operators</h1>
+  <p>List your property, connect with verified professionals, and earn confidently.</p>
+</section>
+
+<!-- Steps Section -->
+<section class="steps-wrapper">
+  <div class="step-box">
+    <img src="{{ ./images/house-1.jpg }}" alt="List Property">
+    <h3>Step 1: List Your Property</h3>
+    <p>Tell us about your property, your expectations, and preferences. It’s quick and simple.</p>
+  </div>
+  <div class="step-box">
+    <img src="{{ ./images/handshake.jpg }}" alt="Matchmaking">
+    <h3>Step 2: We Match You</h3>
+    <p>We’ll connect you with verified STR operators best suited for your location and profile.</p>
+  </div>
+  <div class="step-box">
+    <img src="{{ ./images/signing.jpg }}" alt="Sign Deal">
+    <h3>Step 3: Sign & Earn</h3>
+    <p>Use our legal templates, finalize contracts, and begin earning without the operational headache.</p>
+  </div>
+</section>
+
+<!-- Managed By (Operators) Section -->
+<section class="operators-section">
+  <h2 class="section-title">Managed by verified operators</h2>
+  <div class="operators-grid">
+    <div class="operator-card">
+      <div class="operator-avatar">HB</div>
+      <div class="operator-info">
+        <div class="operator-name">HostBridge Team</div>
+        <div class="operator-meta">London • 25+ units</div>
+        <div class="operator-stars" aria-label="rating 4.8 out of 5">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+            class="fas fa-star-half-alt"></i>
+          <span class="operator-score">4.8</span>
+        </div>
       </div>
-      <div class="navbar-right">
-        <a href="./login.html" class="nav-button login-btn">Login</a>
-        <a href="./register.html" class="nav-button register-btn">Register</a>
+      <a href="#contact-operator" class="operator-cta">Contact</a>
+    </div>
+    <div class="operator-card">
+      <div class="operator-avatar">AO</div>
+      <div class="operator-info">
+        <div class="operator-name">Apex Operators</div>
+        <div class="operator-meta">Manchester • 12 units</div>
+        <div class="operator-stars" aria-label="rating 4.5 out of 5">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+            class="far fa-star"></i>
+          <span class="operator-score">4.5</span>
+        </div>
+      </div>
+      <a href="#contact-operator" class="operator-cta">Contact</a>
+    </div>
+    <div class="operator-card">
+      <div class="operator-avatar">UR</div>
+      <div class="operator-info">
+        <div class="operator-name">Urban Retreats</div>
+        <div class="operator-meta">Birmingham • 8 units</div>
+        <div class="operator-stars" aria-label="rating 4.2 out of 5">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+            class="fas fa-star-half-alt"></i><i class="far fa-star"></i>
+          <span class="operator-score">4.2</span>
+        </div>
+      </div>
+      <a href="#contact-operator" class="operator-cta">Contact</a>
+    </div>
+  </div>
+  <p class="operators-note">All operators are ID-verified and contract-ready. Ratings are shown from landlord feedback.
+  </p>
+  <a id="contact-operator"></a>
+
+  <div class="rating-widget">
+    <div class="rating-title">Rate an operator</div>
+    <div id="operator-rating" class="star-rating-container" data-target-type="operator"
+      data-target-id="sample-operator-1" data-max-stars="5"></div>
+  </div>
+</section>
+
+<!-- Illustration Section -->
+<section class="visual-section">
+  <div class="visual-text">
+    <h2>We simplify landlord-operator relationships</h2>
+    <p>No more screening, compliance confusion, or risk. We streamline it all in one platform — fast, secure, and smart.
+    </p>
+  </div>
+  <div class="visual-image">
+    <img src="{{ ./images/landlord_illustration.png }}" alt="Landlord Illustration">
+  </div>
+</section>
+
+<!-- Landlord Property Submission Form -->
+<section class="landlord-form-section">
+  <h2 class="section-title">Submit your property details</h2>
+  <p class="section-subtitle">Share a few details to help us match you with the right operators.</p>
+
+  <form class="landlord-form" id="landlord-form" method="POST" action="https://host-bridge.onrender.com/submit_property">
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="rent">Monthly rent (£)</label>
+        <input type="number" id="rent" name="rent" min="0" step="1" placeholder="e.g. 1800">
+      </div>
+
+      <div class="form-field">
+        <label for="deposit">Deposit (£)</label>
+        <input type="number" id="deposit" name="deposit" min="0" step="1" placeholder="e.g. 1800">
+      </div>
+
+      <div class="form-field">
+        <label for="furnishing">Furnishing</label>
+        <select id="furnishing" name="furnishing">
+          <option value="">Select furnishing</option>
+          <option value="furnished">Furnished</option>
+          <option value="unfurnished">Unfurnished</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="beds">Bedrooms</label>
+        <input type="number" id="beds" name="beds" min="0" step="1" placeholder="e.g. 2">
+      </div>
+
+      <div class="form-field">
+        <label for="baths">Bathrooms</label>
+        <input type="number" id="baths" name="baths" min="0" step="1" placeholder="e.g. 1">
+      </div>
+
+      <div class="form-field">
+        <label for="area">Area / Neighbourhood</label>
+        <input type="text" id="area" name="area" placeholder="e.g. Shoreditch, London">
+      </div>
+
+      <div class="form-field">
+        <label for="has_cleaner">Existing cleaner for the property?</label>
+        <select id="has_cleaner" name="has_cleaner">
+          <option value="">Select</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+
+      <div class="form-field form-full">
+        <label for="notes">Additional information</label>
+        <textarea id="notes" name="notes" rows="4"
+          placeholder="Share any details, restrictions, preferences or timelines"></textarea>
       </div>
     </div>
-  </nav>
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <section class="hero">
-      <h1>Partner With Trusted STR Operators</h1>
-      <p>List your property, connect with verified professionals, and earn confidently.</p>
-    </section>
-
-    <!-- Steps Section -->
-    <section class="steps-wrapper">
-      <div class="step-box">
-        <img src="./images/house-1.jpg " alt="List Property">
-        <h3>Step 1: List Your Property</h3>
-        <p>Tell us about your property, your expectations, and preferences. It’s quick and simple.</p>
-      </div>
-      <div class="step-box">
-        <img src="./images/handshake.jpg " alt="Matchmaking">
-        <h3>Step 2: We Match You</h3>
-        <p>We’ll connect you with verified STR operators best suited for your location and profile.</p>
-      </div>
-      <div class="step-box">
-        <img src="./images/signing.jpg " alt="Sign Deal">
-        <h3>Step 3: Sign & Earn</h3>
-        <p>Use our legal templates, finalize contracts, and begin earning without the operational headache.</p>
-      </div>
-    </section>
-
-    <!-- Managed By (Operators) Section -->
-    <section class="operators-section">
-      <h2 class="section-title">Managed by verified operators</h2>
-      <div class="operators-grid">
-        <div class="operator-card">
-          <div class="operator-avatar">HB</div>
-          <div class="operator-info">
-            <div class="operator-name">HostBridge Team</div>
-            <div class="operator-meta">London • 25+ units</div>
-            <div class="operator-stars" aria-label="rating 4.8 out of 5">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
-                class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-              <span class="operator-score">4.8</span>
-            </div>
-          </div>
-          <a href="#contact-operator" class="operator-cta">Contact</a>
-        </div>
-        <div class="operator-card">
-          <div class="operator-avatar">AO</div>
-          <div class="operator-info">
-            <div class="operator-name">Apex Operators</div>
-            <div class="operator-meta">Manchester • 12 units</div>
-            <div class="operator-stars" aria-label="rating 4.5 out of 5">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
-                class="fas fa-star"></i><i class="far fa-star"></i>
-              <span class="operator-score">4.5</span>
-            </div>
-          </div>
-          <a href="#contact-operator" class="operator-cta">Contact</a>
-        </div>
-        <div class="operator-card">
-          <div class="operator-avatar">UR</div>
-          <div class="operator-info">
-            <div class="operator-name">Urban Retreats</div>
-            <div class="operator-meta">Birmingham • 8 units</div>
-            <div class="operator-stars" aria-label="rating 4.2 out of 5">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
-                class="fas fa-star-half-alt"></i><i class="far fa-star"></i>
-              <span class="operator-score">4.2</span>
-            </div>
-          </div>
-          <a href="#contact-operator" class="operator-cta">Contact</a>
-        </div>
-      </div>
-      <p class="operators-note">All operators are ID-verified and contract-ready. Ratings are shown from landlord
-        feedback.
-      </p>
-      <a id="contact-operator"></a>
-
-      <div class="rating-widget">
-        <div class="rating-title">Rate an operator</div>
-        <div id="operator-rating" class="star-rating-container" data-target-type="operator"
-          data-target-id="sample-operator-1" data-max-stars="5"></div>
-      </div>
-    </section>
-
-    <!-- Illustration Section -->
-    <section class="visual-section">
-      <div class="visual-text">
-        <h2>We simplify landlord-operator relationships</h2>
-        <p>No more screening, compliance confusion, or risk. We streamline it all in one platform — fast, secure, and
-          smart.
-        </p>
-      </div>
-      <div class="visual-image">
-        <img src="./images/handshake.jpg" alt="Landlord Illustration">
-      </div>
-    </section>
-
-    <!-- Landlord Property Submission Form -->
-    <section class="landlord-form-section">
-      <h2 class="section-title">Submit your property details</h2>
-      <p class="section-subtitle">Share a few details to help us match you with the right operators.</p>
-
-      <form class="landlord-form" id="landlord-form" method="POST"
-        action="https://host-bridge.onrender.com/submit_property">
-        <div class="form-grid">
-          <div class="form-field">
-            <label for="rent">Monthly rent (£)</label>
-            <input type="number" id="rent" name="rent" min="0" step="1" placeholder="e.g. 1800">
-          </div>
-
-          <div class="form-field">
-            <label for="deposit">Deposit (£)</label>
-            <input type="number" id="deposit" name="deposit" min="0" step="1" placeholder="e.g. 1800">
-          </div>
-
-          <div class="form-field">
-            <label for="furnishing">Furnishing</label>
-            <select id="furnishing" name="furnishing">
-              <option value="">Select furnishing</option>
-              <option value="furnished">Furnished</option>
-              <option value="unfurnished">Unfurnished</option>
-            </select>
-          </div>
-
-          <div class="form-field">
-            <label for="beds">Bedrooms</label>
-            <input type="number" id="beds" name="beds" min="0" step="1" placeholder="e.g. 2">
-          </div>
-
-          <div class="form-field">
-            <label for="baths">Bathrooms</label>
-            <input type="number" id="baths" name="baths" min="0" step="1" placeholder="e.g. 1">
-          </div>
-
-          <div class="form-field">
-            <label for="area">Area / Neighbourhood</label>
-            <input type="text" id="area" name="area" placeholder="e.g. Shoreditch, London">
-          </div>
-
-          <div class="form-field">
-            <label for="has_cleaner">Existing cleaner for the property?</label>
-            <select id="has_cleaner" name="has_cleaner">
-              <option value="">Select</option>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
-          </div>
-
-          <div class="form-field form-full">
-            <label for="notes">Additional information</label>
-            <textarea id="notes" name="notes" rows="4"
-              placeholder="Share any details, restrictions, preferences or timelines"></textarea>
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="btn-primary">Submit details</button>
-        </div>
-      </form>
-    </section>
-
-    <script>
-      (function () {
-        const form = document.getElementById('landlord-form');
-        if (!form) return;
-        form.addEventListener('submit', function (e) {
-          // Client-side validation for key fields
-          const rent = document.getElementById('rent').value.trim();
-          const deposit = document.getElementById('deposit').value.trim();
-          const furnishing = document.getElementById('furnishing').value;
-          const beds = document.getElementById('beds').value.trim();
-          const baths = document.getElementById('baths').value.trim();
-          const area = document.getElementById('area').value.trim();
-          const hasCleaner = document.getElementById('has_cleaner').value;
-
-          const requiredMissing = [];
-          if (!rent) requiredMissing.push('Monthly rent');
-          if (!deposit) requiredMissing.push('Deposit');
-          if (!furnishing) requiredMissing.push('Furnishing');
-          if (!beds) requiredMissing.push('Bedrooms');
-          if (!baths) requiredMissing.push('Bathrooms');
-          if (!area) requiredMissing.push('Area');
-          if (!hasCleaner) requiredMissing.push('Existing cleaner');
-
-          if (requiredMissing.length > 0) {
-            e.preventDefault();
-            if (window.toast) toast('Please fill: ' + requiredMissing.join(', '), 'warn');
-          }
-        });
-      })();
-    </script>
-
-    <!-- Register Interest for Landlords Section -->
-    <section class="contact-form-section">
-      <div class="contact-container">
-        <h2 class="contact-title">List Your Property - Express Interest</h2>
-        <p class="contact-subtitle">Connect with verified operators for your property</p>
-
-        <form id="landlord-waitlist-form" class="contact-form" data-emailjs-service="service_jkqc0a3"
-          data-emailjs-template="template_bcdin9c" data-emailjs-public="Ii74HDqv0DgwxKC2u">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" id="name" name="name" placeholder="Enter your full name" required>
-            </div>
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email" placeholder="Enter your email address" required>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="role">Property Type</label>
-            <div class="select-wrapper">
-              <select id="role" name="role" required>
-                <option value="Apartment">Apartment</option>
-                <option value="House">House</option>
-                <option value="Studio">Studio</option>
-                <option value="Multiple Properties">Multiple Properties</option>
-              </select>
-            </div>
-          </div>
-
-          <button type="submit" class="submit-btn" data-idle-label="Express Interest">
-            <span class="btn-text">Express Interest</span>
-            <span class="btn-loading" style="display: none;">Sending...</span>
-          </button>
-        </form>
-      </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta-section">
-      <h2 style="color: white;">Ready to List Your Property?</h2>
-      <a href="./list_property.html" class="cta-button">Get Started</a>
-    </section>
-
-  </main>
-
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="footer-container">
-      <div class="footer-grid">
-        <!-- Company Info -->
-        <div class="footer-column">
-          <h3 class="footer-heading">HostBridge</h3>
-          <p class="footer-description">Your trusted partner in short-term rental compliance and onboarding.
-            Connecting verified property owners with professional STR operators.</p>
-          <div class="footer-social">
-            <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-            <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-          </div>
-        </div>
-
-        <!-- Quick Links -->
-        <div class="footer-column">
-          <h4 class="footer-heading">Quick Links</h4>
-          <ul class="footer-links">
-            <li><a href="./index.html">Home</a></li>
-            <li><a href="./how_landlords.html">For Landlords</a></li>
-            <li><a href="./how_operators.html">For Operators</a></li>
-            <li><a href="./list_property.html">List Property</a></li>
-            <li><a href="./find_property.html">Find Property</a></li>
-          </ul>
-        </div>
-
-        <!-- Resources -->
-        <div class="footer-column">
-          <h4 class="footer-heading">Resources</h4>
-          <ul class="footer-links">
-            <li><a href="./legality_map.html">STR Legality Map</a></li>
-            <li><a href="./templates_resource.html">Legal Templates</a></li>
-            <li><a href="./verify.html">Get Verified</a></li>
-            <li><a href="./services.html">Services</a></li>
-            <li><a href="./marketplace_listings.html">Marketplace</a></li>
-          </ul>
-        </div>
-
-        <!-- Contact & Legal -->
-        <div class="footer-column">
-          <h4 class="footer-heading">Contact & Legal</h4>
-          <ul class="footer-links">
-            <li><a href="./contact.html">Contact Us</a></li>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-            <li><a href="#">Cookie Policy</a></li>
-            <li><a href="#">FAQ</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Footer Bottom -->
-      <div class="footer-bottom">
-        <div class="footer-bottom-content">
-          <p class="footer-copyright">&copy; 2025 HostBridge. All rights reserved.</p>
-          <div class="footer-badges">
-            <span class="footer-badge"><i class="fas fa-shield-alt"></i> SSL Secured</span>
-            <span class="footer-badge"><i class="fas fa-lock"></i> GDPR Compliant</span>
-            <span class="footer-badge"><i class="fas fa-check-circle"></i> Verified</span>
-          </div>
-        </div>
-      </div>
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">Submit details</button>
     </div>
-  </footer>
+  </form>
+</section>
 
-  <!-- Mobile nav backdrop -->
-  <div class="nav-backdrop" id="nav-backdrop" tabindex="-1" aria-hidden="true"></div>
+<script>
+  (function () {
+    const form = document.getElementById('landlord-form');
+    if (!form) return;
+    form.addEventListener('submit', function (e) {
+      // Client-side validation for key fields
+      const rent = document.getElementById('rent').value.trim();
+      const deposit = document.getElementById('deposit').value.trim();
+      const furnishing = document.getElementById('furnishing').value;
+      const beds = document.getElementById('beds').value.trim();
+      const baths = document.getElementById('baths').value.trim();
+      const area = document.getElementById('area').value.trim();
+      const hasCleaner = document.getElementById('has_cleaner').value;
 
-  <!-- Leaflet JS (fixed) -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+      const requiredMissing = [];
+      if (!rent) requiredMissing.push('Monthly rent');
+      if (!deposit) requiredMissing.push('Deposit');
+      if (!furnishing) requiredMissing.push('Furnishing');
+      if (!beds) requiredMissing.push('Bedrooms');
+      if (!baths) requiredMissing.push('Bathrooms');
+      if (!area) requiredMissing.push('Area');
+      if (!hasCleaner) requiredMissing.push('Existing cleaner');
 
-  <!-- Page-Specific Scripts -->
-  <!-- EmailJS SDK and integration loaded only on pages that need it -->
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  <script src="./js/email.js "></script>
-  <script src="./js/star-rating.js"></script>
-
-  <script src="./js/toast.js"></script>
-  <script>
-    // Mobile nav toggle
-    (function () {
-      var toggle = document.getElementById('nav-toggle');
-      var backdrop = document.getElementById('nav-backdrop');
-      var nav = document.getElementById('primary-nav');
-      function closeNav() { document.body.classList.remove('nav-open'); if (toggle) toggle.setAttribute('aria-expanded', 'false'); }
-      function openNav() { document.body.classList.add('nav-open'); if (toggle) toggle.setAttribute('aria-expanded', 'true'); }
-      if (toggle) { toggle.addEventListener('click', function () { document.body.classList.contains('nav-open') ? closeNav() : openNav(); }); }
-      if (backdrop) { backdrop.addEventListener('click', closeNav); }
-      if (nav) { nav.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', closeNav); }); }
-    })();
-
-    window.flashMessages = [];
-
-    window.showFlashMessages = function () {
-      if (Array.isArray(window.flashMessages)) {
-        window.flashMessages.forEach(function (pair) {
-          var category = pair[0] || 'info';
-          var message = pair[1] || '';
-          if (typeof window.toast === 'function') {
-            var extraClass = category === 'error' ? 'failure' : category;
-            window.toast(message, extraClass);
-          }
-        });
+      if (requiredMissing.length > 0) {
+        e.preventDefault();
+        if (window.toast) toast('Please fill: ' + requiredMissing.join(', '), 'warn');
       }
-    };
+    });
+  })();
+</script>
 
-    // Clear flash messages after showing them
-    window.clearFlashMessages = function () {
-      window.flashMessages = [];
-    };
-  </script>
+<!-- Register Interest for Landlords Section -->
+<section class="contact-form-section">
+  <div class="contact-container">
+    <h2 class="contact-title">List Your Property - Express Interest</h2>
+    <p class="contact-subtitle">Connect with verified operators for your property</p>
+
+    <form id="landlord-waitlist-form" class="contact-form" data-emailjs-service="service_jkqc0a3"
+      data-emailjs-template="template_bcdin9c" data-emailjs-public="Ii74HDqv0DgwxKC2u">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="role">Property Type</label>
+        <div class="select-wrapper">
+          <select id="role" name="role" required>
+            <option value="Apartment">Apartment</option>
+            <option value="House">House</option>
+            <option value="Studio">Studio</option>
+            <option value="Multiple Properties">Multiple Properties</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" data-idle-label="Express Interest">
+        <span class="btn-text">Express Interest</span>
+        <span class="btn-loading" style="display: none;">Sending...</span>
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <h2>Ready to List Your Property?</h2>
+  <a href="./list_property.html" class="cta-button">Get Started</a>
+</section>
+
+<script>
+  (function () {
+    const captions = { 1: "Very dissatisfied", 2: "Dissatisfied", 3: "Neutral", 4: "Satisfied", 5: "Delighted" };
+    const form = document.getElementById('operator-review-form');
+    const caption = document.getElementById('rating-caption');
+    const notes = document.getElementById('rating-notes');
+    const radios = document.querySelectorAll('.star-widget input[type="radio"]');
+    const labels = document.querySelectorAll('.star-widget label.fas.fa-star');
+
+    function applyActiveStars(val) {
+      labels.forEach(l => {
+        const v = Number(l.getAttribute('data-value'));
+        l.classList.remove('active');
+        if (v <= val && val > 0) { l.classList.add('active'); }
+      });
+      caption.textContent = val > 0 ? (captions[val] || '') : '';
+    }
+
+    labels.forEach(l => {
+      l.addEventListener('click', () => {
+        const val = Number(l.getAttribute('data-value'));
+        const radio = document.getElementById('rate-' + val);
+        if (radio) radio.checked = true;
+        applyActiveStars(val);
+      });
+    });
+
+    radios.forEach(r => r.addEventListener('change', () => applyActiveStars(Number(r.value))));
+
+    // Start with no stars selected
+    applyActiveStars(0);
+
+    if (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const selected = Array.from(radios).find(r => r.checked);
+        if (!selected) { if (window.toast) toast('Please select a rating.', 'warn'); return; }
+        if (window.toast) toast('Thank you. Your feedback has been recorded.', 'success');
+        caption.textContent = '';
+        notes.value = '';
+        radios.forEach(r => r.checked = false);
+        applyActiveStars(0);
+      });
+    }
+  })();
+</script>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <!-- Company Info -->
+                <div class="footer-column">
+                    <h3 class="footer-heading">HostBridge</h3>
+                    <p class="footer-description">Your trusted partner in short-term rental compliance and onboarding.
+                        Connecting verified property owners with professional STR operators.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-column">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="./index.html">Home</a></li>
+                        <li><a href="./how_landlords.html">For Landlords</a></li>
+                        <li><a href="./how_operators.html">For Operators</a></li>
+                        <li><a href="./list_property.html">List Property</a></li>
+                        <li><a href="./find_property.html">Find Property</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources -->
+                <div class="footer-column">
+                    <h4 class="footer-heading">Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="./legality_map.html">STR Legality Map</a></li>
+                        <li><a href="./templates_resource.html">Legal Templates</a></li>
+                        <li><a href="./verify.html">Get Verified</a></li>
+                        <li><a href="./services.html">Services</a></li>
+                        <li><a href="./marketplace_listings.html">Marketplace</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact & Legal -->
+                <div class="footer-column">
+                    <h4 class="footer-heading">Contact & Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="./contact.html">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p class="footer-copyright">&copy; 2025 HostBridge. All rights reserved.</p>
+                    <div class="footer-badges">
+                        <span class="footer-badge"><i class="fas fa-shield-alt"></i> SSL Secured</span>
+                        <span class="footer-badge"><i class="fas fa-lock"></i> GDPR Compliant</span>
+                        <span class="footer-badge"><i class="fas fa-check-circle"></i> Verified</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile nav backdrop -->
+    <div class="nav-backdrop" id="nav-backdrop" tabindex="-1" aria-hidden="true"></div>
+
+    <!-- Leaflet JS (fixed) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Page-Specific Scripts -->
+    <!-- EmailJS SDK and integration loaded only on pages that need it -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="{{ ./js/email.js }}"></script>
+<!-- Star Rating System -->
+<script src="{{ ./js/star-rating.js }}"></script>
+
+    <script src="./js/toast.js"></script>
+    <script>
+        // Mobile nav toggle
+        (function () {
+            var toggle = document.getElementById('nav-toggle');
+            var backdrop = document.getElementById('nav-backdrop');
+            var nav = document.getElementById('primary-nav');
+            function closeNav() { document.body.classList.remove('nav-open'); if (toggle) toggle.setAttribute('aria-expanded', 'false'); }
+            function openNav() { document.body.classList.add('nav-open'); if (toggle) toggle.setAttribute('aria-expanded', 'true'); }
+            if (toggle) { toggle.addEventListener('click', function () { document.body.classList.contains('nav-open') ? closeNav() : openNav(); }); }
+            if (backdrop) { backdrop.addEventListener('click', closeNav); }
+            if (nav) { nav.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', closeNav); }); }
+        })();
+
+        window.flashMessages = [];
+
+        window.showFlashMessages = function () {
+            if (Array.isArray(window.flashMessages)) {
+                window.flashMessages.forEach(function (pair) {
+                    var category = pair[0] || 'info';
+                    var message = pair[1] || '';
+                    if (typeof window.toast === 'function') {
+                        var extraClass = category === 'error' ? 'failure' : category;
+                        window.toast(message, extraClass);
+                    }
+                });
+            }
+        };
+
+        // Clear flash messages after showing them
+        window.clearFlashMessages = function () {
+            window.flashMessages = [];
+        };
+    </script>
 
 </body>
 

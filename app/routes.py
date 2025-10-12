@@ -3,7 +3,9 @@ from flask import render_template, request, redirect, url_for, session, flash, j
 from app.db import (verify_credentials, create_user, find_user_by_email, create_or_link_google_user,
                      save_verification_document, get_user_verification_status, 
                      get_user_verification_documents, check_verification_completion,
-                     save_rating, get_ratings_for_target, calculate_average_rating)
+                     save_rating, get_ratings_for_target, calculate_average_rating,
+                     create_password_reset_token, get_password_reset_token, mark_token_as_used,
+                     update_user_password, delete_expired_tokens)
 import os
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
@@ -161,13 +163,141 @@ def login():
 @app.route('/forgotpassword', methods=['GET', 'POST'])
 def forgotpassword():
 	if request.method == 'POST':
-		email = request.form.get('email')
-		if email:
-			# TODO: Implement password reset logic
-			# For now, just redirect back with a success message
-			flash('Password reset link sent to your email!', 'success')
-			return redirect(url_for('login'))
-	return render_template('forgotpassword.html')
+		email = request.form.get('email', '').strip().lower()
+		if not email:
+			flash('Please provide an email address.', 'error')
+			return redirect(url_for('forgotpassword'))
+		
+		# Check if user exists
+		user = find_user_by_email(email)
+		if not user:
+			# Don't reveal if email exists or not (security best practice)
+			flash('If that email is registered, you will receive a password reset link shortly.', 'success')
+			return redirect(url_for('forgotpassword'))
+		
+		# Generate secure token
+		token = secrets.token_urlsafe(32)
+		
+		# Token expires in 1 hour
+		from datetime import datetime, timedelta
+		expires_at = (datetime.now() + timedelta(hours=1)).isoformat()
+		
+		# Save token to database
+		create_password_reset_token(user['id'], token, expires_at)
+		
+		reset_url = f"https://host-bridge.com/reset_password.html?token={token}"
+		
+		# Pass data to template for EmailJS to send the email
+		emailjs_public = os.getenv('EMAILJS_PUBLIC_KEY', '')
+		emailjs_service = os.getenv('EMAILJS_SERVICE_ID', '')
+		emailjs_template = os.getenv('EMAILJS_PASSWORD_RESET_TEMPLATE_ID', os.getenv('EMAILJS_CONTACT_TEMPLATE_ID', ''))
+		
+		return render_template('forgotpassword.html', 
+		                      send_email=True,
+		                      user_email=email,
+		                      user_name=user.get('first_name', 'User'),
+		                      reset_url=reset_url,
+		                      EMAILJS_PUBLIC=emailjs_public,
+		                      EMAILJS_SERVICE=emailjs_service,
+		                      EMAILJS_PASSWORD_RESET_TEMPLATE=emailjs_template)
+	
+	return render_template('forgotpassword.html', send_email=False)
+
+
+@app.route('/api/forgot-password', methods=['POST'])
+def api_forgot_password():
+	"""API endpoint for password reset token generation"""
+	email = request.form.get('email', '').strip().lower()
+	if not email:
+		return jsonify({'success': False, 'message': 'Email is required'}), 400
+	
+	# Check if user exists
+	user = find_user_by_email(email)
+	if not user:
+		# Don't reveal if email exists or not (security best practice)
+		return jsonify({'success': False, 'message': 'If that email is registered, you will receive a reset link shortly.'})
+	
+	# Generate secure token
+	token = secrets.token_urlsafe(32)
+	
+	# Token expires in 1 hour
+	from datetime import datetime, timedelta
+	expires_at = (datetime.now() + timedelta(hours=1)).isoformat()
+	
+	# Save token to database
+	create_password_reset_token(user['id'], token, expires_at)
+	
+	# Create reset URL (use Hostinger URL for the reset page)
+	reset_url = f"https://host-bridge.com/reset_password.html?token={token}"
+	
+	return jsonify({
+		'success': True,
+		'reset_url': reset_url,
+		'user_name': user.get('first_name', 'User')
+	})
+
+
+@app.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+	"""Handle password reset with token"""
+	delete_expired_tokens()
+	
+	if request.method == 'GET':
+		# Verify token is valid
+		token_data = get_password_reset_token(token)
+		if not token_data:
+			flash('Invalid or expired reset link.', 'error')
+			return redirect(url_for('forgotpassword'))
+		
+		# Check if token is expired
+		from datetime import datetime
+		expires_at = datetime.fromisoformat(token_data['expires_at'])
+		if datetime.now() > expires_at:
+			flash('This reset link has expired. Please request a new one.', 'error')
+			return redirect(url_for('forgotpassword'))
+		
+		# Token is valid, show reset form
+		return render_template('reset_password.html', token=token)
+	
+	elif request.method == 'POST':
+		# Handle password update
+		new_password = request.form.get('password', '').strip()
+		confirm_password = request.form.get('confirm_password', '').strip()
+		
+		if not new_password or not confirm_password:
+			flash('Please fill in all fields.', 'error')
+			return render_template('reset_password.html', token=token)
+		
+		if new_password != confirm_password:
+			flash('Passwords do not match.', 'error')
+			return render_template('reset_password.html', token=token)
+		
+		if len(new_password) < 6:
+			flash('Password must be at least 6 characters long.', 'error')
+			return render_template('reset_password.html', token=token)
+		
+		# Verify token again
+		token_data = get_password_reset_token(token)
+		if not token_data:
+			flash('Invalid or expired reset link.', 'error')
+			return redirect(url_for('forgotpassword'))
+		
+		# Check if token is expired
+		from datetime import datetime
+		expires_at = datetime.fromisoformat(token_data['expires_at'])
+		if datetime.now() > expires_at:
+			flash('This reset link has expired. Please request a new one.', 'error')
+			return redirect(url_for('forgotpassword'))
+		
+		# Update password
+		update_user_password(token_data['user_id'], new_password)
+		
+		# Mark token as used
+		mark_token_as_used(token)
+		
+		flash('Your password has been reset successfully! You can now log in.', 'success')
+		return redirect(url_for('login'))
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
