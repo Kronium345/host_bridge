@@ -1,9 +1,17 @@
 from flask import Flask
+from flask_cors import CORS
 import os
 from app.db import init_db
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev-secret-change-me")
+
+CORS(app, origins=[
+    'https://host-bridge.com',
+    'https://www.host-bridge.com', 
+    'http://localhost:5000',  
+    'http://127.0.0.1:5000'  
+])
 
 # Ensure SQLite schema exists on startup
 init_db()

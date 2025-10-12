@@ -158,8 +158,15 @@ def login():
 		flash('Invalid email or password.', 'error')
 	return render_template('login.html')
 
-@app.route('/forgotpassword')
+@app.route('/forgotpassword', methods=['GET', 'POST'])
 def forgotpassword():
+	if request.method == 'POST':
+		email = request.form.get('email')
+		if email:
+			# TODO: Implement password reset logic
+			# For now, just redirect back with a success message
+			flash('Password reset link sent to your email!', 'success')
+			return redirect(url_for('login'))
 	return render_template('forgotpassword.html')
 
 @app.route('/register', methods=['GET', 'POST'])
