@@ -264,6 +264,8 @@ const starRatingCSS = `
 
 .stars-container {
     display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
     gap: 2px;
     margin-bottom: 10px;
 }
@@ -285,7 +287,7 @@ const starRatingCSS = `
 }
 
 .star-rating-widget .star:hover ~ .star {
-    color: #ddd;
+    color: #ffd700;
 }
 
 .rating-feedback {
