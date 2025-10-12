@@ -134,6 +134,14 @@ function handleSubmit(e) {
         return;
     }
 
+    // Debug logging
+    console.log('EmailJS Config:', {
+        serviceId: EMAILJS_CONFIG.serviceId,
+        templateId: EMAILJS_CONFIG.templateId,
+        publicKey: EMAILJS_CONFIG.publicKey ? 'Set' : 'Missing'
+    });
+    console.log('Template Params:', templateParams);
+
     emailjs.send(
         EMAILJS_CONFIG.serviceId,
         EMAILJS_CONFIG.templateId,

@@ -13,10 +13,17 @@ anychart.onDocumentReady(function () {
             // Create choropleth series with loaded data
             let series = map.choropleth(data);
 
-            // Set the map colors (like the example)
-            series.colorScale(
-                anychart.scales.linearColor("#d4e9d7", "#90d4a0", "#2E8B57", "#1a5c3a")
-            );
+            // Use ordinal color scale based on regulation_level field
+            var colorScale = anychart.scales.ordinalColor();
+            colorScale.ranges([
+                // Green for permitted (matching legend)
+                { less: 4.5, color: "#2E8B57", name: "STR Permitted" },
+                // Orange for restricted (matching legend)
+                { from: 2.5, to: 4.5, color: "#f59e0b", name: "Restricted / Permit Needed" },
+                // Red/Pink for not permitted / varies (matching legend)
+                { greater: 0, less: 2.5, color: "#ef4444", name: "Varies by Area" }
+            ]);
+            series.colorScale(colorScale);
 
             // Customize the colors in the hovered state
             series.hovered().fill(function (d) {
@@ -63,14 +70,14 @@ anychart.onDocumentReady(function () {
                     }
 
                     return (
-                        "<div style='font-size:13px; padding:12px; max-width:280px;'>" +
+                        "<div style='font-size:13px; padding:14px; max-width:300px; background:white; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15);'>" +
                         "<div style='display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;'>" +
-                        "<h4 style='margin:0; color:#004c46; font-size:15px;'>" + name + "</h4>" +
-                        "<span style='background:" + badgeColor + "; color:white; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:600;'>" + statusText + "</span>" +
+                        "<h4 style='margin:0; color:#1a1a1a; font-size:16px; font-weight:700;'>" + name + "</h4>" +
+                        "<span style='background:" + badgeColor + "; color:white; padding:5px 12px; border-radius:14px; font-size:11px; font-weight:700;'>" + statusText + "</span>" +
                         "</div>" +
-                        "<p style='margin:8px 0; color:#4b5563; line-height:1.5;'>" + description + "</p>" +
-                        "<div style='margin-top:10px; padding-top:10px; border-top:1px solid #e5e7eb;'>" +
-                        "<span style='color:#6b7280; font-size:11px;'>Regulation Score: <strong>" + value + "/5</strong></span>" +
+                        "<p style='margin:8px 0; color:#333333; line-height:1.6; font-size:13px;'>" + description + "</p>" +
+                        "<div style='margin-top:12px; padding-top:10px; border-top:2px solid #e5e7eb;'>" +
+                        "<span style='color:#555555; font-size:12px; font-weight:600;'>Regulation Score: <strong style='color:#2E8B57;'>" + value + "/5</strong></span>" +
                         "</div>" +
                         "</div>"
                     );

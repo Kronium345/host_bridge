@@ -16,8 +16,8 @@ from datetime import datetime
 def home():
 	emailjs_public = os.getenv('EMAILJS_PUBLIC_KEY', '')
 	emailjs_service = os.getenv('EMAILJS_SERVICE_ID', '')
-	# Prefer a dedicated newsletter template; fall back to general template
-	emailjs_template = os.getenv('EMAILJS_NEWSLETTER_TEMPLATE_ID', os.getenv('EMAILJS_TEMPLATE_ID', ''))
+	# Try contact template first, then newsletter template as fallback
+	emailjs_template = os.getenv('EMAILJS_CONTACT_TEMPLATE_ID', os.getenv('EMAILJS_NEWSLETTER_TEMPLATE_ID', os.getenv('EMAILJS_TEMPLATE_ID', '')))
 	return render_template(
 		'index.html',
 		EMAILJS_PUBLIC=emailjs_public,

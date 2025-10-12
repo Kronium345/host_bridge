@@ -13,10 +13,14 @@ anychart.onDocumentReady(function () {
             // Create a choropleth series with the data directly
             let series = map.choropleth(data);
 
-            // Configure the color scale based on regulation levels
-            series.colorScale(
-                anychart.scales.linearColor("#d4e9d7", "#90d4a0", "#2E8B57", "#1a5c3a")
-            );
+            // Use ordinal color scale based on regulation levels
+            var colorScale = anychart.scales.ordinalColor();
+            colorScale.ranges([
+                { less: 4.5, color: "#2E8B57" },
+                { from: 2.5, to: 4.5, color: "#f59e0b" },
+                { greater: 0, less: 2.5, color: "#ef4444" }
+            ]);
+            series.colorScale(colorScale);
 
             // Set stroke (border) for regions
             series.stroke("#ffffff", 1);
@@ -37,9 +41,9 @@ anychart.onDocumentReady(function () {
                 .format(function (d) {
                     if (d.getData('name')) {
                         return (
-                            "<div style='font-size:12px; padding:5px;'>" +
-                            "<b>" + d.getData('name') + "</b><br/>" +
-                            "<span style='color:#666;'>" + d.getData('description') + "</span>" +
+                            "<div style='font-size:12px; padding:10px; background:white; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.12);'>" +
+                            "<b style='color:#1a1a1a;'>" + d.getData('name') + "</b><br/>" +
+                            "<span style='color:#333333;'>" + d.getData('description') + "</span>" +
                             "</div>"
                         );
                     } else {
