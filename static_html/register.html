@@ -392,17 +392,20 @@
                             // Successful registration, redirect to homepage
                             window.location.href = 'https://host-bridge.com/index.html';
                         } else {
-                            // Check if there's an error response
-                            const text = await response.text();
-
-                            // Try to parse as JSON for error messages
-                            try {
-                                const errorData = JSON.parse(text);
-                                if (errorData.error) {
-                                    showToast(errorData.error, 'error');
+                            // Check response content type
+                            const contentType = response.headers.get('content-type');
+                            if (contentType && contentType.includes('application/json')) {
+                                // JSON response
+                                const data = await response.json();
+                                if (data.success && data.redirect_url) {
+                                    // Successful registration, redirect to the provided URL
+                                    window.location.href = data.redirect_url;
+                                } else if (data.error) {
+                                    showToast(data.error, 'error');
                                 }
-                            } catch {
-                                // If not JSON, check for flash messages in HTML
+                            } else {
+                                // HTML response - check for flash messages
+                                const text = await response.text();
                                 if (text.includes('already exists') || text.includes('do not match') || text.includes('required')) {
                                     showToast('Registration failed. Please check your details and try again.', 'error');
                                 } else {

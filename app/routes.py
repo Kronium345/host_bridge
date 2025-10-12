@@ -162,6 +162,11 @@ def login():
 			session['user_id'] = user['id']
 			session['user_email'] = user['email']
 			flash('Logged in successfully.', 'success')
+			
+			# For AJAX requests, return JSON instead of redirecting
+			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+				return jsonify({'success': True, 'redirect_url': 'https://host-bridge.com/index.html'})
+			
 			return redirect('https://host-bridge.com/index.html')
 		
 		error_msg = 'Invalid email or password.'
@@ -333,6 +338,11 @@ def register():
 		session['user_id'] = user_id
 		session['user_email'] = email
 		flash('Account created. You are now signed in.', 'success')
+		
+		# For AJAX requests, return JSON instead of redirecting
+		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+			return jsonify({'success': True, 'redirect_url': 'https://host-bridge.com/index.html'})
+		
 		# Redirect to Hostinger frontend after successful registration
 		return redirect('https://host-bridge.com/index.html')
 	
