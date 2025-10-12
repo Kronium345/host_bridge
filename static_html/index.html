@@ -898,8 +898,17 @@
         }
 
         function updateHeaderForLoggedInUser(user) {
+            console.log('updateHeaderForLoggedInUser called with user:', user);
+
             const loginBtn = document.querySelector('a[href="./login.html"]');
             const registerBtn = document.querySelector('a[href="./register.html"]');
+
+            console.log('Login button found:', loginBtn);
+            console.log('Register button found:', registerBtn);
+
+            // Try alternative selectors
+            const allLinks = document.querySelectorAll('a');
+            console.log('All links on page:', Array.from(allLinks).map(a => ({ href: a.href, text: a.textContent })));
 
             if (loginBtn && registerBtn) {
                 // Replace login/register buttons with user info
