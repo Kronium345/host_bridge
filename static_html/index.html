@@ -910,46 +910,24 @@
             const allLinks = document.querySelectorAll('a');
             console.log('All links on page:', Array.from(allLinks).map(a => ({ href: a.href, text: a.textContent })));
 
-            if (loginBtn && registerBtn) {
-                // Replace login/register buttons with user info
-                const userInfo = document.createElement('div');
-                userInfo.className = 'user-info';
-                userInfo.innerHTML = `
-                    <span class="user-name">${user.first_name || user.email}</span>
-                    <a href="https://host-bridge.onrender.com/logout" class="logout-btn">Logout</a>
-                `;
+            // Find the navbar-right container (where the buttons are)
+            const navbarRight = document.querySelector('.navbar-right');
 
-                // Style the user info
-                userInfo.style.cssText = `
-                    display: flex;
-                    align-items: center;
-                    gap: 15px;
-                    font-size: 14px;
-                `;
+            if (navbarRight) {
+                // Create user display elements matching Jinja template style
+                const userEmail = document.createElement('span');
+                userEmail.textContent = user.first_name || user.email;
+                userEmail.style.cssText = 'margin-right:10px;color:#004c46;font-weight:600;';
 
-                const logoutBtn = userInfo.querySelector('.logout-btn');
-                logoutBtn.style.cssText = `
-                    background: #dc3545;
-                    color: white;
-                    padding: 8px 16px;
-                    border-radius: 5px;
-                    text-decoration: none;
-                    font-size: 14px;
-                    transition: background-color 0.3s;
-                `;
-                logoutBtn.addEventListener('mouseover', () => logoutBtn.style.background = '#c82333');
-                logoutBtn.addEventListener('mouseout', () => logoutBtn.style.background = '#dc3545');
+                const logoutLink = document.createElement('a');
+                logoutLink.href = 'https://host-bridge.onrender.com/logout';
+                logoutLink.textContent = 'Logout';
+                logoutLink.className = 'nav-button login-btn';
 
-                const userName = userInfo.querySelector('.user-name');
-                userName.style.cssText = `
-                    color: #2E8B57;
-                    font-weight: 600;
-                `;
-
-                // Replace the buttons
-                const parentContainer = loginBtn.parentNode;
-                parentContainer.replaceChild(userInfo, loginBtn);
-                parentContainer.removeChild(registerBtn);
+                // Clear existing content and add new elements
+                navbarRight.innerHTML = '';
+                navbarRight.appendChild(userEmail);
+                navbarRight.appendChild(logoutLink);
             }
         }
 
