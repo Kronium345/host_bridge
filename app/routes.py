@@ -147,7 +147,7 @@ def submit_property():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	if request.method == 'GET' and session.get('user_id'):
-		return redirect(url_for('home'))
+		return redirect('https://host-bridge.com/index.html')
 	if request.method == 'POST':
 		email = request.form.get('email', '').strip()
 		password = request.form.get('password', '')
@@ -156,7 +156,7 @@ def login():
 			session['user_id'] = user['id']
 			session['user_email'] = user['email']
 			flash('Logged in successfully.', 'success')
-			return redirect(url_for('home'))
+			return redirect('https://host-bridge.com/index.html')
 		flash('Invalid email or password.', 'error')
 	return render_template('login.html')
 
@@ -302,7 +302,8 @@ def reset_password(token):
 @app.route('/register', methods=['GET', 'POST'])
 def register():
 	if request.method == 'GET' and session.get('user_id'):
-		return redirect(url_for('home'))
+		# Redirect to Hostinger frontend, not Render backend
+		return redirect('https://host-bridge.com/index.html')
 	if request.method == 'POST':
 		first_name = request.form.get('name')
 		last_name = request.form.get('lastname')
@@ -325,14 +326,15 @@ def register():
 		session['user_id'] = user_id
 		session['user_email'] = email
 		flash('Account created. You are now signed in.', 'success')
-		return redirect(url_for('home'))
+		# Redirect to Hostinger frontend after successful registration
+		return redirect('https://host-bridge.com/index.html')
 	return render_template('register.html')
 
 @app.route('/logout')
 def logout():
 	session.clear()
 	flash('You have been signed out.', 'info')
-	return redirect(url_for('home'))
+	return redirect('https://host-bridge.com/index.html')
 
 
 @app.route('/filter-properties', methods=['POST'])
@@ -641,8 +643,9 @@ def auth_google_callback():
 		session.pop('oauth_state', None)
 		session.pop('oauth_next', None)
 		flash('Signed in with Google.', 'success')
-		print(f"DEBUG: Google auth successful, redirecting to home")
-		return redirect(url_for('home'))
+		print(f"DEBUG: Google auth successful, redirecting to Hostinger frontend")
+		# Redirect to Hostinger frontend after Google OAuth
+		return redirect('https://host-bridge.com/index.html')
 	except Exception as e:
 		print(f"DEBUG: Failed to create user account: {e}")
 		flash(f'Failed to create user account: {e}', 'error')
