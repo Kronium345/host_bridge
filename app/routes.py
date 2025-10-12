@@ -158,7 +158,10 @@ def login():
 			flash('Logged in successfully.', 'success')
 			return redirect('https://host-bridge.com/index.html')
 		flash('Invalid email or password.', 'error')
-	return render_template('login.html')
+		# Keep user on login page with error message
+		return redirect('https://host-bridge.com/login.html')
+	
+	return redirect('https://host-bridge.com/login.html')
 
 @app.route('/forgotpassword', methods=['GET', 'POST'])
 def forgotpassword():
@@ -185,23 +188,11 @@ def forgotpassword():
 		# Save token to database
 		create_password_reset_token(user['id'], token, expires_at)
 		
-		reset_url = f"https://host-bridge.com/reset_password.html?token={token}"
-		
-		# Pass data to template for EmailJS to send the email
-		emailjs_public = os.getenv('EMAILJS_PUBLIC_KEY', '')
-		emailjs_service = os.getenv('EMAILJS_SERVICE_ID', '')
-		emailjs_template = os.getenv('EMAILJS_PASSWORD_RESET_TEMPLATE_ID', os.getenv('EMAILJS_CONTACT_TEMPLATE_ID', ''))
-		
-		return render_template('forgotpassword.html', 
-		                      send_email=True,
-		                      user_email=email,
-		                      user_name=user.get('first_name', 'User'),
-		                      reset_url=reset_url,
-		                      EMAILJS_PUBLIC=emailjs_public,
-		                      EMAILJS_SERVICE=emailjs_service,
-		                      EMAILJS_PASSWORD_RESET_TEMPLATE=emailjs_template)
+		flash('If that email is registered, you will receive a password reset link shortly.', 'success')
+		return redirect('https://host-bridge.com/login.html')
 	
-	return render_template('forgotpassword.html', send_email=False)
+	
+	return redirect('https://host-bridge.com/forgotpassword.html')
 
 
 @app.route('/api/forgot-password', methods=['POST'])
@@ -256,8 +247,7 @@ def reset_password(token):
 			flash('This reset link has expired. Please request a new one.', 'error')
 			return redirect('https://host-bridge.com/forgotpassword.html')
 		
-		# Token is valid, show reset form
-		return render_template('reset_password.html', token=token)
+		return redirect(f'https://host-bridge.com/reset_password.html?token={token}')
 	
 	elif request.method == 'POST':
 		# Handle password update
@@ -266,15 +256,15 @@ def reset_password(token):
 		
 		if not new_password or not confirm_password:
 			flash('Please fill in all fields.', 'error')
-			return render_template('reset_password.html', token=token)
+			return redirect(f'https://host-bridge.com/reset_password.html?token={token}')
 		
 		if new_password != confirm_password:
 			flash('Passwords do not match.', 'error')
-			return render_template('reset_password.html', token=token)
+			return redirect(f'https://host-bridge.com/reset_password.html?token={token}')
 		
 		if len(new_password) < 6:
 			flash('Password must be at least 6 characters long.', 'error')
-			return render_template('reset_password.html', token=token)
+			return redirect(f'https://host-bridge.com/reset_password.html?token={token}')
 		
 		# Verify token again
 		token_data = get_password_reset_token(token)
@@ -302,7 +292,6 @@ def reset_password(token):
 @app.route('/register', methods=['GET', 'POST'])
 def register():
 	if request.method == 'GET' and session.get('user_id'):
-		# Redirect to Hostinger frontend, not Render backend
 		return redirect('https://host-bridge.com/index.html')
 	if request.method == 'POST':
 		first_name = request.form.get('name')
@@ -314,13 +303,13 @@ def register():
 
 		if not email or not password:
 			flash('Email and password are required.', 'error')
-			return render_template('register.html')
+			return redirect('https://host-bridge.com/register.html')
 		if password != confirm_password:
 			flash('Passwords do not match.', 'error')
-			return render_template('register.html')
+			return redirect('https://host-bridge.com/register.html')
 		if find_user_by_email(email):
 			flash('An account with that email already exists.', 'error')
-			return render_template('register.html')
+			return redirect('https://host-bridge.com/register.html')
 
 		user_id = create_user(email=email, password=password, first_name=first_name, last_name=last_name, phone=phone)
 		session['user_id'] = user_id
@@ -328,7 +317,8 @@ def register():
 		flash('Account created. You are now signed in.', 'success')
 		# Redirect to Hostinger frontend after successful registration
 		return redirect('https://host-bridge.com/index.html')
-	return render_template('register.html')
+	
+	return redirect('https://host-bridge.com/register.html')
 
 @app.route('/logout')
 def logout():
@@ -592,7 +582,7 @@ def login_google():
 	flow = _build_flow()
 	state = secrets.token_urlsafe(32)
 	session['oauth_state'] = state
-	next_url = request.args.get('next') or url_for('home')
+	next_url = request.args.get('next') or 'https://host-bridge.com/index.html'
 	session['oauth_next'] = next_url
 	auth_url, _ = flow.authorization_url(
 		access_type='offline',
