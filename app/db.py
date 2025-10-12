@@ -156,6 +156,12 @@ def find_user_by_email(email: str) -> Optional[Dict]:
         return dict(row) if row else None
 
 
+def get_user_by_id(user_id: int) -> Optional[Dict]:
+    with open_conn() as conn:
+        row = conn.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
+        return dict(row) if row else None
+
+
 def create_user(email: str, password: str, first_name: Optional[str] = None,
                 last_name: Optional[str] = None, phone: Optional[str] = None,
                 role: str = 'user', approval_status: str = 'approved',

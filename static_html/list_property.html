@@ -296,6 +296,74 @@
         window.clearFlashMessages = function () {
             window.flashMessages = [];
         };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const listingForm = document.querySelector('.listing-form');
+            if (listingForm) {
+                listingForm.addEventListener('submit', async function (e) {
+                    e.preventDefault();
+
+                    const submitBtn = listingForm.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.textContent;
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Submitting...';
+
+                    try {
+                        const formData = new FormData(listingForm);
+
+                        const response = await fetch('https://host-bridge.onrender.com/submit_property', {
+                            method: 'POST',
+                            body: formData,
+                            credentials: 'include',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+
+                        if (response.redirected) {
+                            // Successful submission, redirect to landlords page
+                            window.location.href = 'https://host-bridge.com/how_landlords.html';
+                        } else {
+                            const contentType = response.headers.get('content-type');
+                            if (contentType && contentType.includes('application/json')) {
+                                // JSON response
+                                const data = await response.json();
+                                if (data.success) {
+                                    showToast(data.success, 'success');
+                                    listingForm.reset();
+                                } else if (data.error) {
+                                    showToast(data.error, 'error');
+                                }
+                            } else {
+                                // HTML response - check for flash messages
+                                const text = await response.text();
+                                if (text.includes('required') || text.includes('missing')) {
+                                    showToast('Please fill in all required fields.', 'error');
+                                } else {
+                                    showToast('Submission failed. Please try again.', 'error');
+                                }
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Submission error:', error);
+                        showToast('Network error. Please check your connection and try again.', 'error');
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalText;
+                    }
+                });
+            }
+        });
+
+        function showToast(message, type) {
+            if (typeof window.toast === 'function') {
+                const extraClass = type === 'error' ? 'failure' : type;
+                window.toast(message, extraClass);
+            } else {
+                // Fallback to alert if toast function not available
+                alert(message);
+            }
+        }
     </script>
 
 </body>

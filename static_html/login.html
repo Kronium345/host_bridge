@@ -472,6 +472,92 @@
         window.clearFlashMessages = function () {
             window.flashMessages = [];
         };
+
+        // Handle login form submission with AJAX
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async function (e) {
+                    e.preventDefault();
+
+                    const submitBtn = loginForm.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.textContent;
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Signing In...';
+
+                    try {
+                        const formData = new FormData(loginForm);
+
+                        const response = await fetch('https://host-bridge.onrender.com/login', {
+                            method: 'POST',
+                            body: formData,
+                            credentials: 'include',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+
+                        if (response.redirected) {
+                            // Successful login, redirect to homepage
+                            window.location.href = 'https://host-bridge.com/index.html';
+                        } else {
+                            // Check if there's an error response
+                            const text = await response.text();
+
+                            // Try to parse as JSON for error messages
+                            try {
+                                const errorData = JSON.parse(text);
+                                if (errorData.error) {
+                                    showToast(errorData.error, 'error');
+                                }
+                            } catch {
+                                // If not JSON, show generic error
+                                showToast('Invalid email or password.', 'error');
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Login error:', error);
+                        showToast('Network error. Please check your connection and try again.', 'error');
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalText;
+                    }
+                });
+            }
+        });
+
+        function showToast(message, type) {
+            if (typeof window.toast === 'function') {
+                const extraClass = type === 'error' ? 'failure' : type;
+                window.toast(message, extraClass);
+            } else {
+                // Fallback to alert if toast function not available
+                alert(message);
+            }
+        }
+
+        // Check login status and redirect if already logged in
+        async function checkLoginStatus() {
+            try {
+                const response = await fetch('https://host-bridge.onrender.com/api/user/status', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    const userData = await response.json();
+                    if (userData.logged_in && userData.user) {
+                        // User is already logged in, redirect to homepage
+                        window.location.href = 'https://host-bridge.com/index.html';
+                    }
+                }
+            } catch (error) {
+                console.log('Not logged in or error checking status:', error);
+            }
+        }
+
+        // Check login status on page load
+        document.addEventListener('DOMContentLoaded', checkLoginStatus);
     </script>
 
 </body>

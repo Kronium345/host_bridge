@@ -5,7 +5,7 @@ from app.db import (verify_credentials, create_user, find_user_by_email, create_
                      get_user_verification_documents, check_verification_completion,
                      save_rating, get_ratings_for_target, calculate_average_rating,
                      create_password_reset_token, get_password_reset_token, mark_token_as_used,
-                     update_user_password, delete_expired_tokens)
+                     update_user_password, delete_expired_tokens, get_user_by_id)
 import os
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
@@ -127,7 +127,10 @@ def submit_property():
 	if not has_cleaner: missing.append('existing cleaner')
 
 	if missing:
-		flash(f"Please provide: {', '.join(missing)}.", 'error')
+		error_msg = f"Please provide: {', '.join(missing)}."
+		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+			return jsonify({'error': error_msg}), 400
+		flash(error_msg, 'error')
 		return redirect('https://host-bridge.com/how_landlords.html')
 
 	print('DEBUG: Landlord submission:', {
@@ -141,7 +144,10 @@ def submit_property():
 		'notes': notes,
 	})
 
-	flash('Thanks! Your property details were submitted. We will be in touch shortly.', 'success')
+	success_msg = 'Thanks! Your property details were submitted. We will be in touch shortly.'
+	if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+		return jsonify({'success': success_msg})
+	flash(success_msg, 'success')
 	return redirect('https://host-bridge.com/how_landlords.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -157,8 +163,11 @@ def login():
 			session['user_email'] = user['email']
 			flash('Logged in successfully.', 'success')
 			return redirect('https://host-bridge.com/index.html')
-		flash('Invalid email or password.', 'error')
-		# Keep user on login page with error message
+		
+		error_msg = 'Invalid email or password.'
+		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+			return jsonify({'error': error_msg}), 400
+		flash(error_msg, 'error')
 		return redirect('https://host-bridge.com/login.html')
 	
 	return redirect('https://host-bridge.com/login.html')
@@ -302,13 +311,22 @@ def register():
 		confirm_password = request.form.get('confirm_password', '')
 
 		if not email or not password:
-			flash('Email and password are required.', 'error')
+			error_msg = 'Email and password are required.'
+			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+				return jsonify({'error': error_msg}), 400
+			flash(error_msg, 'error')
 			return redirect('https://host-bridge.com/register.html')
 		if password != confirm_password:
-			flash('Passwords do not match.', 'error')
+			error_msg = 'Passwords do not match.'
+			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+				return jsonify({'error': error_msg}), 400
+			flash(error_msg, 'error')
 			return redirect('https://host-bridge.com/register.html')
 		if find_user_by_email(email):
-			flash('An account with that email already exists.', 'error')
+			error_msg = 'An account with that email already exists.'
+			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+				return jsonify({'error': error_msg}), 400
+			flash(error_msg, 'error')
 			return redirect('https://host-bridge.com/register.html')
 
 		user_id = create_user(email=email, password=password, first_name=first_name, last_name=last_name, phone=phone)
@@ -319,6 +337,25 @@ def register():
 		return redirect('https://host-bridge.com/index.html')
 	
 	return redirect('https://host-bridge.com/register.html')
+
+@app.route('/api/user/status', methods=['GET'])
+def get_user_status():
+	"""API endpoint to check if user is logged in"""
+	user_id = session.get('user_id')
+	if user_id:
+		user = get_user_by_id(user_id)
+		if user:
+			return jsonify({
+				'logged_in': True,
+				'user': {
+					'id': user['id'],
+					'email': user['email'],
+					'first_name': user.get('first_name'),
+					'last_name': user.get('last_name')
+				}
+			})
+	
+	return jsonify({'logged_in': False})
 
 @app.route('/logout')
 def logout():
