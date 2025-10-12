@@ -1,5 +1,9 @@
 # HostBridge (Flask + SQLite)
 
+**🌐 Live Demo:** [https://host-bridge.onrender.com](https://host-bridge.onrender.com)
+
+**Production:** Change "python run.py" to "gunicorn run:app" for future upgrade
+
 HostBridge is a web app for connecting landlords and short‑term rental (STR) operators, providing compliance resources, listings, and onboarding tools. It includes:
 
 - Static marketing pages and templates
