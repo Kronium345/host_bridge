@@ -100,6 +100,74 @@
         {% block content %}{% endblock %}
     </main>
 
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <!-- Company Info -->
+                <div class="footer-column">
+                    <h3 class="footer-heading">HostBridge</h3>
+                    <p class="footer-description">Your trusted partner in short-term rental compliance and onboarding.
+                        Connecting verified property owners with professional STR operators.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-column">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="{{ url_for('home') }}">Home</a></li>
+                        <li><a href="{{ url_for('how_landlords') }}">For Landlords</a></li>
+                        <li><a href="{{ url_for('how_operators') }}">For Operators</a></li>
+                        <li><a href="{{ url_for('list_property') }}">List Property</a></li>
+                        <li><a href="{{ url_for('find_property') }}">Find Property</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources -->
+                <div class="footer-column">
+                    <h4 class="footer-heading">Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="{{ url_for('legality_map') }}">STR Legality Map</a></li>
+                        <li><a href="{{ url_for('templates_resource') }}">Legal Templates</a></li>
+                        <li><a href="{{ url_for('verify') }}">Get Verified</a></li>
+                        <li><a href="{{ url_for('services') }}">Services</a></li>
+                        <li><a href="{{ url_for('marketplace_listings') }}">Marketplace</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact & Legal -->
+                <div class="footer-column">
+                    <h4 class="footer-heading">Contact & Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p class="footer-copyright">&copy; 2025 HostBridge. All rights reserved.</p>
+                    <div class="footer-badges">
+                        <span class="footer-badge"><i class="fas fa-shield-alt"></i> SSL Secured</span>
+                        <span class="footer-badge"><i class="fas fa-lock"></i> GDPR Compliant</span>
+                        <span class="footer-badge"><i class="fas fa-check-circle"></i> Verified</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <!-- Mobile nav backdrop -->
     <div class="nav-backdrop" id="nav-backdrop" tabindex="-1" aria-hidden="true"></div>
 

@@ -1,0 +1,86 @@
+[
+    {
+        "id": "GB.GG",
+        "name": "Glasgow",
+        "value": 5,
+        "regulation_level": "permitted",
+        "description": "Short-term let licensing required"
+    },
+    {
+        "id": "GB.EB",
+        "name": "Edinburgh",
+        "value": 5,
+        "regulation_level": "permitted",
+        "description": "Mandatory licensing scheme in operation"
+    },
+    {
+        "id": "GB.AB",
+        "name": "Aberdeen",
+        "value": 5,
+        "regulation_level": "permitted",
+        "description": "Licensing scheme in place"
+    },
+    {
+        "id": "GB.DU",
+        "name": "Dundee",
+        "value": 5,
+        "regulation_level": "permitted",
+        "description": "STR licensing required"
+    },
+    {
+        "id": "GB.MN",
+        "name": "Manchester",
+        "value": 2,
+        "regulation_level": "restricted",
+        "description": "Article 4 direction in some areas"
+    },
+    {
+        "id": "GB.LV",
+        "name": "Liverpool",
+        "value": 3,
+        "regulation_level": "restricted",
+        "description": "Self-regulation with monitoring"
+    },
+    {
+        "id": "GB.BI",
+        "name": "Birmingham",
+        "value": 3,
+        "regulation_level": "restricted",
+        "description": "Planning permission required for change of use"
+    },
+    {
+        "id": "GB.LE",
+        "name": "Leeds",
+        "value": 3,
+        "regulation_level": "restricted",
+        "description": "Local authority regulations apply"
+    },
+    {
+        "id": "GB.SH",
+        "name": "Sheffield",
+        "value": 2,
+        "regulation_level": "not-permitted",
+        "description": "Strict controls in place"
+    },
+    {
+        "id": "GB.BR",
+        "name": "Bristol",
+        "value": 3,
+        "regulation_level": "restricted",
+        "description": "Considering tighter regulations"
+    },
+    {
+        "id": "GB.CF",
+        "name": "Cardiff",
+        "value": 4,
+        "regulation_level": "restricted",
+        "description": "Registration scheme being implemented"
+    },
+    {
+        "id": "GB.BF",
+        "name": "Belfast",
+        "value": 5,
+        "regulation_level": "permitted",
+        "description": "Tourist accommodation registration required"
+    }
+]

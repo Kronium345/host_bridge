@@ -15,7 +15,7 @@
 <!-- Interactive Map Section -->
 <section class="map-section">
     <div class="map-container">
-        <div id="str-map"></div>
+        <div id="str-map" style="width: 100%; height: 600px;"></div>
 
         <!-- Legend -->
         <div class="map-legend">
@@ -29,25 +29,11 @@
             </div>
             <div class="legend-item">
                 <div class="legend-color not-permitted"></div>
-                <span>Not Permitted</span>
+                <span>Varies by Area</span>
             </div>
         </div>
     </div>
 </section>
-
-<!-- Popup Info Box (hidden by default) -->
-<div id="area-popup" class="area-popup">
-    <div class="popup-content">
-        <h3 id="popup-title">Area Information</h3>
-        <p id="popup-description">Click on an area to see details</p>
-        <a href="#" id="popup-link" class="popup-link">View licensing authority</a>
-        <div class="popup-stats">
-            <span class="stat-label">Average nightly rate:</span>
-            <span class="stat-value" id="popup-rate">£0</span>
-        </div>
-        <button class="popup-close" id="popup-close">&times;</button>
-    </div>
-</div>
 
 <!-- CTA Section -->
 <section class="legality-cta">
@@ -57,8 +43,17 @@
 {% endblock %}
 
 {% block scripts %}
-<!-- Leaflet CSS and JS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+<!-- AnyChart Scripts -->
+<script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-core.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-map.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.11.1/geodata/countries/united_kingdom/united_kingdom.js"></script>
+<script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-data-adapter.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-exports.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.15/proj4.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.anychart.com/releases/8.11.1/css/anychart-ui.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.anychart.com/releases/8.11.1/fonts/css/anychart-font.min.css">
+
+<!-- Legality Map Script -->
+<script src="{{ url_for('static', filename='js/legality_map.js') }}"></script>
 {% endblock %}

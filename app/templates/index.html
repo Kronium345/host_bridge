@@ -22,10 +22,17 @@
             <!-- Feature 1: Property Listings -->
             <div class="showcase-card">
                 <div class="showcase-header">
-                    <div class="showcase-icon">
-                        <i class="fas fa-home"></i>
+                    <div class="showcase-header-left">
+                        <div class="showcase-window-controls">
+                            <div class="window-control close"></div>
+                            <div class="window-control minimize"></div>
+                            <div class="window-control maximize"></div>
+                        </div>
+                        <div class="showcase-icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <h3>Property Listings</h3>
                     </div>
-                    <h3>Property Listings</h3>
                 </div>
                 <div class="showcase-preview">
                     <div class="preview-mockup property-listing-mockup">
@@ -75,10 +82,17 @@
             <!-- Feature 2: User Profiles -->
             <div class="showcase-card">
                 <div class="showcase-header">
-                    <div class="showcase-icon">
-                        <i class="fas fa-user-circle"></i>
+                    <div class="showcase-header-left">
+                        <div class="showcase-window-controls">
+                            <div class="window-control close"></div>
+                            <div class="window-control minimize"></div>
+                            <div class="window-control maximize"></div>
+                        </div>
+                        <div class="showcase-icon">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <h3>Verified Profiles</h3>
                     </div>
-                    <h3>Verified Profiles</h3>
                 </div>
                 <div class="showcase-preview">
                     <div class="preview-mockup profile-mockup">
@@ -121,10 +135,17 @@
             <!-- Feature 3: Messaging System -->
             <div class="showcase-card">
                 <div class="showcase-header">
-                    <div class="showcase-icon">
-                        <i class="fas fa-comments"></i>
+                    <div class="showcase-header-left">
+                        <div class="showcase-window-controls">
+                            <div class="window-control close"></div>
+                            <div class="window-control minimize"></div>
+                            <div class="window-control maximize"></div>
+                        </div>
+                        <div class="showcase-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>Secure Messaging</h3>
                     </div>
-                    <h3>Secure Messaging</h3>
                 </div>
                 <div class="showcase-preview">
                     <div class="preview-mockup messaging-mockup">
@@ -161,16 +182,27 @@
                         </div>
                     </div>
                 </div>
-                <p class="showcase-description">Communicate safely with built-in encrypted messaging</p>
+                <div class="showcase-card-footer">
+                    <p class="showcase-description" style="padding: 0; border: none; flex: 1;">Communicate safely with
+                        built-in encrypted messaging</p>
+                    <span class="coming-soon-badge"><i class="fas fa-clock"></i> Coming Soon</span>
+                </div>
             </div>
 
             <!-- Feature 4: Lease Templates -->
             <div class="showcase-card">
                 <div class="showcase-header">
-                    <div class="showcase-icon">
-                        <i class="fas fa-file-contract"></i>
+                    <div class="showcase-header-left">
+                        <div class="showcase-window-controls">
+                            <div class="window-control close"></div>
+                            <div class="window-control minimize"></div>
+                            <div class="window-control maximize"></div>
+                        </div>
+                        <div class="showcase-icon">
+                            <i class="fas fa-file-contract"></i>
+                        </div>
+                        <h3>Legal Templates</h3>
                     </div>
-                    <h3>Legal Templates</h3>
                 </div>
                 <div class="showcase-preview">
                     <div class="preview-mockup template-mockup">
@@ -212,46 +244,33 @@
             <!-- Feature 5: Interactive Map -->
             <div class="showcase-card">
                 <div class="showcase-header">
-                    <div class="showcase-icon">
-                        <i class="fas fa-map-marked-alt"></i>
+                    <div class="showcase-header-left">
+                        <div class="showcase-window-controls">
+                            <div class="window-control close"></div>
+                            <div class="window-control minimize"></div>
+                            <div class="window-control maximize"></div>
+                        </div>
+                        <div class="showcase-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <h3>STR Legality Map</h3>
                     </div>
-                    <h3>STR Legality Map</h3>
                 </div>
                 <div class="showcase-preview">
                     <div class="preview-mockup map-mockup">
-                        <div class="map-search">
-                            <i class="fas fa-search"></i>
-                            <span>Search location...</span>
-                        </div>
-                        <div class="map-view-interactive">
-                            <!-- Embedded mini map preview -->
-                            <iframe
-                                src="https://www.openstreetmap.org/export/embed.html?bbox=-0.489,51.28,0.236,51.686&layer=mapnik&marker=51.5074,-0.1278"
-                                style="border: none; width: 100%; height: 180px; border-radius: 8px;"
-                                frameborder="0"></iframe>
-                            <div class="map-overlay-markers">
-                                <div class="map-marker permitted-marker" style="top: 30%; left: 40%;"
-                                    title="London - Permitted">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                </div>
-                                <div class="map-marker restricted-marker" style="top: 50%; left: 60%;"
-                                    title="Manchester - Restricted">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                </div>
-                                <div class="map-marker permitted-marker" style="top: 65%; left: 35%;"
-                                    title="Birmingham - Permitted">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="map-legend">
+                        <div id="showcase-choropleth-container" style="width: 100%; height: 280px;"></div>
+                        <div class="map-legend" style="margin-top: 16px;">
                             <div class="legend-item permitted">
                                 <div class="legend-dot"></div>
-                                <span>Permitted (e.g., Edinburgh)</span>
+                                <span>Permitted</span>
                             </div>
                             <div class="legend-item restricted">
-                                <div class="legend-dot"></div>
-                                <span>Restricted (e.g., Manchester)</span>
+                                <div class="legend-dot" style="background: #f59e0b;"></div>
+                                <span>Restricted</span>
+                            </div>
+                            <div class="legend-item" style="color: #6b7280;">
+                                <div class="legend-dot" style="background: #e5e7eb;"></div>
+                                <span>Varies by Area</span>
                             </div>
                         </div>
                     </div>
@@ -262,10 +281,17 @@
             <!-- Feature 6: Calendar & Bookings -->
             <div class="showcase-card">
                 <div class="showcase-header">
-                    <div class="showcase-icon">
-                        <i class="fas fa-calendar-alt"></i>
+                    <div class="showcase-header-left">
+                        <div class="showcase-window-controls">
+                            <div class="window-control close"></div>
+                            <div class="window-control minimize"></div>
+                            <div class="window-control maximize"></div>
+                        </div>
+                        <div class="showcase-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <h3>Booking Calendar</h3>
                     </div>
-                    <h3>Booking Calendar</h3>
                 </div>
                 <div class="showcase-preview">
                     <div class="preview-mockup calendar-mockup">
@@ -300,7 +326,11 @@
                         </div>
                     </div>
                 </div>
-                <p class="showcase-description">Manage availability and bookings with our intuitive calendar</p>
+                <div class="showcase-card-footer">
+                    <p class="showcase-description" style="padding: 0; border: none; flex: 1;">Manage availability and
+                        bookings with our intuitive calendar</p>
+                    <span class="coming-soon-badge"><i class="fas fa-clock"></i> Coming Soon</span>
+                </div>
             </div>
         </div>
 
@@ -311,12 +341,12 @@
     </div>
 </section>
 
-<section class="video-section">
+<!-- <section class="video-section">
     <h2 class="video-title">Platform Demo</h2>
     <div class="video-container">
         <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Demo Video" allowfullscreen></iframe>
     </div>
-</section>
+</section> -->
 
 <section class="why-hostbridge-section">
     <div class="why-container">
@@ -608,6 +638,18 @@
 </section>
 {% endblock %}
 {% block scripts %}
+<!-- AnyChart Scripts -->
+<script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-core.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-map.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.11.1/geodata/countries/united_kingdom/united_kingdom.js"></script>
+<script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-data-adapter.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.15/proj4.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.anychart.com/releases/8.11.1/css/anychart-ui.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.anychart.com/releases/8.11.1/fonts/css/anychart-font.min.css">
+
+<!-- Showcase Choropleth Map Script -->
+<script src="{{ url_for('static', filename='js/showcase_map.js') }}"></script>
+
 <!-- EmailJS SDK and integration loaded only on pages that need it -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script src="{{ url_for('static', filename='js/email.js') }}"></script>
