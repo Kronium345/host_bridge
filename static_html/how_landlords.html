@@ -160,26 +160,8 @@
 
       <div class="rating-widget">
         <div class="rating-title">Rate an operator</div>
-        <div class="star-widget">
-          <div class="star-row">
-            <input type="radio" name="rate" id="rate-1" value="1">
-            <label for="rate-1" class="fas fa-star" data-value="1"></label>
-            <input type="radio" name="rate" id="rate-2" value="2">
-            <label for="rate-2" class="fas fa-star" data-value="2"></label>
-            <input type="radio" name="rate" id="rate-3" value="3">
-            <label for="rate-3" class="fas fa-star" data-value="3"></label>
-            <input type="radio" name="rate" id="rate-4" value="4">
-            <label for="rate-4" class="fas fa-star" data-value="4"></label>
-            <input type="radio" name="rate" id="rate-5" value="5">
-            <label for="rate-5" class="fas fa-star" data-value="5"></label>
-          </div>
-          <form action="#" id="operator-review-form">
-            <header id="rating-caption" role="status" aria-live="polite"></header>
-            <div class="textarea"><textarea id="rating-notes" placeholder="Optional: share brief feedback"></textarea>
-            </div>
-            <div class="btn"><button type="submit">Submit rating</button></div>
-          </form>
-        </div>
+        <div id="operator-rating" class="star-rating-container" data-target-type="operator"
+          data-target-id="sample-operator-1" data-max-stars="5"></div>
       </div>
     </section>
 
@@ -336,52 +318,6 @@
       <a href="./list_property.html" class="cta-button">Get Started</a>
     </section>
 
-    <script>
-      (function () {
-        const captions = { 1: "Very dissatisfied", 2: "Dissatisfied", 3: "Neutral", 4: "Satisfied", 5: "Delighted" };
-        const form = document.getElementById('operator-review-form');
-        const caption = document.getElementById('rating-caption');
-        const notes = document.getElementById('rating-notes');
-        const radios = document.querySelectorAll('.star-widget input[type="radio"]');
-        const labels = document.querySelectorAll('.star-widget label.fas.fa-star');
-
-        function applyActiveStars(val) {
-          labels.forEach(l => {
-            const v = Number(l.getAttribute('data-value'));
-            l.classList.remove('active');
-            if (v <= val && val > 0) { l.classList.add('active'); }
-          });
-          caption.textContent = val > 0 ? (captions[val] || '') : '';
-        }
-
-        labels.forEach(l => {
-          l.addEventListener('click', () => {
-            const val = Number(l.getAttribute('data-value'));
-            const radio = document.getElementById('rate-' + val);
-            if (radio) radio.checked = true;
-            applyActiveStars(val);
-          });
-        });
-
-        radios.forEach(r => r.addEventListener('change', () => applyActiveStars(Number(r.value))));
-
-        // Start with no stars selected
-        applyActiveStars(0);
-
-        if (form) {
-          form.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const selected = Array.from(radios).find(r => r.checked);
-            if (!selected) { if (window.toast) toast('Please select a rating.', 'warn'); return; }
-            if (window.toast) toast('Thank you. Your feedback has been recorded.', 'success');
-            caption.textContent = '';
-            notes.value = '';
-            radios.forEach(r => r.checked = false);
-            applyActiveStars(0);
-          });
-        }
-      })();
-    </script>
   </main>
 
   <!-- Footer -->
@@ -462,6 +398,7 @@
   <!-- EmailJS SDK and integration loaded only on pages that need it -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script src="./js/email.js "></script>
+  <script src="./js/star-rating.js"></script>
 
   <script src="./js/toast.js"></script>
   <script>

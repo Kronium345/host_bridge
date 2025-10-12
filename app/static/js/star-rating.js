@@ -258,15 +258,18 @@ document.addEventListener('DOMContentLoaded', function () {
 // CSS Styles for star rating (add to your CSS file)
 const starRatingCSS = `
 .star-rating-widget {
-    display: inline-block;
-    margin: 10px 0;
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    max-width: 500px;
 }
 
 .stars-container {
     display: flex;
     flex-direction: row;
+    justify-content: center;
     gap: 2px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .star-rating-widget input[type="radio"] {
@@ -288,32 +291,42 @@ const starRatingCSS = `
 .rating-feedback {
     font-size: 0.9em;
     color: #666;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     min-height: 20px;
+    text-align: center;
 }
 
 .rating-actions {
-    margin-top: 10px;
+    margin-top: 15px;
+    text-align: center;
+    width: 100%;
 }
 
 .rating-actions textarea {
-    width: 100%;
-    padding: 8px;
+    width: 80%;
+    max-width: 400px;
+    padding: 12px;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 6px;
     resize: vertical;
-    margin-bottom: 10px;
+    margin: 0 auto 15px auto;
     font-family: inherit;
+    display: block;
+    font-size: 14px;
 }
 
 .rating-actions button {
-    padding: 8px 16px;
+    padding: 12px 24px;
     background: #2E8B57;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     transition: background 0.2s;
+    display: block;
+    margin: 0 auto;
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .rating-actions button:hover {
