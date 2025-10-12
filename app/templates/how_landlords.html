@@ -74,25 +74,8 @@
 
   <div class="rating-widget">
     <div class="rating-title">Rate an operator</div>
-    <div class="star-widget">
-      <div class="star-row">
-        <input type="radio" name="rate" id="rate-1" value="1">
-        <label for="rate-1" class="fas fa-star" data-value="1"></label>
-        <input type="radio" name="rate" id="rate-2" value="2">
-        <label for="rate-2" class="fas fa-star" data-value="2"></label>
-        <input type="radio" name="rate" id="rate-3" value="3">
-        <label for="rate-3" class="fas fa-star" data-value="3"></label>
-        <input type="radio" name="rate" id="rate-4" value="4">
-        <label for="rate-4" class="fas fa-star" data-value="4"></label>
-        <input type="radio" name="rate" id="rate-5" value="5">
-        <label for="rate-5" class="fas fa-star" data-value="5"></label>
-      </div>
-      <form action="#" id="operator-review-form">
-        <header id="rating-caption" role="status" aria-live="polite"></header>
-        <div class="textarea"><textarea id="rating-notes" placeholder="Optional: share brief feedback"></textarea></div>
-        <div class="btn"><button type="submit">Submit rating</button></div>
-      </form>
-    </div>
+    <div id="operator-rating" class="star-rating-container" data-target-type="operator"
+      data-target-id="sample-operator-1" data-max-stars="5"></div>
   </div>
 </section>
 
@@ -299,4 +282,6 @@
 <!-- EmailJS SDK and integration loaded only on pages that need it -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script src="{{ url_for('static', filename='js/email.js') }}"></script>
+<!-- Star Rating System -->
+<script src="{{ url_for('static', filename='js/star-rating.js') }}"></script>
 {% endblock %}

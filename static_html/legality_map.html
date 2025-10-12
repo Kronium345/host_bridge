@@ -17,8 +17,6 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Leaflet Map CSS (fixed) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="./css/styles.css">
@@ -86,44 +84,44 @@
     <!-- Main Content -->
     <main class="main-content">
         <!-- Hero Section -->
-<section class="legality-hero">
-    <h1>Check if your property is STR-ready</h1>
-    <div class="search-container">
-        <input type="text" id="postcode-search" placeholder="Enter postcode" class="search-input">
-        <button class="search-btn" id="search-btn">
-            <i class="fas fa-search"></i>
-        </button>
-    </div>
-</section>
-
-<!-- Interactive Map Section -->
-<section class="map-section">
-    <div class="map-container">
-        <div id="str-map" style="width: 100%; height: 600px;"></div>
-
-        <!-- Legend -->
-        <div class="map-legend">
-            <div class="legend-item">
-                <div class="legend-color permitted"></div>
-                <span>STR Permitted</span>
+        <section class="legality-hero">
+            <h1>Check if your property is STR-ready</h1>
+            <div class="search-container">
+                <input type="text" id="postcode-search" placeholder="Enter postcode" class="search-input">
+                <button class="search-btn" id="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
             </div>
-            <div class="legend-item">
-                <div class="legend-color restricted"></div>
-                <span>Restricted / Permit Needed</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color not-permitted"></div>
-                <span>Varies by Area</span>
-            </div>
-        </div>
-    </div>
-</section>
+        </section>
 
-<!-- CTA Section -->
-<section class="legality-cta">
-    <h2>List your property on HostBridge today</h2>
-    <a href="./list_property.html" class="cta-button">Get Started</a>
-</section>
+        <!-- Interactive Map Section -->
+        <section class="map-section">
+            <div class="map-container">
+                <div id="str-map" style="width: 100%; height: 600px;"></div>
+
+                <!-- Legend -->
+                <div class="map-legend">
+                    <div class="legend-item">
+                        <div class="legend-color permitted"></div>
+                        <span>STR Permitted</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color restricted"></div>
+                        <span>Restricted / Permit Needed</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color not-permitted"></div>
+                        <span>Varies by Area</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="legality-cta">
+            <h2>List your property on HostBridge today</h2>
+            <a href="./list_property.html" class="cta-button">Get Started</a>
+        </section>
     </main>
 
     <!-- Footer -->
@@ -197,23 +195,21 @@
     <!-- Mobile nav backdrop -->
     <div class="nav-backdrop" id="nav-backdrop" tabindex="-1" aria-hidden="true"></div>
 
-    <!-- Leaflet JS (fixed) -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
     <!-- Page-Specific Scripts -->
     <!-- AnyChart Scripts -->
-<script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-core.min.js"></script>
-<script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-map.min.js"></script>
-<script src="https://cdn.anychart.com/releases/8.11.1/geodata/countries/united_kingdom/united_kingdom.js"></script>
-<script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-data-adapter.min.js"></script>
-<script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-exports.min.js"></script>
-<script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-ui.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.15/proj4.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.anychart.com/releases/8.11.1/css/anychart-ui.min.css">
-<link rel="stylesheet" type="text/css" href="https://cdn.anychart.com/releases/8.11.1/fonts/css/anychart-font.min.css">
+    <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-core.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-map.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.1/geodata/countries/united_kingdom/united_kingdom.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-data-adapter.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-exports.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.15/proj4.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.anychart.com/releases/8.11.1/css/anychart-ui.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.anychart.com/releases/8.11.1/fonts/css/anychart-font.min.css">
 
-<!-- Legality Map Script -->
-<script src="./js/legality_map.js "></script>
+    <!-- Legality Map Script -->
+    <script src="./js/legality_map.js"></script>
 
     <script src="./js/toast.js"></script>
     <script>

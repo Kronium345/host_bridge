@@ -2,7 +2,8 @@ from app import app
 from flask import render_template, request, redirect, url_for, session, flash, jsonify
 from app.db import (verify_credentials, create_user, find_user_by_email, create_or_link_google_user,
                      save_verification_document, get_user_verification_status, 
-                     get_user_verification_documents, check_verification_completion)
+                     get_user_verification_documents, check_verification_completion,
+                     save_rating, get_ratings_for_target, calculate_average_rating)
 import os
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
@@ -509,3 +510,63 @@ def auth_google_callback():
 		print(f"DEBUG: Failed to create user account: {e}")
 		flash(f'Failed to create user account: {e}', 'error')
 		return redirect(url_for('login'))
+
+# Rating API endpoints
+@app.route('/api/ratings', methods=['POST'])
+def submit_rating():
+	"""Submit a new rating"""
+	try:
+		data = request.get_json()
+		
+		# Validate required fields
+		if not data or 'rating' not in data:
+			return jsonify({'success': False, 'message': 'Rating is required'}), 400
+		
+		rating = data['rating']
+		if not isinstance(rating, (int, float)) or rating < 1 or rating > 5:
+			return jsonify({'success': False, 'message': 'Rating must be between 1 and 5'}), 400
+		
+		# Get user info (optional - can work without login)
+		user_id = session.get('user_id')
+		user_email = session.get('user_email')
+		
+		# Prepare rating data
+		rating_data = {
+			'rating': float(rating),
+			'comment': data.get('comment', ''),
+			'target_id': data.get('targetId', 'general'),
+			'target_type': data.get('targetType', 'general'),
+			'user_id': user_id,
+			'user_email': user_email,
+			'timestamp': data.get('timestamp', datetime.now().isoformat())
+		}
+		
+		# Save to database
+		rating_id = save_rating(rating_data)
+		
+		return jsonify({
+			'success': True, 
+			'message': 'Rating submitted successfully',
+			'rating_id': rating_id
+		})
+		
+	except Exception as e:
+		print(f"Error submitting rating: {e}")
+		return jsonify({'success': False, 'message': 'Failed to submit rating'}), 500
+
+@app.route('/api/ratings/<target_type>/<target_id>', methods=['GET'])
+def get_ratings(target_type, target_id):
+	"""Get ratings for a specific target"""
+	try:
+		ratings = get_ratings_for_target(target_type, target_id)
+		
+		return jsonify({
+			'success': True,
+			'ratings': ratings,
+			'average_rating': calculate_average_rating(ratings),
+			'total_ratings': len(ratings)
+		})
+		
+	except Exception as e:
+		print(f"Error fetching ratings: {e}")
+		return jsonify({'success': False, 'message': 'Failed to fetch ratings'}), 500

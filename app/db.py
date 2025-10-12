@@ -114,6 +114,23 @@ def init_db():
             """
         )
 
+        # Create ratings table
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS ratings (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                user_email TEXT,
+                rating REAL NOT NULL CHECK (rating >= 1 AND rating <= 5),
+                comment TEXT,
+                target_type TEXT DEFAULT 'general', -- 'operator', 'property', 'service', etc.
+                target_id TEXT DEFAULT 'general', -- ID of the item being rated
+                timestamp TEXT DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+            )
+            """
+        )
+
 
 # -----------------------
 # User helpers (Auth)
@@ -335,3 +352,53 @@ def check_verification_completion(user_id: int) -> Dict:
         'role_verified': has_role,
         'all_complete': all_complete
     }
+
+
+# -----------------------
+# Rating system helpers
+# -----------------------
+
+def save_rating(rating_data: dict) -> int:
+    """Save a rating to the database."""
+    with open_conn() as conn:
+        cur = conn.execute(
+            """
+            INSERT INTO ratings 
+            (user_id, user_email, rating, comment, target_type, target_id, timestamp)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                rating_data.get('user_id'),
+                rating_data.get('user_email'),
+                rating_data['rating'],
+                rating_data.get('comment', ''),
+                rating_data.get('target_type', 'general'),
+                rating_data.get('target_id', 'general'),
+                rating_data.get('timestamp')
+            )
+        )
+        return cur.lastrowid
+
+
+def get_ratings_for_target(target_type: str, target_id: str) -> list:
+    """Get all ratings for a specific target."""
+    with open_conn() as conn:
+        rows = conn.execute(
+            """
+            SELECT rating, comment, user_email, timestamp 
+            FROM ratings 
+            WHERE target_type = ? AND target_id = ?
+            ORDER BY timestamp DESC
+            """,
+            (target_type, target_id)
+        ).fetchall()
+        return [dict(row) for row in rows]
+
+
+def calculate_average_rating(ratings: list) -> float:
+    """Calculate average rating from a list of rating records."""
+    if not ratings:
+        return 0.0
+    
+    total = sum(rating['rating'] for rating in ratings)
+    return round(total / len(ratings), 1)
