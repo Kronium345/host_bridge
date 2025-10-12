@@ -128,7 +128,7 @@ def submit_property():
 
 	if missing:
 		flash(f"Please provide: {', '.join(missing)}.", 'error')
-		return redirect(url_for('how_landlords'))
+		return redirect('https://host-bridge.com/how_landlords.html')
 
 	print('DEBUG: Landlord submission:', {
 		'rent': rent,
@@ -142,7 +142,7 @@ def submit_property():
 	})
 
 	flash('Thanks! Your property details were submitted. We will be in touch shortly.', 'success')
-	return redirect(url_for('how_landlords'))
+	return redirect('https://host-bridge.com/how_landlords.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -166,14 +166,14 @@ def forgotpassword():
 		email = request.form.get('email', '').strip().lower()
 		if not email:
 			flash('Please provide an email address.', 'error')
-			return redirect(url_for('forgotpassword'))
+			return redirect('https://host-bridge.com/forgotpassword.html')
 		
 		# Check if user exists
 		user = find_user_by_email(email)
 		if not user:
 			# Don't reveal if email exists or not (security best practice)
 			flash('If that email is registered, you will receive a password reset link shortly.', 'success')
-			return redirect(url_for('forgotpassword'))
+			return redirect('https://host-bridge.com/forgotpassword.html')
 		
 		# Generate secure token
 		token = secrets.token_urlsafe(32)
@@ -247,14 +247,14 @@ def reset_password(token):
 		token_data = get_password_reset_token(token)
 		if not token_data:
 			flash('Invalid or expired reset link.', 'error')
-			return redirect(url_for('forgotpassword'))
+			return redirect('https://host-bridge.com/forgotpassword.html')
 		
 		# Check if token is expired
 		from datetime import datetime
 		expires_at = datetime.fromisoformat(token_data['expires_at'])
 		if datetime.now() > expires_at:
 			flash('This reset link has expired. Please request a new one.', 'error')
-			return redirect(url_for('forgotpassword'))
+			return redirect('https://host-bridge.com/forgotpassword.html')
 		
 		# Token is valid, show reset form
 		return render_template('reset_password.html', token=token)
@@ -280,14 +280,14 @@ def reset_password(token):
 		token_data = get_password_reset_token(token)
 		if not token_data:
 			flash('Invalid or expired reset link.', 'error')
-			return redirect(url_for('forgotpassword'))
+			return redirect('https://host-bridge.com/forgotpassword.html')
 		
 		# Check if token is expired
 		from datetime import datetime
 		expires_at = datetime.fromisoformat(token_data['expires_at'])
 		if datetime.now() > expires_at:
 			flash('This reset link has expired. Please request a new one.', 'error')
-			return redirect(url_for('forgotpassword'))
+			return redirect('https://host-bridge.com/forgotpassword.html')
 		
 		# Update password
 		update_user_password(token_data['user_id'], new_password)
@@ -296,7 +296,7 @@ def reset_password(token):
 		mark_token_as_used(token)
 		
 		flash('Your password has been reset successfully! You can now log in.', 'success')
-		return redirect(url_for('login'))
+		return redirect('https://host-bridge.com/login.html')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -587,7 +587,7 @@ def _build_flow() -> Flow:
 def login_google():
 	if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
 		flash('Google OAuth is not configured. Set GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET.', 'error')
-		return redirect(url_for('login'))
+		return redirect('https://host-bridge.com/login.html')
 
 	flow = _build_flow()
 	state = secrets.token_urlsafe(32)
@@ -607,7 +607,7 @@ def login_google():
 def auth_google_callback():
 	if 'oauth_state' not in session or session['oauth_state'] != request.args.get('state'):
 		flash('Invalid login state. Please try again.', 'error')
-		return redirect(url_for('login'))
+		return redirect('https://host-bridge.com/login.html')
 
 	flow = _build_flow()
 	try:
@@ -615,7 +615,7 @@ def auth_google_callback():
 	except Exception as e:
 		print(f"DEBUG: Google auth failed during token fetch: {e}")
 		flash(f'Google auth failed: {e}', 'error')
-		return redirect(url_for('login'))
+		return redirect('https://host-bridge.com/login.html')
 
 	credentials = flow.credentials
 	request_adapter = google_requests.Request()
@@ -629,7 +629,7 @@ def auth_google_callback():
 	except Exception as e:
 		print(f"DEBUG: Google ID token verification failed: {e}")
 		flash(f'Could not verify Google ID token: {e}', 'error')
-		return redirect(url_for('login'))
+		return redirect('https://host-bridge.com/login.html')
 
 	google_sub = idinfo.get('sub')
 	email = idinfo.get('email')
@@ -649,7 +649,7 @@ def auth_google_callback():
 	except Exception as e:
 		print(f"DEBUG: Failed to create user account: {e}")
 		flash(f'Failed to create user account: {e}', 'error')
-		return redirect(url_for('login'))
+		return redirect('https://host-bridge.com/login.html')
 
 # Rating API endpoints
 @app.route('/api/ratings', methods=['POST'])
