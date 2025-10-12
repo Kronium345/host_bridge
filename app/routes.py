@@ -351,9 +351,14 @@ def register():
 @app.route('/api/user/status', methods=['GET'])
 def get_user_status():
 	"""API endpoint to check if user is logged in"""
+	print(f"DEBUG: /api/user/status called")
+	print(f"DEBUG: Session data: {dict(session)}")
+	print(f"DEBUG: User ID from session: {session.get('user_id')}")
+	
 	user_id = session.get('user_id')
 	if user_id:
 		user = get_user_by_id(user_id)
+		print(f"DEBUG: User found in DB: {user}")
 		if user:
 			return jsonify({
 				'logged_in': True,
@@ -365,6 +370,7 @@ def get_user_status():
 				}
 			})
 	
+	print(f"DEBUG: Returning logged_in: False")
 	return jsonify({'logged_in': False})
 
 @app.route('/logout')
