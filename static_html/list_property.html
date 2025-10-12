@@ -86,73 +86,104 @@
     <!-- Main Content -->
     <main class="main-content">
         <section class="hero">
-    <h1>List Your Property</h1>
-    <p>Reach trusted STR operators looking for properties like yours.</p>
-</section>
+            <h1>List Your Property</h1>
+            <p>Reach trusted STR operators looking for properties like yours.</p>
+        </section>
 
-<section class="map-filters-section">
-    <div class="map-filter-container">
-        <div class="map-box">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!..." width="100%" height="400" style="border:0; border-radius: 10px;" allowfullscreen="" loading="lazy"></iframe>
-        </div>
+        <section class="map-filters-section">
+            <div class="map-filter-container">
+                <div class="map-box">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!..." width="100%" height="400"
+                        style="border:0; border-radius: 10px;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
 
-        <div class="filters-box">
-            <h3>Property Listing Details</h3>
-            <form class="listing-form">
-                <label>Property Title:</label>
-                <input type="text" placeholder="e.g. Spacious 2BHK near Heathrow" required>
+                <div class="filters-box">
+                    <h3>Property Listing Details</h3>
+                    <form class="listing-form" action="https://host-bridge.onrender.com/submit_property" method="post">
+                        <label>Property Title:</label>
+                        <input type="text" name="title" placeholder="e.g. Spacious 2BHK near Heathrow" required>
 
-                <label>Region:</label>
-                <select>
-                    <option value="">-- Select Region --</option>
-                    <option>London</option>
-                    <option>Manchester</option>
-                    <option>Birmingham</option>
-                </select>
+                        <label>Region:</label>
+                        <select name="area" required>
+                            <option value="">-- Select Region --</option>
+                            <option value="London">London</option>
+                            <option value="Manchester">Manchester</option>
+                            <option value="Birmingham">Birmingham</option>
+                        </select>
 
-                <label>Property Type:</label>
-                <select>
-                    <option value="">-- Select Type --</option>
-                    <option>Flat</option>
-                    <option>House</option>
-                    <option>Studio</option>
-                </select>
+                        <label>Property Type:</label>
+                        <select name="property_type">
+                            <option value="">-- Select Type --</option>
+                            <option value="Flat">Flat</option>
+                            <option value="House">House</option>
+                            <option value="Studio">Studio</option>
+                        </select>
 
-                <label>STR Regulation Compliance:</label>
-                <select>
-                    <option value="">-- Select --</option>
-                    <option>Compliant</option>
-                    <option>Pending</option>
-                    <option>Not Sure</option>
-                </select>
+                        <label>STR Regulation Compliance:</label>
+                        <select name="compliance">
+                            <option value="">-- Select --</option>
+                            <option value="Compliant">Compliant</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Not Sure">Not Sure</option>
+                        </select>
 
-                <label>Furnishings:</label>
-                <select>
-                    <option value="">-- Select --</option>
-                    <option>Fully Furnished</option>
-                    <option>Semi Furnished</option>
-                    <option>Unfurnished</option>
-                </select>
+                        <label>Furnishings:</label>
+                        <select name="furnishing" required>
+                            <option value="">-- Select --</option>
+                            <option value="Fully Furnished">Fully Furnished</option>
+                            <option value="Semi Furnished">Semi Furnished</option>
+                            <option value="Unfurnished">Unfurnished</option>
+                        </select>
 
-                <label>Description:</label>
-                <textarea rows="4" placeholder="Describe your property and features..."></textarea>
+                        <label>Monthly Rent (£):</label>
+                        <input type="number" name="rent" min="0" step="1" placeholder="e.g. 1800" required>
 
-                <button type="submit">Submit Listing</button>
+                        <label>Deposit (£):</label>
+                        <input type="number" name="deposit" min="0" step="1" placeholder="e.g. 2000" required>
 
-                <p class="note">🎉 List up to <strong>2 properties</strong> for free with basic tools.</p>
-            </form>
-        </div>
-    </div>
-</section>
+                        <label>Number of Beds:</label>
+                        <select name="beds" required>
+                            <option value="">-- Select --</option>
+                            <option value="1">1 Bed</option>
+                            <option value="2">2 Beds</option>
+                            <option value="3">3 Beds</option>
+                            <option value="4+">4+ Beds</option>
+                        </select>
 
-<section class="tools-section">
-    <h3>Free Tools with Every Listing</h3>
-    <ul class="tools-list">
-        <li>✔️ Preview your listing before publishing</li>
-        <li>✔️ Edit or Delete listings anytime</li>
-        <li>✔️ Get notified when operators express interest</li>
-    </ul>
-</section>
+                        <label>Number of Bathrooms:</label>
+                        <select name="baths" required>
+                            <option value="">-- Select --</option>
+                            <option value="1">1 Bathroom</option>
+                            <option value="2">2 Bathrooms</option>
+                            <option value="3+">3+ Bathrooms</option>
+                        </select>
+
+                        <label>Existing Cleaner:</label>
+                        <select name="has_cleaner" required>
+                            <option value="">-- Select --</option>
+                            <option value="Yes">Yes, I have a cleaner</option>
+                            <option value="No">No, need help finding one</option>
+                        </select>
+
+                        <label>Description:</label>
+                        <textarea name="notes" rows="4" placeholder="Describe your property and features..."></textarea>
+
+                        <button type="submit">Submit Listing</button>
+
+                        <p class="note">🎉 List up to <strong>2 properties</strong> for free with basic tools.</p>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="tools-section">
+            <h3>Free Tools with Every Listing</h3>
+            <ul class="tools-list">
+                <li>✔️ Preview your listing before publishing</li>
+                <li>✔️ Edit or Delete listings anytime</li>
+                <li>✔️ Get notified when operators express interest</li>
+            </ul>
+        </section>
     </main>
 
     <!-- Footer -->
@@ -230,7 +261,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <!-- Page-Specific Scripts -->
-    
+
 
     <script src="./js/toast.js"></script>
     <script>
