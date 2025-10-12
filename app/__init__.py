@@ -11,7 +11,9 @@ CORS(app, origins=[
     'https://www.host-bridge.com', 
     'http://localhost:5000',  
     'http://127.0.0.1:5000'  
-])
+], supports_credentials=True, 
+    allow_headers=['Content-Type', 'Authorization', 'X-Requested-With'],
+    methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 
 # Ensure SQLite schema exists on startup
 init_db()
