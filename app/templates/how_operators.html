@@ -54,6 +54,9 @@
     <p style="margin: 0; color: #666;"><i class="fas fa-info-circle"></i> Please <a href="login.html"
         style="color: #004c46; text-decoration: underline;">log in</a> to make bookings and manage properties.</p>
   </div>
+
+  <!-- Toast container positioned below calendar -->
+  <div id="toast-container" style="position: relative; margin-top: 20px; display: flex; justify-content: center;"></div>
 </section>
 
 <script>
@@ -106,7 +109,7 @@
         if (status) { cell.classList.add(status); cell.setAttribute('data-status', status); }
         cell.innerHTML = `<span class="num">${d}</span>`;
         cell.addEventListener('click', () => {
-          window.location.href = 'login.html';
+          showLoginToast();
         });
         grid.appendChild(cell);
       }
@@ -118,6 +121,65 @@
     buildMonth(viewYear, viewMonth);
 
   })();
+
+  // Toast function for login reminder
+  function showLoginToast() {
+    const container = document.getElementById('toast-container');
+
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+      background: #004c46;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 500;
+      transform: translateY(-20px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    `;
+
+    toast.innerHTML = `
+      <i class="fas fa-info-circle"></i>
+      <span>Please log in to make bookings</span>
+      <a href="login.html" style="color: white; text-decoration: underline; margin-left: 10px;">Login</a>
+    `;
+
+    container.appendChild(toast);
+
+    // Trigger animation
+    requestAnimationFrame(() => {
+      toast.style.transform = 'translateY(0)';
+      toast.style.opacity = '1';
+    });
+
+    // Auto remove after 4 seconds
+    setTimeout(() => {
+      toast.style.transform = 'translateY(-20px)';
+      toast.style.opacity = '0';
+      setTimeout(() => {
+        if (container.contains(toast)) {
+          container.removeChild(toast);
+        }
+      }, 300);
+    }, 4000);
+
+    // Click to dismiss
+    toast.addEventListener('click', () => {
+      toast.style.transform = 'translateY(-20px)';
+      toast.style.opacity = '0';
+      setTimeout(() => {
+        if (container.contains(toast)) {
+          container.removeChild(toast);
+        }
+      }, 300);
+    });
+  }
 </script>
 
 <!-- Illustration Section -->
