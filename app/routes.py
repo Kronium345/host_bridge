@@ -5,7 +5,9 @@ from app.db import (verify_credentials, create_user, find_user_by_email, create_
                      get_user_verification_documents, check_verification_completion,
                      save_rating, get_ratings_for_target, calculate_average_rating,
                      create_password_reset_token, get_password_reset_token, mark_token_as_used,
-                     update_user_password, delete_expired_tokens, get_user_by_id)
+                     update_user_password, delete_expired_tokens, get_user_by_id,
+                     create_booking, get_user_bookings, get_property_bookings,
+                     create_testimonial, get_approved_testimonials, get_user_testimonial)
 import os
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
@@ -753,3 +755,122 @@ def get_ratings(target_type, target_id):
 	except Exception as e:
 		print(f"Error fetching ratings: {e}")
 		return jsonify({'success': False, 'message': 'Failed to fetch ratings'}), 500
+
+
+# -----------------------
+# Booking System Routes
+# -----------------------
+
+@app.route('/api/booking/create', methods=['POST'])
+def create_booking_api():
+	"""Create a new booking - requires login"""
+	if not session.get('user_id'):
+		return jsonify({'success': False, 'message': 'Please log in to make a booking'}), 401
+	
+	try:
+		data = request.get_json()
+		property_id = data.get('property_id', 1)  # Default to property 1
+		booking_date = data.get('booking_date')
+		booking_time = data.get('booking_time')
+		message = data.get('message', '')
+		
+		if not booking_date:
+			return jsonify({'success': False, 'message': 'Booking date is required'}), 400
+		
+		user_id = session['user_id']
+		booking_id = create_booking(user_id, property_id, booking_date, booking_time, message)
+		
+		return jsonify({
+			'success': True, 
+			'message': f'Booking created successfully for {booking_date}',
+			'booking_id': booking_id
+		})
+		
+	except Exception as e:
+		print(f"Error creating booking: {e}")
+		return jsonify({'success': False, 'message': 'Failed to create booking'}), 500
+
+
+@app.route('/api/booking/user', methods=['GET'])
+def get_user_bookings_api():
+	"""Get user's bookings - requires login"""
+	if not session.get('user_id'):
+		return jsonify({'success': False, 'message': 'Please log in to view bookings'}), 401
+	
+	try:
+		user_id = session['user_id']
+		bookings = get_user_bookings(user_id)
+		return jsonify({'success': True, 'bookings': bookings})
+		
+	except Exception as e:
+		print(f"Error fetching bookings: {e}")
+		return jsonify({'success': False, 'message': 'Failed to fetch bookings'}), 500
+
+
+# -----------------------
+# Testimonial System Routes
+# -----------------------
+
+@app.route('/api/testimonial/create', methods=['POST'])
+def create_testimonial_api():
+	"""Create a new testimonial - requires login"""
+	if not session.get('user_id'):
+		return jsonify({'success': False, 'message': 'Please log in to submit a testimonial'}), 401
+	
+	try:
+		data = request.get_json()
+		rating = data.get('rating')
+		comment = data.get('comment', '').strip()
+		
+		if not rating or rating < 1 or rating > 5:
+			return jsonify({'success': False, 'message': 'Rating must be between 1 and 5'}), 400
+		
+		if not comment:
+			return jsonify({'success': False, 'message': 'Comment is required'}), 400
+		
+		user_id = session['user_id']
+		
+		# Check if user already has a testimonial
+		existing = get_user_testimonial(user_id)
+		if existing:
+			return jsonify({'success': False, 'message': 'You have already submitted a testimonial'}), 400
+		
+		testimonial_id = create_testimonial(user_id, rating, comment)
+		
+		return jsonify({
+			'success': True, 
+			'message': 'Testimonial submitted successfully! It will be reviewed before being published.',
+			'testimonial_id': testimonial_id
+		})
+		
+	except Exception as e:
+		print(f"Error creating testimonial: {e}")
+		return jsonify({'success': False, 'message': 'Failed to submit testimonial'}), 500
+
+
+@app.route('/api/testimonials/approved', methods=['GET'])
+def get_approved_testimonials_api():
+	"""Get approved testimonials for display"""
+	try:
+		testimonials = get_approved_testimonials()
+		return jsonify({'success': True, 'testimonials': testimonials})
+		
+	except Exception as e:
+		print(f"Error fetching testimonials: {e}")
+		return jsonify({'success': False, 'message': 'Failed to fetch testimonials'}), 500
+
+
+@app.route('/api/testimonial/user', methods=['GET'])
+def get_user_testimonial_api():
+	"""Get user's testimonial - requires login"""
+	if not session.get('user_id'):
+		return jsonify({'success': False, 'message': 'Please log in to view your testimonial'}), 401
+	
+	try:
+		user_id = session['user_id']
+		testimonial = get_user_testimonial(user_id)
+		return jsonify({'success': True, 'testimonial': testimonial})
+		
+	except Exception as e:
+		print(f"Error fetching user testimonial: {e}")
+		return jsonify({'success': False, 'message': 'Failed to fetch testimonial'}), 500

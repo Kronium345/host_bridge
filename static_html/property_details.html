@@ -86,136 +86,136 @@
     <!-- Main Content -->
     <main class="main-content">
         <div class="property-details-container">
-    <div class="property-header">
-        <a href="./marketplace_listings.html" class="back-btn">
-            <i class="fas fa-arrow-left"></i> BACK
-        </a>
-        <h1 class="page-title">PROPERTY DETAILS</h1>
-    </div>
-
-    <div class="property-content">
-        <div class="property-image-section">
-            <div class="property-image">
-                <img id="pd-image" src="./images/pattern.png" alt="Property Image">
+            <div class="property-header">
+                <a href="./marketplace_listings.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> BACK
+                </a>
+                <h1 class="page-title">PROPERTY DETAILS</h1>
             </div>
-            <div class="property-info">
-                <div class="property-price" id="pd-price">£1200/mo</div>
-                <div class="property-specs">
-                    <span><i class="fas fa-bed"></i> <span id="pd-beds">3</span></span>
-                    <span><i class="fas fa-bath"></i> <span id="pd-baths">1</span></span>
-                    <span><i class="fas fa-couch"></i> <span id="pd-furnishing">F/U</span></span>
+
+            <div class="property-content">
+                <div class="property-image-section">
+                    <div class="property-image">
+                        <img id="pd-image" src="./images/pattern.png" alt="Property Image">
+                    </div>
+                    <div class="property-info">
+                        <div class="property-price" id="pd-price">£1200/mo</div>
+                        <div class="property-specs">
+                            <span><i class="fas fa-bed"></i> <span id="pd-beds">3</span></span>
+                            <span><i class="fas fa-bath"></i> <span id="pd-baths">1</span></span>
+                            <span><i class="fas fa-couch"></i> <span id="pd-furnishing">F/U</span></span>
+                        </div>
+                        <div class="property-address" id="pd-address">
+                            <strong>Address:</strong><br>
+                            123 Main Street, London, SW1A 1AA
+                        </div>
+                    </div>
                 </div>
-                <div class="property-address" id="pd-address">
-                    <strong>Address:</strong><br>
-                    123 Main Street, London, SW1A 1AA
+
+                <div class="financial-summary">
+                    <h3 class="financial-title">Financial Summary:</h3>
+                    <div class="financial-item">
+                        <span class="financial-label">Monthly Revenue:</span>
+                        <span class="financial-value">£2,400</span>
+                    </div>
+                    <div class="financial-item">
+                        <span class="financial-label">Profit / month:</span>
+                        <span class="financial-value">£1,200</span>
+                    </div>
+                    <div class="financial-item">
+                        <span class="financial-label">Upfront costs:</span>
+                        <span class="financial-value">£3,600</span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="financial-summary">
-            <h3 class="financial-title">Financial Summary:</h3>
-            <div class="financial-item">
-                <span class="financial-label">Monthly Revenue:</span>
-                <span class="financial-value">£2,400</span>
+            <div class="connect-section">
+                <h3 class="connect-title">Connect with landlord</h3>
+                <button class="submit-enquiry-btn">
+                    <i class="fas fa-paper-plane"></i> Submit enquiry
+                </button>
             </div>
-            <div class="financial-item">
-                <span class="financial-label">Profit / month:</span>
-                <span class="financial-value">£1,200</span>
+
+            <div class="regulations-section">
+                <div class="regulation-item">
+                    <span class="regulation-label">STR Regulations</span>
+                    <span class="regulation-status">Y</span>
+                </div>
+                <div class="regulation-item">
+                    <span class="regulation-label">Property Setup</span>
+                    <span class="regulation-status">Y</span>
+                </div>
             </div>
-            <div class="financial-item">
-                <span class="financial-label">Upfront costs:</span>
-                <span class="financial-value">£3,600</span>
+
+
+            <div class="admin-dashboard show" id="admin-dashboard">
+                <h3 class="admin-title">
+                    <i class="fas fa-shield-alt"></i> Admin Dashboard
+                </h3>
+                <div class="admin-actions">
+                    <button class="admin-btn" onclick="openLandlordForm()">
+                        <i class="fas fa-user-plus"></i> Landlord Form
+                    </button>
+                    <button class="admin-btn secondary" onclick="updateContact()">
+                        <i class="fas fa-phone"></i> Update Contact
+                    </button>
+                    <button class="admin-btn secondary" onclick="editDetails()">
+                        <i class="fas fa-edit"></i> Edit Details
+                    </button>
+                    <button class="admin-btn danger" onclick="deleteProperty()">
+                        <i class="fas fa-trash"></i> Delete Property
+                    </button>
+                </div>
             </div>
+
         </div>
-    </div>
 
-    <div class="connect-section">
-        <h3 class="connect-title">Connect with landlord</h3>
-        <button class="submit-enquiry-btn">
-            <i class="fas fa-paper-plane"></i> Submit enquiry
-        </button>
-    </div>
-
-    <div class="regulations-section">
-        <div class="regulation-item">
-            <span class="regulation-label">STR Regulations</span>
-            <span class="regulation-status">Y</span>
-        </div>
-        <div class="regulation-item">
-            <span class="regulation-label">Property Setup</span>
-            <span class="regulation-status">Y</span>
-        </div>
-    </div>
-
-    
-    <div class="admin-dashboard show" id="admin-dashboard">
-        <h3 class="admin-title">
-            <i class="fas fa-shield-alt"></i> Admin Dashboard
-        </h3>
-        <div class="admin-actions">
-            <button class="admin-btn" onclick="openLandlordForm()">
-                <i class="fas fa-user-plus"></i> Landlord Form
-            </button>
-            <button class="admin-btn secondary" onclick="updateContact()">
-                <i class="fas fa-phone"></i> Update Contact
-            </button>
-            <button class="admin-btn secondary" onclick="editDetails()">
-                <i class="fas fa-edit"></i> Edit Details
-            </button>
-            <button class="admin-btn danger" onclick="deleteProperty()">
-                <i class="fas fa-trash"></i> Delete Property
-            </button>
-        </div>
-    </div>
-    
-</div>
-
-<script>
-    function openLandlordForm() {
-        if (window.toast) window.toast('Opening landlord form...', 'info');
-    }
-    function updateContact() {
-        if (window.toast) window.toast('Opening contact update form...', 'info');
-    }
-    function editDetails() {
-        if (window.toast) window.toast('Opening property edit form...', 'info');
-    }
-    function deleteProperty() {
-        if (confirm('Are you sure you want to delete this property? This action cannot be undone.')) {
-            if (window.toast) window.toast('Property deleted successfully', 'success');
-            setTimeout(() => { window.location.href = "./marketplace_listings.html"; }, 1500);
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const userRole = '';
-        if (userRole === 'admin' || userRole === 'super_admin') {
-            const adminDashboard = document.getElementById('admin-dashboard');
-            if (adminDashboard) adminDashboard.classList.add('show');
-        }
-
-        // Load selected property from sessionStorage
-        try {
-            const raw = sessionStorage.getItem('selectedProperty');
-            if (raw) {
-                const data = JSON.parse(raw);
-                const img = document.getElementById('pd-image');
-                const price = document.getElementById('pd-price');
-                const beds = document.getElementById('pd-beds');
-                const baths = document.getElementById('pd-baths');
-                const furn = document.getElementById('pd-furnishing');
-                const addr = document.getElementById('pd-address');
-
-                if (img && data.image) img.src = data.image;
-                if (price && data.price) price.textContent = `£${Number(data.price).toLocaleString()}/mo`;
-                if (beds && data.beds) beds.textContent = data.beds;
-                if (baths && data.baths) baths.textContent = data.baths;
-                if (furn && data.furnishing) furn.textContent = data.furnishing;
-                if (addr && data.address) addr.innerHTML = `<strong>Address:</strong><br>${data.address}`;
+        <script>
+            function openLandlordForm() {
+                if (window.toast) window.toast('Opening landlord form...', 'info');
             }
-        } catch (_) { }
-    });
-</script>
+            function updateContact() {
+                if (window.toast) window.toast('Opening contact update form...', 'info');
+            }
+            function editDetails() {
+                if (window.toast) window.toast('Opening property edit form...', 'info');
+            }
+            function deleteProperty() {
+                if (confirm('Are you sure you want to delete this property? This action cannot be undone.')) {
+                    if (window.toast) window.toast('Property deleted successfully', 'success');
+                    setTimeout(() => { window.location.href = "./marketplace_listings.html"; }, 1500);
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const userRole = '';
+                if (userRole === 'admin' || userRole === 'super_admin') {
+                    const adminDashboard = document.getElementById('admin-dashboard');
+                    if (adminDashboard) adminDashboard.classList.add('show');
+                }
+
+                // Load selected property from sessionStorage
+                try {
+                    const raw = sessionStorage.getItem('selectedProperty');
+                    if (raw) {
+                        const data = JSON.parse(raw);
+                        const img = document.getElementById('pd-image');
+                        const price = document.getElementById('pd-price');
+                        const beds = document.getElementById('pd-beds');
+                        const baths = document.getElementById('pd-baths');
+                        const furn = document.getElementById('pd-furnishing');
+                        const addr = document.getElementById('pd-address');
+
+                        if (img && data.image) img.src = data.image;
+                        if (price && data.price) price.textContent = `£${Number(data.price).toLocaleString()}/mo`;
+                        if (beds && data.beds) beds.textContent = data.beds;
+                        if (baths && data.baths) baths.textContent = data.baths;
+                        if (furn && data.furnishing) furn.textContent = data.furnishing;
+                        if (addr && data.address) addr.innerHTML = `<strong>Address:</strong><br>${data.address}`;
+                    }
+                } catch (_) { }
+            });
+        </script>
     </main>
 
     <!-- Footer -->
@@ -228,10 +228,10 @@
                     <p class="footer-description">Your trusted partner in short-term rental compliance and onboarding.
                         Connecting verified property owners with professional STR operators.</p>
                     <div class="footer-social">
-                        <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/in/hostbridge" class="social-link" aria-label="LinkedIn"
+                            target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.instagram.com/host.bridge/" class="social-link" aria-label="Instagram"
+                            target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
 
@@ -293,7 +293,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <!-- Page-Specific Scripts -->
-    
+
 
     <script src="./js/toast.js"></script>
     <script>

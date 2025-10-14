@@ -340,7 +340,7 @@ document.addEventListener('DOMContentLoaded', function () {
     })();
 
     // Load and display GeoJSON
-    fetch('/static/data/uk-countries.geojson')
+    fetch('./data/uk-countries.geojson')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);

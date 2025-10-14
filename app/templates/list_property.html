@@ -8,7 +8,8 @@
 <section class="map-filters-section">
     <div class="map-filter-container">
         <div class="map-box">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!..." width="100%" height="400" style="border:0; border-radius: 10px;" allowfullscreen="" loading="lazy"></iframe>
+            <h2 style="text-align: center; color: #004c46;">Property Location Map</h2>
+            <div id="map" style="height: 400px; width: 100%; border-radius: 12px;"></div>
         </div>
 
         <div class="filters-box">
@@ -68,4 +69,34 @@
         <li>✔️ Get notified when operators express interest</li>
     </ul>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<!-- Leaflet Map Scripts -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // UK-Centered Map
+    const map = L.map('map').setView([54.505, -3.09], 6); // UK center
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Sample property locations for demonstration
+    const propertyLocations = [
+        { name: 'London Studio', lat: 51.5074, lng: -0.1278 },
+        { name: 'Manchester Apartment', lat: 53.4808, lng: -2.2426 },
+        { name: 'Edinburgh Flat', lat: 55.9533, lng: -3.1883 },
+        { name: 'Belfast House', lat: 54.5973, lng: -5.9301 },
+        { name: 'Cardiff Loft', lat: 51.4816, lng: -3.1791 }
+    ];
+
+    // Add sample markers to the map
+    propertyLocations.forEach(location => {
+        L.marker([location.lat, location.lng])
+            .addTo(map)
+            .bindPopup(`<b>${location.name}</b><br>Sample property location`);
+    });
+</script>
 {% endblock %}

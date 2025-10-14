@@ -86,141 +86,141 @@
     <!-- Main Content -->
     <main class="main-content">
         <div class="marketplace-container">
-    <div class="marketplace-header">
-        <h1 class="marketplace-title">FIND VERIFIED PROPERTIES</h1>
-    </div>
+            <div class="marketplace-header">
+                <h1 class="marketplace-title">FIND VERIFIED PROPERTIES</h1>
+            </div>
 
-    <div class="search-filter-section">
-        <div class="search-container">
-            <input type="text" class="search-input" placeholder="Search by city or Postcode" id="search-input">
-            <i class="fas fa-search search-icon"></i>
+            <div class="search-filter-section">
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Search by city or Postcode" id="search-input">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <button class="filter-btn">
+                    <i class="fas fa-filter"></i> Filter
+                </button>
+            </div>
+
+            <div class="listings-grid" id="listings-grid">
+                <!-- Sample Property Cards -->
+                <a class="property-card" href="./property_details.html?id=1" data-image="./images/house-1.jpg"
+                    data-price="1200" data-beds="3" data-baths="1" data-furnishing="F/U"
+                    data-address="123 Main Street, London, SW1A 1AA">
+                    <div class="property-image">
+                        <img src="./images/house-1.jpg" alt="Property Image">
+                    </div>
+                    <div class="property-content">
+                        <div class="property-price">£1200/mo</div>
+                        <div class="property-details">
+                            <span><i class="fas fa-bed"></i><span class="detail-count"></span></span>
+                            <span><i class="fas fa-bath"></i><span class="detail-count"></span></span>
+                            <span><i class="fas fa-couch"></i><span class="detail-count"></span></span>
+                        </div>
+                        <div class="property-listed">Listed yesterday</div>
+                        <div class="property-address">
+                            <strong>Address:</strong><br>
+                            123 Main Street, London, SW1A 1AA
+                        </div>
+                    </div>
+                </a>
+
+                <a class="property-card" href="./property_details.html?id=2" data-image="./images/house-2.jpg"
+                    data-price="2000" data-beds="1" data-baths="1" data-furnishing="F"
+                    data-address="456 High Street, Manchester, M1 1AA">
+                    <div class="property-image">
+                        <img src="./images/house-2.jpg" alt="Property Image">
+                    </div>
+                    <div class="property-content">
+                        <div class="property-price">£2000/mo</div>
+                        <div class="property-details">
+                            <span><i class="fas fa-bed"></i><span class="detail-count"></span></span>
+                            <span><i class="fas fa-bath"></i><span class="detail-count"></span></span>
+                            <span><i class="fas fa-couch"></i><span class="detail-count"></span></span>
+                        </div>
+                        <div class="property-listed">Listed 2 days ago</div>
+                        <div class="property-address">
+                            <strong>Address:</strong><br>
+                            456 High Street, Manchester, M1 1AA
+                        </div>
+                    </div>
+                </a>
+
+                <a class="property-card" href="./property_details.html?id=3" data-image="./images/house-3.jpg"
+                    data-price="1800" data-beds="2" data-baths="2" data-furnishing="U"
+                    data-address="789 Queen Street, Birmingham, B1 1AA">
+                    <div class="property-image">
+                        <img src="./images/house-3.jpg" alt="Property Image">
+                    </div>
+                    <div class="property-content">
+                        <div class="property-price">£1800/mo</div>
+                        <div class="property-details">
+                            <span><i class="fas fa-bed"></i><span class="detail-count"></span></span>
+                            <span><i class="fas fa-bath"></i><span class="detail-count"></span></span>
+                            <span><i class="fas fa-couch"></i><span class="detail-count"></span></span>
+                        </div>
+                        <div class="property-listed">Listed 3 days ago</div>
+                        <div class="property-address">
+                            <strong>Address:</strong><br>
+                            789 Queen Street, Birmingham, B1 1AA
+                        </div>
+                    </div>
+                </a>
+
+                <a class="property-card" href="./property_details.html?id=4" data-image="./images/house-4.jpg"
+                    data-price="1500" data-beds="2" data-baths="1" data-furnishing="F/U"
+                    data-address="321 Park Lane, Liverpool, L1 1AA">
+                    <div class="property-image">
+                        <img src="./images/house-4.jpg" alt="Property Image">
+                    </div>
+                    <div class="property-content">
+                        <div class="property-price">£1500/mo</div>
+                        <div class="property-details">
+                            <span><i class="fas fa-bed"></i><span class="detail-count"></span></span>
+                            <span><i class="fas fa-bath"></i><span class="detail-count"></span></span>
+                            <span><i class="fas fa-couch"></i><span class="detail-count"></span></span>
+                        </div>
+                        <div class="property-listed">Listed 1 week ago</div>
+                        <div class="property-address">
+                            <strong>Address:</strong><br>
+                            321 Park Lane, Liverpool, L1 1AA
+                        </div>
+                    </div>
+                </a>
+            </div>
         </div>
-        <button class="filter-btn">
-            <i class="fas fa-filter"></i> Filter
-        </button>
-    </div>
 
-    <div class="listings-grid" id="listings-grid">
-        <!-- Sample Property Cards -->
-        <a class="property-card" href="./property_details.html?id=1"
-            data-image="./images/house-1.jpg" data-price="1200" data-beds="3"
-            data-baths="1" data-furnishing="F/U" data-address="123 Main Street, London, SW1A 1AA">
-            <div class="property-image">
-                <img src="./images/house-1.jpg" alt="Property Image">
-            </div>
-            <div class="property-content">
-                <div class="property-price">£1200/mo</div>
-                <div class="property-details">
-                    <span><i class="fas fa-bed"></i><span class="detail-count"></span></span>
-                    <span><i class="fas fa-bath"></i><span class="detail-count"></span></span>
-                    <span><i class="fas fa-couch"></i><span class="detail-count"></span></span>
-                </div>
-                <div class="property-listed">Listed yesterday</div>
-                <div class="property-address">
-                    <strong>Address:</strong><br>
-                    123 Main Street, London, SW1A 1AA
-                </div>
-            </div>
-        </a>
-
-        <a class="property-card" href="./property_details.html?id=2"
-            data-image="./images/house-2.jpg" data-price="2000" data-beds="1"
-            data-baths="1" data-furnishing="F" data-address="456 High Street, Manchester, M1 1AA">
-            <div class="property-image">
-                <img src="./images/house-2.jpg" alt="Property Image">
-            </div>
-            <div class="property-content">
-                <div class="property-price">£2000/mo</div>
-                <div class="property-details">
-                    <span><i class="fas fa-bed"></i><span class="detail-count"></span></span>
-                    <span><i class="fas fa-bath"></i><span class="detail-count"></span></span>
-                    <span><i class="fas fa-couch"></i><span class="detail-count"></span></span>
-                </div>
-                <div class="property-listed">Listed 2 days ago</div>
-                <div class="property-address">
-                    <strong>Address:</strong><br>
-                    456 High Street, Manchester, M1 1AA
-                </div>
-            </div>
-        </a>
-
-        <a class="property-card" href="./property_details.html?id=3"
-            data-image="./images/house-3.jpg" data-price="1800" data-beds="2"
-            data-baths="2" data-furnishing="U" data-address="789 Queen Street, Birmingham, B1 1AA">
-            <div class="property-image">
-                <img src="./images/house-3.jpg" alt="Property Image">
-            </div>
-            <div class="property-content">
-                <div class="property-price">£1800/mo</div>
-                <div class="property-details">
-                    <span><i class="fas fa-bed"></i><span class="detail-count"></span></span>
-                    <span><i class="fas fa-bath"></i><span class="detail-count"></span></span>
-                    <span><i class="fas fa-couch"></i><span class="detail-count"></span></span>
-                </div>
-                <div class="property-listed">Listed 3 days ago</div>
-                <div class="property-address">
-                    <strong>Address:</strong><br>
-                    789 Queen Street, Birmingham, B1 1AA
-                </div>
-            </div>
-        </a>
-
-        <a class="property-card" href="./property_details.html?id=4"
-            data-image="./images/house-4.jpg" data-price="1500" data-beds="2"
-            data-baths="1" data-furnishing="F/U" data-address="321 Park Lane, Liverpool, L1 1AA">
-            <div class="property-image">
-                <img src="./images/house-4.jpg" alt="Property Image">
-            </div>
-            <div class="property-content">
-                <div class="property-price">£1500/mo</div>
-                <div class="property-details">
-                    <span><i class="fas fa-bed"></i><span class="detail-count"></span></span>
-                    <span><i class="fas fa-bath"></i><span class="detail-count"></span></span>
-                    <span><i class="fas fa-couch"></i><span class="detail-count"></span></span>
-                </div>
-                <div class="property-listed">Listed 1 week ago</div>
-                <div class="property-address">
-                    <strong>Address:</strong><br>
-                    321 Park Lane, Liverpool, L1 1AA
-                </div>
-            </div>
-        </a>
-    </div>
-</div>
-
-<script>
-    document.getElementById('search-input').addEventListener('input', function (e) {
-        const searchTerm = e.target.value.toLowerCase();
-        const propertyCards = document.querySelectorAll('.property-card');
-        propertyCards.forEach(card => {
-            const address = card.querySelector('.property-address').textContent.toLowerCase();
-            const price = card.querySelector('.property-price').textContent.toLowerCase();
-            const details = card.querySelector('.property-details').textContent.toLowerCase();
-            card.style.display = (address.includes(searchTerm) || price.includes(searchTerm) || details.includes(searchTerm)) ? 'block' : 'none';
-        });
-    });
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const cards = document.querySelectorAll('.property-card');
-        cards.forEach(card => {
-            card.addEventListener('click', function (e) {
-                const data = {
-                    image: this.getAttribute('data-image') || '',
-                    price: this.getAttribute('data-price') || '',
-                    beds: this.getAttribute('data-beds') || '',
-                    baths: this.getAttribute('data-baths') || '',
-                    furnishing: this.getAttribute('data-furnishing') || '',
-                    address: this.getAttribute('data-address') || ''
-                };
-                try { sessionStorage.setItem('selectedProperty', JSON.stringify(data)); } catch (_) { }
-                // Ensure data is stored before navigation
-                e.preventDefault();
-                window.location.href = this.getAttribute('href');
+        <script>
+            document.getElementById('search-input').addEventListener('input', function (e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const propertyCards = document.querySelectorAll('.property-card');
+                propertyCards.forEach(card => {
+                    const address = card.querySelector('.property-address').textContent.toLowerCase();
+                    const price = card.querySelector('.property-price').textContent.toLowerCase();
+                    const details = card.querySelector('.property-details').textContent.toLowerCase();
+                    card.style.display = (address.includes(searchTerm) || price.includes(searchTerm) || details.includes(searchTerm)) ? 'block' : 'none';
+                });
             });
-        });
-    });
-</script>
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const cards = document.querySelectorAll('.property-card');
+                cards.forEach(card => {
+                    card.addEventListener('click', function (e) {
+                        const data = {
+                            image: this.getAttribute('data-image') || '',
+                            price: this.getAttribute('data-price') || '',
+                            beds: this.getAttribute('data-beds') || '',
+                            baths: this.getAttribute('data-baths') || '',
+                            furnishing: this.getAttribute('data-furnishing') || '',
+                            address: this.getAttribute('data-address') || ''
+                        };
+                        try { sessionStorage.setItem('selectedProperty', JSON.stringify(data)); } catch (_) { }
+                        // Ensure data is stored before navigation
+                        e.preventDefault();
+                        window.location.href = this.getAttribute('href');
+                    });
+                });
+            });
+        </script>
     </main>
 
     <!-- Footer -->
@@ -233,10 +233,10 @@
                     <p class="footer-description">Your trusted partner in short-term rental compliance and onboarding.
                         Connecting verified property owners with professional STR operators.</p>
                     <div class="footer-social">
-                        <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/in/hostbridge" class="social-link" aria-label="LinkedIn"
+                            target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.instagram.com/host.bridge/" class="social-link" aria-label="Instagram"
+                            target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
 
@@ -298,7 +298,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <!-- Page-Specific Scripts -->
-    
+
 
     <script src="./js/toast.js"></script>
     <script>

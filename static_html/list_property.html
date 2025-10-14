@@ -93,8 +93,8 @@
         <section class="map-filters-section">
             <div class="map-filter-container">
                 <div class="map-box">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!..." width="100%" height="400"
-                        style="border:0; border-radius: 10px;" allowfullscreen="" loading="lazy"></iframe>
+                    <h2 style="text-align: center; color: #004c46;">Property Location Map</h2>
+                    <div id="map" style="height: 400px; width: 100%; border-radius: 12px;"></div>
                 </div>
 
                 <div class="filters-box">
@@ -196,10 +196,10 @@
                     <p class="footer-description">Your trusted partner in short-term rental compliance and onboarding.
                         Connecting verified property owners with professional STR operators.</p>
                     <div class="footer-social">
-                        <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/in/hostbridge" class="social-link" aria-label="LinkedIn"
+                            target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.instagram.com/host.bridge/" class="social-link" aria-label="Instagram"
+                            target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
 
@@ -259,6 +259,33 @@
 
     <!-- Leaflet JS (fixed) -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Map Initialization Script -->
+    <script>
+        // UK-Centered Map
+        const map = L.map('map').setView([54.505, -3.09], 6); // UK center
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Sample property locations for demonstration
+        const propertyLocations = [
+            { name: 'London Studio', lat: 51.5074, lng: -0.1278 },
+            { name: 'Manchester Apartment', lat: 53.4808, lng: -2.2426 },
+            { name: 'Edinburgh Flat', lat: 55.9533, lng: -3.1883 },
+            { name: 'Belfast House', lat: 54.5973, lng: -5.9301 },
+            { name: 'Cardiff Loft', lat: 51.4816, lng: -3.1791 }
+        ];
+
+        // Add sample markers to the map
+        propertyLocations.forEach(location => {
+            L.marker([location.lat, location.lng])
+                .addTo(map)
+                .bindPopup(`<b>${location.name}</b><br>Sample property location`);
+        });
+    </script>
 
     <!-- Page-Specific Scripts -->
 

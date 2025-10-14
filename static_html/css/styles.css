@@ -298,7 +298,10 @@ body {
     text-align: center;
 }
 
-
+/* Override for find-property page - white text on green background */
+.find-property .hero-section {
+    background: linear-gradient(135deg, #2E8B57 0%, #3CB371 100%);
+}
 
 .hero-section h1 {
     font-size: 2.8rem;
@@ -312,6 +315,7 @@ body {
     max-width: 700px;
     margin: 0 auto;
 }
+
 
 /* Override for services page hero subtitle */
 .hero-section .hero-subtitle {
@@ -3441,7 +3445,8 @@ body {
 
 .cta-subtitle {
     font-size: 1.25rem;
-    color: #e9ecef;
+    font-weight: 500;
+    color: white;
     margin-bottom: 40px;
     max-width: 600px;
     margin-left: auto;
@@ -3915,7 +3920,8 @@ body {
 
 .cta-subtitle {
     font-size: 1.25rem;
-    color: #6c757d;
+    font-weight: 500;
+    color: white;
     margin-bottom: 40px;
     text-align: center;
 }
@@ -4532,4 +4538,62 @@ body {
         padding: 12px 15px;
         font-size: 0.9rem;
     }
+}
+
+/* ULTRA-SPECIFIC: Force white text for find-property hero section */
+body.find-property .hero-section {
+    background: linear-gradient(135deg, #2E8B57 0%, #3CB371 100%) !important;
+}
+
+body.find-property .hero-section h1,
+body.find-property .hero-section p {
+    color: white !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Property Management Section with Images */
+.managed-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.managed-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.property-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.managed-details {
+    flex: 1;
+}
+
+.managed-title {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+}
+
+.managed-meta {
+    color: #7f8c8d;
+    font-size: 0.95rem;
+}
+
+.managed-meta i {
+    margin-right: 4px;
+    color: #27ae60;
 }

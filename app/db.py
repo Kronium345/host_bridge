@@ -1,7 +1,7 @@
 import os
 import sqlite3
 from contextlib import contextmanager
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # Resolve DB path relative to the project root
@@ -139,6 +139,36 @@ def init_db():
                 token TEXT UNIQUE NOT NULL,
                 expires_at TEXT NOT NULL,
                 used INTEGER DEFAULT 0,
+                created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            )
+            """
+        )
+
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS bookings (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                property_id INTEGER NOT NULL,
+                booking_date TEXT NOT NULL,
+                booking_time TEXT,
+                message TEXT,
+                status TEXT DEFAULT 'pending',
+                created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            )
+            """
+        )
+
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS testimonials (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+                comment TEXT NOT NULL,
+                approved BOOLEAN DEFAULT 0,
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             )
@@ -493,3 +523,76 @@ def update_user_password(user_id: int, new_password: str) -> bool:
             (password_hash, user_id)
         )
         return True
+
+
+# -----------------------
+# Booking helpers
+# -----------------------
+
+def create_booking(user_id: int, property_id: int, booking_date: str, booking_time: str = None, message: str = None) -> int:
+    """Create a new booking"""
+    with open_conn() as conn:
+        cursor = conn.execute("""
+            INSERT INTO bookings (user_id, property_id, booking_date, booking_time, message)
+            VALUES (?, ?, ?, ?, ?)
+        """, (user_id, property_id, booking_date, booking_time, message))
+        return cursor.lastrowid
+
+
+def get_user_bookings(user_id: int) -> List[Dict]:
+    """Get all bookings for a user"""
+    with open_conn() as conn:
+        rows = conn.execute("""
+            SELECT * FROM bookings 
+            WHERE user_id = ? 
+            ORDER BY booking_date DESC
+        """, (user_id,)).fetchall()
+        return [dict(row) for row in rows]
+
+
+def get_property_bookings(property_id: int) -> List[Dict]:
+    """Get all bookings for a property"""
+    with open_conn() as conn:
+        rows = conn.execute("""
+            SELECT * FROM bookings 
+            WHERE property_id = ? 
+            ORDER BY booking_date DESC
+        """, (property_id,)).fetchall()
+        return [dict(row) for row in rows]
+
+
+# -----------------------
+# Testimonial helpers
+# -----------------------
+
+def create_testimonial(user_id: int, rating: int, comment: str) -> int:
+    """Create a new testimonial"""
+    with open_conn() as conn:
+        cursor = conn.execute("""
+            INSERT INTO testimonials (user_id, rating, comment)
+            VALUES (?, ?, ?)
+        """, (user_id, rating, comment))
+        return cursor.lastrowid
+
+
+def get_approved_testimonials() -> List[Dict]:
+    """Get all approved testimonials with user names"""
+    with open_conn() as conn:
+        rows = conn.execute("""
+            SELECT t.*, u.first_name, u.last_name, u.email
+            FROM testimonials t
+            JOIN users u ON t.user_id = u.id
+            WHERE t.approved = 1
+            ORDER BY t.created_at DESC
+        """).fetchall()
+        return [dict(row) for row in rows]
+
+
+def get_user_testimonial(user_id: int) -> Optional[Dict]:
+    """Get testimonial by user"""
+    with open_conn() as conn:
+        row = conn.execute("""
+            SELECT * FROM testimonials 
+            WHERE user_id = ?
+        """, (user_id,)).fetchone()
+        return dict(row) if row else None
