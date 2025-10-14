@@ -154,8 +154,12 @@ def submit_property():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+	# Determine redirect URL based on environment
+	is_local = request.host.startswith('127.0.0.1') or request.host.startswith('localhost')
+	redirect_url = 'http://127.0.0.1:5000/index.html' if is_local else 'https://host-bridge.com/index.html'
+	
 	if request.method == 'GET' and session.get('user_id'):
-		return redirect('https://host-bridge.com/index.html')
+		return redirect(redirect_url)
 	if request.method == 'POST':
 		email = request.form.get('email', '').strip()
 		password = request.form.get('password', '')
@@ -167,17 +171,17 @@ def login():
 			
 			# For AJAX requests, return JSON instead of redirecting
 			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-				return jsonify({'success': True, 'redirect_url': 'https://host-bridge.com/index.html'})
+				return jsonify({'success': True, 'redirect_url': redirect_url})
 			
-			return redirect('https://host-bridge.com/index.html')
+			return redirect(redirect_url)
 		
 		error_msg = 'Invalid email or password.'
 		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
 			return jsonify({'error': error_msg}), 400
 		flash(error_msg, 'error')
-		return redirect('https://host-bridge.com/login.html')
+		return redirect(redirect_url.replace('/index.html', '/login.html'))
 	
-	return redirect('https://host-bridge.com/login.html')
+	return redirect(redirect_url.replace('/index.html', '/login.html'))
 
 @app.route('/forgotpassword', methods=['GET', 'POST'])
 def forgotpassword():
@@ -307,8 +311,12 @@ def reset_password(token):
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+	# Determine redirect URL based on environment
+	is_local = request.host.startswith('127.0.0.1') or request.host.startswith('localhost')
+	redirect_url = 'http://127.0.0.1:5000/index.html' if is_local else 'https://host-bridge.com/index.html'
+	
 	if request.method == 'GET' and session.get('user_id'):
-		return redirect('https://host-bridge.com/index.html')
+		return redirect(redirect_url)
 	if request.method == 'POST':
 		first_name = request.form.get('name')
 		last_name = request.form.get('lastname')
@@ -322,19 +330,19 @@ def register():
 			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
 				return jsonify({'error': error_msg}), 400
 			flash(error_msg, 'error')
-			return redirect('https://host-bridge.com/register.html')
+			return redirect(redirect_url.replace('/index.html', '/register.html'))
 		if password != confirm_password:
 			error_msg = 'Passwords do not match.'
 			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
 				return jsonify({'error': error_msg}), 400
 			flash(error_msg, 'error')
-			return redirect('https://host-bridge.com/register.html')
+			return redirect(redirect_url.replace('/index.html', '/register.html'))
 		if find_user_by_email(email):
 			error_msg = 'An account with that email already exists.'
 			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
 				return jsonify({'error': error_msg}), 400
 			flash(error_msg, 'error')
-			return redirect('https://host-bridge.com/register.html')
+			return redirect(redirect_url.replace('/index.html', '/register.html'))
 
 		user_id = create_user(email=email, password=password, first_name=first_name, last_name=last_name, phone=phone)
 		session['user_id'] = user_id
@@ -343,12 +351,12 @@ def register():
 		
 		# For AJAX requests, return JSON instead of redirecting
 		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-			return jsonify({'success': True, 'redirect_url': 'https://host-bridge.com/index.html'})
+			return jsonify({'success': True, 'redirect_url': redirect_url})
 		
-		# Redirect to Hostinger frontend after successful registration
-		return redirect('https://host-bridge.com/index.html')
+		# Redirect to appropriate frontend after successful registration
+		return redirect(redirect_url)
 	
-	return redirect('https://host-bridge.com/register.html')
+	return redirect(redirect_url.replace('/index.html', '/register.html'))
 
 @app.route('/api/user/status', methods=['GET'])
 def get_user_status():

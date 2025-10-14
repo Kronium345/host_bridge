@@ -379,7 +379,11 @@
                     try {
                         const formData = new FormData(registerForm);
 
-                        const response = await fetch('https://host-bridge.onrender.com/register', {
+                        // Detect environment and use appropriate backend URL
+                        const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                        const backendUrl = isLocalDev ? 'http://127.0.0.1:5000' : 'https://host-bridge.onrender.com';
+
+                        const response = await fetch(`${backendUrl}/register`, {
                             method: 'POST',
                             body: formData,
                             credentials: 'include',
@@ -390,7 +394,8 @@
 
                         if (response.redirected) {
                             // Successful registration, redirect to homepage
-                            window.location.href = 'https://host-bridge.com/index.html';
+                            const frontendUrl = isLocalDev ? 'http://127.0.0.1:5000' : 'https://host-bridge.com';
+                            window.location.href = `${frontendUrl}/index.html`;
                         } else {
                             // Check response content type
                             const contentType = response.headers.get('content-type');
