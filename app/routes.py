@@ -658,9 +658,14 @@ def login_google():
 
 @app.route('/auth/google/callback')
 def auth_google_callback():
+	# Determine redirect URL based on environment
+	is_local = request.host.startswith('127.0.0.1') or request.host.startswith('localhost')
+	redirect_url = 'http://127.0.0.1:5000/index.html' if is_local else 'https://host-bridge.com/index.html'
+	login_redirect = redirect_url.replace('/index.html', '/login.html')
+	
 	if 'oauth_state' not in session or session['oauth_state'] != request.args.get('state'):
 		flash('Invalid login state. Please try again.', 'error')
-		return redirect('https://host-bridge.com/login.html')
+		return redirect(login_redirect)
 
 	flow = _build_flow()
 	try:
@@ -668,7 +673,7 @@ def auth_google_callback():
 	except Exception as e:
 		print(f"DEBUG: Google auth failed during token fetch: {e}")
 		flash(f'Google auth failed: {e}', 'error')
-		return redirect('https://host-bridge.com/login.html')
+		return redirect(login_redirect)
 
 	credentials = flow.credentials
 	request_adapter = google_requests.Request()
@@ -682,7 +687,7 @@ def auth_google_callback():
 	except Exception as e:
 		print(f"DEBUG: Google ID token verification failed: {e}")
 		flash(f'Could not verify Google ID token: {e}', 'error')
-		return redirect('https://host-bridge.com/login.html')
+		return redirect(login_redirect)
 
 	google_sub = idinfo.get('sub')
 	email = idinfo.get('email')
@@ -696,13 +701,13 @@ def auth_google_callback():
 		session.pop('oauth_state', None)
 		session.pop('oauth_next', None)
 		flash('Signed in with Google.', 'success')
-		print(f"DEBUG: Google auth successful, redirecting to Hostinger frontend")
-		# Redirect to Hostinger frontend after Google OAuth
-		return redirect('https://host-bridge.com/index.html')
+		print(f"DEBUG: Google auth successful, redirecting to frontend")
+		# Redirect to appropriate frontend after Google OAuth
+		return redirect(redirect_url)
 	except Exception as e:
 		print(f"DEBUG: Failed to create user account: {e}")
 		flash(f'Failed to create user account: {e}', 'error')
-		return redirect('https://host-bridge.com/login.html')
+		return redirect(login_redirect)
 
 # Rating API endpoints
 @app.route('/api/ratings', methods=['POST'])
