@@ -1,5 +1,5 @@
 from app import app
-from flask import render_template, request, redirect, url_for, session, flash, jsonify
+from flask import render_template, request, redirect, url_for, session, flash, jsonify, send_from_directory
 from app.db import (verify_credentials, create_user, find_user_by_email, create_or_link_google_user,
                      save_verification_document, get_user_verification_status, 
                      get_user_verification_documents, check_verification_completion,
@@ -29,6 +29,47 @@ def home():
 		EMAILJS_SERVICE=emailjs_service,
 		EMAILJS_TEMPLATE=emailjs_template,
 	)
+
+# ----------------------------
+# Local dev helpers to serve static_html pages
+# ----------------------------
+
+# Root of the repository → static_html lives alongside the app package
+STATIC_HTML_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static_html')
+
+@app.route('/login.html')
+def serve_login_html():
+	"""Serve static_html/login.html for local development."""
+	try:
+		return send_from_directory(STATIC_HTML_DIR, 'login.html')
+	except Exception:
+		# Fallback to dynamic route if file is missing
+		return redirect(url_for('login'))
+
+@app.route('/register.html')
+def serve_register_html():
+	"""Serve static_html/register.html for local development."""
+	try:
+		return send_from_directory(STATIC_HTML_DIR, 'register.html')
+	except Exception:
+		# Fallback to dynamic route if file is missing
+		return redirect(url_for('register'))
+
+@app.route('/css/<path:filename>')
+def serve_static_html_css(filename):
+	return send_from_directory(os.path.join(STATIC_HTML_DIR, 'css'), filename)
+
+@app.route('/js/<path:filename>')
+def serve_static_html_js(filename):
+	return send_from_directory(os.path.join(STATIC_HTML_DIR, 'js'), filename)
+
+@app.route('/images/<path:filename>')
+def serve_static_html_images(filename):
+	return send_from_directory(os.path.join(STATIC_HTML_DIR, 'images'), filename)
+
+@app.route('/data/<path:filename>')
+def serve_static_html_data(filename):
+	return send_from_directory(os.path.join(STATIC_HTML_DIR, 'data'), filename)
 
 @app.route('/how-it-works/landlords')
 def how_landlords():
