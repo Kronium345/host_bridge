@@ -1,5 +1,6 @@
 from app import app
 from flask import render_template, request, redirect, url_for, session, flash, jsonify, send_from_directory
+from flask_login import login_user, logout_user, current_user, login_required
 from app.db import (verify_credentials, create_user, find_user_by_email, create_or_link_google_user,
                      save_verification_document, get_user_verification_status, 
                      get_user_verification_documents, check_verification_completion,
@@ -206,8 +207,15 @@ def login():
 		password = request.form.get('password', '')
 		user = verify_credentials(email, password)
 		if user:
-			session['user_id'] = user['id']
-			session['user_email'] = user['email']
+			from app import User
+			user_obj = User(
+				user_id=user['id'],
+				email=user['email'],
+				first_name=user.get('first_name'),
+				last_name=user.get('last_name'),
+				role=user.get('role', 'user')
+			)
+			login_user(user_obj)
 			flash('Logged in successfully.', 'success')
 			
 			# For AJAX requests, return JSON instead of redirecting
@@ -386,8 +394,15 @@ def register():
 			return redirect(redirect_url.replace('/index.html', '/register.html'))
 
 		user_id = create_user(email=email, password=password, first_name=first_name, last_name=last_name, phone=phone)
-		session['user_id'] = user_id
-		session['user_email'] = email
+		from app import User
+		user_obj = User(
+			user_id=user_id,
+			email=email,
+			first_name=first_name,
+			last_name=last_name,
+			role='user'
+		)
+		login_user(user_obj)
 		flash('Account created. You are now signed in.', 'success')
 		
 		# For AJAX requests, return JSON instead of redirecting
@@ -403,30 +418,27 @@ def register():
 def get_user_status():
 	"""API endpoint to check if user is logged in"""
 	print(f"DEBUG: /api/user/status called")
-	print(f"DEBUG: Session data: {dict(session)}")
-	print(f"DEBUG: User ID from session: {session.get('user_id')}")
+	print(f"DEBUG: current_user: {current_user}")
 	
-	user_id = session.get('user_id')
-	if user_id:
-		user = get_user_by_id(user_id)
-		print(f"DEBUG: User found in DB: {user}")
-		if user:
-			return jsonify({
-				'logged_in': True,
-				'user': {
-					'id': user['id'],
-					'email': user['email'],
-					'first_name': user.get('first_name'),
-					'last_name': user.get('last_name')
-				}
-			})
+	if current_user.is_authenticated:
+		print(f"DEBUG: User found: {current_user.id}")
+		return jsonify({
+			'logged_in': True,
+			'user': {
+				'id': current_user.id,
+				'email': current_user.email,
+				'first_name': current_user.first_name,
+				'last_name': current_user.last_name,
+				'role': current_user.role
+			}
+		})
 	
 	print(f"DEBUG: Returning logged_in: False")
 	return jsonify({'logged_in': False})
 
 @app.route('/logout')
 def logout():
-	session.clear()
+	logout_user()
 	flash('You have been signed out.', 'info')
 	return redirect('https://host-bridge.com/index.html')
 
@@ -493,12 +505,11 @@ def generate_unique_filename(original_filename, user_id):
 # ----------------------------
 
 @app.route('/api/verify/upload/<document_type>', methods=['POST'])
+@login_required
 def upload_verification_document(document_type):
 	"""Handle file upload for verification documents."""
-	if 'user_id' not in session:
-		return jsonify({'success': False, 'message': 'Please login first'}), 401
 	
-	user_id = session['user_id']
+	user_id = current_user.id
 	
 	# Validate document type
 	valid_types = ['identity', 'address', 'role']
@@ -602,12 +613,11 @@ def upload_verification_document(document_type):
 
 
 @app.route('/api/verify/status', methods=['GET'])
+@login_required
 def get_verification_status():
 	"""Get current verification status for logged-in user."""
-	if 'user_id' not in session:
-		return jsonify({'success': False, 'message': 'Not logged in'}), 401
 	
-	user_id = session['user_id']
+	user_id = current_user.id
 	status = get_user_verification_status(user_id)
 	docs = get_user_verification_documents(user_id)
 	completion = check_verification_completion(user_id)
@@ -737,8 +747,15 @@ def auth_google_callback():
 
 	try:
 		user = create_or_link_google_user(google_sub=google_sub, email=email, name=name, picture_url=picture)
-		session['user_id'] = user['id']
-		session['user_email'] = user.get('email')
+		from app import User
+		user_obj = User(
+			user_id=user['id'],
+			email=user.get('email'),
+			first_name=user.get('first_name'),
+			last_name=user.get('last_name'),
+			role=user.get('role', 'user')
+		)
+		login_user(user_obj)
 		session.pop('oauth_state', None)
 		session.pop('oauth_next', None)
 		flash('Signed in with Google.', 'success')
@@ -816,10 +833,9 @@ def get_ratings(target_type, target_id):
 # -----------------------
 
 @app.route('/api/booking/create', methods=['POST'])
+@login_required
 def create_booking_api():
 	"""Create a new booking - requires login"""
-	if not session.get('user_id'):
-		return jsonify({'success': False, 'message': 'Please log in to make a booking'}), 401
 	
 	try:
 		data = request.get_json()
@@ -831,7 +847,7 @@ def create_booking_api():
 		if not booking_date:
 			return jsonify({'success': False, 'message': 'Booking date is required'}), 400
 		
-		user_id = session['user_id']
+		user_id = current_user.id
 		booking_id = create_booking(user_id, property_id, booking_date, booking_time, message)
 		
 		return jsonify({
@@ -846,13 +862,12 @@ def create_booking_api():
 
 
 @app.route('/api/booking/user', methods=['GET'])
+@login_required
 def get_user_bookings_api():
 	"""Get user's bookings - requires login"""
-	if not session.get('user_id'):
-		return jsonify({'success': False, 'message': 'Please log in to view bookings'}), 401
 	
 	try:
-		user_id = session['user_id']
+		user_id = current_user.id
 		bookings = get_user_bookings(user_id)
 		return jsonify({'success': True, 'bookings': bookings})
 		
@@ -866,10 +881,9 @@ def get_user_bookings_api():
 # -----------------------
 
 @app.route('/api/testimonial/create', methods=['POST'])
+@login_required
 def create_testimonial_api():
 	"""Create a new testimonial - requires login"""
-	if not session.get('user_id'):
-		return jsonify({'success': False, 'message': 'Please log in to submit a testimonial'}), 401
 	
 	try:
 		data = request.get_json()
@@ -882,7 +896,7 @@ def create_testimonial_api():
 		if not comment:
 			return jsonify({'success': False, 'message': 'Comment is required'}), 400
 		
-		user_id = session['user_id']
+		user_id = current_user.id
 		
 		# Check if user already has a testimonial
 		existing = get_user_testimonial(user_id)
@@ -915,13 +929,12 @@ def get_approved_testimonials_api():
 
 
 @app.route('/api/testimonial/user', methods=['GET'])
+@login_required
 def get_user_testimonial_api():
 	"""Get user's testimonial - requires login"""
-	if not session.get('user_id'):
-		return jsonify({'success': False, 'message': 'Please log in to view your testimonial'}), 401
 	
 	try:
-		user_id = session['user_id']
+		user_id = current_user.id
 		testimonial = get_user_testimonial(user_id)
 		return jsonify({'success': True, 'testimonial': testimonial})
 		

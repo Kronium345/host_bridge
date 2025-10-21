@@ -90,8 +90,10 @@
             <p class="hero-main-subtitle">Connecting Landlords with Short-Term Rental Operators on the UK's only
                 compliance-first platform.</p>
             <div class="hero-cta-buttons">
-                <a href="./register.html" class="cta-button cta-primary">I'm a Landlord: List My Property</a>
-                <a href="./register.html" class="cta-button cta-secondary">I'm an Operator: Find Compliant
+                <a href="./register.html" class="cta-button cta-primary" id="landlord-btn">I'm a Landlord: List My
+                    Property</a>
+                <a href="./register.html" class="cta-button cta-secondary" id="operator-btn">I'm an Operator: Find
+                    Compliant
                     Units</a>
             </div>
         </section>
@@ -725,6 +727,29 @@
 
         // Check login status on page load
         document.addEventListener('DOMContentLoaded', checkLoginStatus);
+
+        // Update hero buttons based on login status
+        function updateHeroButtons(user) {
+            const landlordBtn = document.getElementById('landlord-btn');
+            const operatorBtn = document.getElementById('operator-btn');
+
+            if (user && user.logged_in) {
+                // User is logged in - redirect to respective pages
+                landlordBtn.href = './list_property.html';
+                operatorBtn.href = './find_property.html';
+            } else {
+                // User is not logged in - redirect to register
+                landlordBtn.href = './register.html';
+                operatorBtn.href = './register.html';
+            }
+        }
+
+        // Override the existing updateHeaderForLoggedInUser to also update hero buttons
+        const originalUpdateHeader = updateHeaderForLoggedInUser;
+        updateHeaderForLoggedInUser = function (user) {
+            originalUpdateHeader(user);
+            updateHeroButtons(user);
+        };
     </script>
 
 </body>
