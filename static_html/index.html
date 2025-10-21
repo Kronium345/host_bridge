@@ -733,14 +733,20 @@
             const landlordBtn = document.getElementById('landlord-btn');
             const operatorBtn = document.getElementById('operator-btn');
 
-            if (user && user.logged_in) {
+            if (!landlordBtn || !operatorBtn) {
+                return;
+            }
+
+            if (user) {
                 // User is logged in - redirect to respective pages
                 landlordBtn.href = './list_property.html';
                 operatorBtn.href = './find_property.html';
+                console.log('Updated hero buttons for logged in user');
             } else {
                 // User is not logged in - redirect to register
                 landlordBtn.href = './register.html';
                 operatorBtn.href = './register.html';
+                console.log('Updated hero buttons for logged out user');
             }
         }
 
@@ -750,6 +756,19 @@
             originalUpdateHeader(user);
             updateHeroButtons(user);
         };
+
+        // Also update buttons on page load for logged out users
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set default register links if user is not logged in
+            setTimeout(function () {
+                const landlordBtn = document.getElementById('landlord-btn');
+                const operatorBtn = document.getElementById('operator-btn');
+                if (landlordBtn && operatorBtn && !landlordBtn.href.includes('list_property')) {
+                    // Buttons haven't been updated to list/find, so user is logged out
+                    updateHeroButtons(null);
+                }
+            }, 1000); // Wait for login check to complete
+        });
     </script>
 
 </body>
