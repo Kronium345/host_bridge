@@ -71,8 +71,9 @@
                     <li><a href="{{ url_for('services') }}">Services</a></li>
                     <li><a href="{{ url_for('contact') }}">Contact</a></li>
                     <li class="mobile-auth">
-                        {% if session.get('user_id') %}
-                        <div class="mobile-auth-email">{{ session.get('user_email') or 'Signed in' }}</div>
+                        {% if current_user.is_authenticated %}
+                        <div class="mobile-auth-email">{{ current_user.first_name or current_user.email or 'Signed in'
+                            }}</div>
                         <a href="{{ url_for('logout') }}" class="nav-button register-btn">Logout</a>
                         {% else %}
                         <a href="{{ url_for('login') }}" class="nav-button login-btn">Login</a>
@@ -82,9 +83,9 @@
                 </ul>
             </div>
             <div class="navbar-right">
-                {% if session.get('user_id') %}
+                {% if current_user.is_authenticated %}
                 <span style="margin-right:10px;color:#004c46;font-weight:600;">
-                    {{ session.get('user_email') or 'Signed in' }}
+                    {{ current_user.first_name or current_user.email or 'Signed in' }}
                 </span>
                 <a href="{{ url_for('logout') }}" class="nav-button login-btn">Logout</a>
                 {% else %}

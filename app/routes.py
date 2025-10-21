@@ -441,7 +441,10 @@ def get_user_status():
 def logout():
 	logout_user()
 	flash('You have been signed out.', 'info')
-	return redirect('https://host-bridge.com/index.html')
+	# Determine redirect URL based on environment
+	is_local = request.host.startswith('127.0.0.1') or request.host.startswith('localhost')
+	redirect_url = url_for('home', _external=False) if is_local else 'https://host-bridge.com/index.html'
+	return redirect(redirect_url)
 
 
 @app.route('/filter-properties', methods=['POST'])
