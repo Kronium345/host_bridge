@@ -19,6 +19,7 @@ import hashlib
 from datetime import datetime
 
 @app.route('/')
+@app.route('/index.html')
 def home():
 	emailjs_public = os.getenv('EMAILJS_PUBLIC_KEY', '')
 	emailjs_service = os.getenv('EMAILJS_SERVICE_ID', '')
