@@ -548,6 +548,32 @@
         alert(message);
       }
     }
+
+    // Check login status and update header
+    async function checkLoginStatus() {
+      try {
+        const response = await fetch('https://host-bridge.onrender.com/api/user/status', { method: 'GET', credentials: 'include' });
+        if (response.ok) {
+          const userData = await response.json();
+          if (userData.logged_in && userData.user) {
+            const navbarRight = document.querySelector('.navbar-right');
+            if (navbarRight) {
+              const userSpan = document.createElement('span');
+              userSpan.textContent = userData.user.first_name || userData.user.email;
+              userSpan.style.cssText = 'margin-right:10px;color:#004c46;font-weight:600;';
+              const logoutLink = document.createElement('a');
+              logoutLink.href = 'https://host-bridge.onrender.com/logout';
+              logoutLink.textContent = 'Logout';
+              logoutLink.className = 'nav-button login-btn';
+              navbarRight.innerHTML = '';
+              navbarRight.appendChild(userSpan);
+              navbarRight.appendChild(logoutLink);
+            }
+          }
+        }
+      } catch (e) { console.error('Login check error:', e); }
+    }
+    document.addEventListener('DOMContentLoaded', checkLoginStatus);
   </script>
 
 </body>

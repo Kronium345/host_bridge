@@ -326,6 +326,63 @@
     window.clearFlashMessages = function () {
       window.flashMessages = [];
     };
+
+    // Check login status and update header
+    async function checkLoginStatus() {
+      try {
+        console.log('Checking login status...');
+        const response = await fetch('https://host-bridge.onrender.com/api/user/status', {
+          method: 'GET',
+          credentials: 'include'
+        });
+
+        console.log('Login status response:', response.status, response.ok);
+
+        if (response.ok) {
+          const userData = await response.json();
+          console.log('User data received:', userData);
+
+          if (userData.logged_in && userData.user) {
+            console.log('User is logged in, updating header...');
+            // Update header to show logged in state
+            updateHeaderForLoggedInUser(userData.user);
+          } else {
+            console.log('User not logged in or no user data');
+          }
+        } else {
+          console.log('Login status check failed with status:', response.status);
+        }
+      } catch (error) {
+        console.error('Error checking login status:', error);
+      }
+    }
+
+    function updateHeaderForLoggedInUser(user) {
+      console.log('updateHeaderForLoggedInUser called with user:', user);
+
+      // Find the navbar-right container (where the buttons are)
+      const navbarRight = document.querySelector('.navbar-right');
+
+      if (navbarRight) {
+        // Create user display elements matching Jinja template style
+        const userEmail = document.createElement('span');
+        userEmail.textContent = user.first_name || user.email;
+        userEmail.style.cssText = 'margin-right:10px;color:#004c46;font-weight:600;';
+
+        const logoutLink = document.createElement('a');
+        logoutLink.href = 'https://host-bridge.onrender.com/logout';
+        logoutLink.textContent = 'Logout';
+        logoutLink.className = 'nav-button login-btn';
+
+        // Clear existing content and add new elements
+        navbarRight.innerHTML = '';
+        navbarRight.appendChild(userEmail);
+        navbarRight.appendChild(logoutLink);
+      }
+    }
+
+    // Check login status on page load
+    document.addEventListener('DOMContentLoaded', checkLoginStatus);
   </script>
 
 </body>
