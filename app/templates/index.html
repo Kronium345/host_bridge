@@ -1,344 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="hero">
-    <h1>Connect with verified STR partners hassle-free</h1>
-    <p>Your trusted partner in short-term rental compliance and onboarding.</p>
+<section class="hero hero-main">
+    <h1 class="hero-main-title">The <span class="highlight-text">Bridge</span> to STR Profits</h1>
+    <p class="hero-main-subtitle">Connecting Landlords with Short-Term Rental Operators on the UK's only
+        compliance-first platform.</p>
+    <div class="hero-cta-buttons">
+        <a href="{{ url_for('list_property') }}" class="cta-button cta-primary">I'm a Landlord: List My Property</a>
+        <a href="{{ url_for('find_property') }}" class="cta-button cta-secondary">I'm an Operator: Find Compliant
+            Units</a>
+    </div>
 </section>
 
 <section class="trust-icons">
     <div class="trust-box">Companies House Verified</div>
     <div class="trust-box">Postcode STR Map</div>
     <div class="trust-box">Legal Templates Included</div>
-</section>
-
-<!-- Feature Showcase Section -->
-<section class="feature-showcase-section">
-    <div class="showcase-container">
-        <h2 class="showcase-title">Explore the Platform</h2>
-        <p class="showcase-subtitle">See how HostBridge makes property management effortless</p>
-
-        <div class="showcase-grid">
-            <!-- Feature 1: Property Listings -->
-            <div class="showcase-card">
-                <div class="showcase-header">
-                    <div class="showcase-header-left">
-                        <div class="showcase-window-controls">
-                            <div class="window-control close"></div>
-                            <div class="window-control minimize"></div>
-                            <div class="window-control maximize"></div>
-                        </div>
-                        <div class="showcase-icon">
-                            <i class="fas fa-home"></i>
-                        </div>
-                        <h3>Property Listings</h3>
-                    </div>
-                </div>
-                <div class="showcase-preview">
-                    <div class="preview-mockup property-listing-mockup">
-                        <div class="mockup-header">
-                            <div class="mockup-search">
-                                <i class="fas fa-search"></i>
-                                <span>Search properties...</span>
-                            </div>
-                            <div class="mockup-filter">
-                                <i class="fas fa-sliders-h"></i>
-                            </div>
-                        </div>
-                        <div class="mockup-cards">
-                            <div class="mockup-card">
-                                <div class="card-image"
-                                    style="background-image: url('{{ url_for('static', filename='images/house-1.jpg') }}'); background-size: cover; background-position: center;">
-                                </div>
-                                <div class="card-content">
-                                    <div class="card-title-text">Modern Apartment in Westminster</div>
-                                    <div class="card-details">
-                                        <span class="detail-badge"><i class="fas fa-bed"></i> 2 bed</span>
-                                        <span class="detail-badge"><i class="fas fa-bath"></i> 1 bath</span>
-                                    </div>
-                                    <div class="card-price">£1,800/mo</div>
-                                </div>
-                            </div>
-                            <div class="mockup-card">
-                                <div class="card-image"
-                                    style="background-image: url('{{ url_for('static', filename='images/house-2.jpg') }}'); background-size: cover; background-position: center;">
-                                </div>
-                                <div class="card-content">
-                                    <div class="card-title-text">Cozy Studio in Shoreditch</div>
-                                    <div class="card-details">
-                                        <span class="detail-badge"><i class="fas fa-bed"></i> 1 bed</span>
-                                        <span class="detail-badge"><i class="fas fa-bath"></i> 1 bath</span>
-                                    </div>
-                                    <div class="card-price">£1,500/mo</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <p class="showcase-description">Browse verified properties with detailed information, photos, and
-                    pricing</p>
-            </div>
-
-            <!-- Feature 2: User Profiles -->
-            <div class="showcase-card">
-                <div class="showcase-header">
-                    <div class="showcase-header-left">
-                        <div class="showcase-window-controls">
-                            <div class="window-control close"></div>
-                            <div class="window-control minimize"></div>
-                            <div class="window-control maximize"></div>
-                        </div>
-                        <div class="showcase-icon">
-                            <i class="fas fa-user-circle"></i>
-                        </div>
-                        <h3>Verified Profiles</h3>
-                    </div>
-                </div>
-                <div class="showcase-preview">
-                    <div class="preview-mockup profile-mockup">
-                        <div class="profile-header">
-                            <div class="profile-avatar">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            <div class="profile-info">
-                                <div class="profile-name-text">Sarah Johnson</div>
-                                <div class="profile-role-text">STR Operator • London</div>
-                                <div class="verification-badge">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>Verified</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="profile-stats">
-                            <div class="stat-item">
-                                <div class="stat-number">15</div>
-                                <div class="stat-label">Properties</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-number">4.8</div>
-                                <div class="stat-label">Rating</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-number">98%</div>
-                                <div class="stat-label">Response</div>
-                            </div>
-                        </div>
-                        <div class="profile-actions">
-                            <button class="action-btn primary">Contact</button>
-                            <button class="action-btn secondary">View Profile</button>
-                        </div>
-                    </div>
-                </div>
-                <p class="showcase-description">Connect with ID-verified landlords and operators you can trust</p>
-            </div>
-
-            <!-- Feature 3: Messaging System -->
-            <div class="showcase-card">
-                <div class="showcase-header">
-                    <div class="showcase-header-left">
-                        <div class="showcase-window-controls">
-                            <div class="window-control close"></div>
-                            <div class="window-control minimize"></div>
-                            <div class="window-control maximize"></div>
-                        </div>
-                        <div class="showcase-icon">
-                            <i class="fas fa-comments"></i>
-                        </div>
-                        <h3>Secure Messaging</h3>
-                    </div>
-                </div>
-                <div class="showcase-preview">
-                    <div class="preview-mockup messaging-mockup">
-                        <div class="message-list">
-                            <div class="message-item active">
-                                <div class="message-avatar">JD</div>
-                                <div class="message-preview">
-                                    <div class="message-sender-text">John Davidson</div>
-                                    <div class="message-text-content">Hi, I'm interested in the property...</div>
-                                </div>
-                                <div class="message-time">2m</div>
-                            </div>
-                            <div class="message-item">
-                                <div class="message-avatar">SP</div>
-                                <div class="message-preview">
-                                    <div class="message-sender-text">Sarah Peterson</div>
-                                    <div class="message-text-content">When can we schedule a viewing?</div>
-                                </div>
-                                <div class="message-time">1h</div>
-                            </div>
-                            <div class="message-item">
-                                <div class="message-avatar">MK</div>
-                                <div class="message-preview">
-                                    <div class="message-sender-text">Michael Kumar</div>
-                                    <div class="message-text-content">Thank you for the quick response!</div>
-                                </div>
-                                <div class="message-time">3h</div>
-                            </div>
-                        </div>
-                        <div class="message-input">
-                            <i class="fas fa-paperclip"></i>
-                            <div class="input-placeholder-text">Type your message...</div>
-                            <i class="fas fa-paper-plane"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="showcase-card-footer">
-                    <p class="showcase-description" style="padding: 0; border: none; flex: 1;">Communicate safely with
-                        built-in encrypted messaging</p>
-                    <span class="coming-soon-badge"><i class="fas fa-clock"></i> Coming Soon</span>
-                </div>
-            </div>
-
-            <!-- Feature 4: Lease Templates -->
-            <div class="showcase-card">
-                <div class="showcase-header">
-                    <div class="showcase-header-left">
-                        <div class="showcase-window-controls">
-                            <div class="window-control close"></div>
-                            <div class="window-control minimize"></div>
-                            <div class="window-control maximize"></div>
-                        </div>
-                        <div class="showcase-icon">
-                            <i class="fas fa-file-contract"></i>
-                        </div>
-                        <h3>Legal Templates</h3>
-                    </div>
-                </div>
-                <div class="showcase-preview">
-                    <div class="preview-mockup template-mockup">
-                        <div class="template-doc">
-                            <div class="doc-header">
-                                <i class="fas fa-file-pdf"></i>
-                                <span>STR Lease Agreement</span>
-                            </div>
-                            <div class="doc-content">
-                                <div class="doc-text">This Short-Term Rental Agreement is entered into between:</div>
-                                <div class="doc-text"><strong>Landlord:</strong> [Property Owner Name]</div>
-                                <div class="doc-text"><strong>Operator:</strong> [STR Operator Name]</div>
-                                <div class="doc-section-title">1. Property Details</div>
-                                <div class="doc-text">The property located at [Address] is hereby leased for short-term
-                                    rental purposes.</div>
-                                <div class="doc-text">This agreement includes all terms and conditions required by UK
-                                    law...</div>
-                                <div class="doc-signature">
-                                    <div class="signature-box">
-                                        <div class="signature-line"></div>
-                                        <div class="signature-label">Landlord Signature</div>
-                                    </div>
-                                    <div class="signature-box">
-                                        <div class="signature-line"></div>
-                                        <div class="signature-label">Operator Signature</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="template-actions">
-                            <button class="template-btn"><i class="fas fa-download"></i> Download</button>
-                            <button class="template-btn"><i class="fas fa-edit"></i> Customize</button>
-                        </div>
-                    </div>
-                </div>
-                <p class="showcase-description">Access professionally drafted lease agreements and legal documents</p>
-            </div>
-
-            <!-- Feature 5: Interactive Map -->
-            <div class="showcase-card">
-                <div class="showcase-header">
-                    <div class="showcase-header-left">
-                        <div class="showcase-window-controls">
-                            <div class="window-control close"></div>
-                            <div class="window-control minimize"></div>
-                            <div class="window-control maximize"></div>
-                        </div>
-                        <div class="showcase-icon">
-                            <i class="fas fa-map-marked-alt"></i>
-                        </div>
-                        <h3>STR Legality Map</h3>
-                    </div>
-                </div>
-                <div class="showcase-preview">
-                    <div class="preview-mockup map-mockup">
-                        <div id="showcase-choropleth-container" style="width: 100%; height: 280px;"></div>
-                        <div class="map-legend" style="margin-top: 16px;">
-                            <div class="legend-item permitted">
-                                <div class="legend-dot"></div>
-                                <span>Permitted</span>
-                            </div>
-                            <div class="legend-item restricted">
-                                <div class="legend-dot" style="background: #f59e0b;"></div>
-                                <span>Restricted</span>
-                            </div>
-                            <div class="legend-item" style="color: #6b7280;">
-                                <div class="legend-dot" style="background: #e5e7eb;"></div>
-                                <span>Varies by Area</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <p class="showcase-description">Check STR regulations and compliance requirements by location</p>
-            </div>
-
-            <!-- Feature 6: Calendar & Bookings -->
-            <div class="showcase-card">
-                <div class="showcase-header">
-                    <div class="showcase-header-left">
-                        <div class="showcase-window-controls">
-                            <div class="window-control close"></div>
-                            <div class="window-control minimize"></div>
-                            <div class="window-control maximize"></div>
-                        </div>
-                        <div class="showcase-icon">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                        <h3>Booking Calendar</h3>
-                    </div>
-                </div>
-                <div class="showcase-preview">
-                    <div class="preview-mockup calendar-mockup">
-                        <div class="calendar-header">
-                            <button class="cal-nav-btn"><i class="fas fa-chevron-left"></i></button>
-                            <span>June 2024</span>
-                            <button class="cal-nav-btn"><i class="fas fa-chevron-right"></i></button>
-                        </div>
-                        <div class="calendar-grid">
-                            <div class="cal-day-header">M</div>
-                            <div class="cal-day-header">T</div>
-                            <div class="cal-day-header">W</div>
-                            <div class="cal-day-header">T</div>
-                            <div class="cal-day-header">F</div>
-                            <div class="cal-day-header">S</div>
-                            <div class="cal-day-header">S</div>
-
-                            <div class="cal-day"></div>
-                            <div class="cal-day"></div>
-                            <div class="cal-day"></div>
-                            <div class="cal-day available">1</div>
-                            <div class="cal-day available">2</div>
-                            <div class="cal-day booked">3</div>
-                            <div class="cal-day booked">4</div>
-                            <div class="cal-day booked">5</div>
-                            <div class="cal-day available">6</div>
-                            <div class="cal-day available">7</div>
-                            <div class="cal-day available">8</div>
-                            <div class="cal-day available">9</div>
-                            <div class="cal-day maintenance">10</div>
-                            <div class="cal-day available">11</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="showcase-card-footer">
-                    <p class="showcase-description" style="padding: 0; border: none; flex: 1;">Manage availability and
-                        bookings with our intuitive calendar</p>
-                    <span class="coming-soon-badge"><i class="fas fa-clock"></i> Coming Soon</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="showcase-cta">
-            <h3>Ready to experience it yourself?</h3>
-            <a href="{{ url_for('register') }}" class="showcase-cta-btn">Create Free Account</a>
-        </div>
-    </div>
 </section>
 
 <!-- <section class="video-section">
@@ -382,6 +59,127 @@
                 </div>
                 <h3 class="feature-title">Secure Messaging</h3>
                 <p class="feature-description">Protected communication between all platform users</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Benefits Section -->
+<section class="benefits-section">
+    <div class="benefits-container">
+        <h2 class="benefits-title">Benefits for Both Sides of the Bridge</h2>
+        <div class="benefits-grid">
+            <div class="benefit-card benefit-landlord">
+                <div class="benefit-header">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3 class="benefit-title">For Landlords: De-Risk Your Portfolio</h3>
+                </div>
+                <ul class="benefit-list">
+                    <li>
+                        <i class="fas fa-check"></i>
+                        <div>
+                            <strong>Effortless Legal Check:</strong> We instantly confirm your property's readiness
+                            against all current UK short-term rental regulations.
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-check"></i>
+                        <div>
+                            <strong>Full Management Control:</strong> Easily <strong>manage all your
+                                properties</strong>, <strong>view active listings</strong>, and have the
+                            <strong>optional ability to select the right operator</strong> from your dashboard.
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-check"></i>
+                        <div>
+                            <strong>Rate Operators & Maximize Yield:</strong> Use our integrated rating system to
+                            evaluate operator performance and secure favorable lease terms with professional STR
+                            partners.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="benefit-card benefit-operator">
+                <div class="benefit-header">
+                    <i class="fas fa-chart-line"></i>
+                    <h3 class="benefit-title">For Operators: Scale Your Business Effortlessly</h3>
+                </div>
+                <ul class="benefit-list">
+                    <li>
+                        <i class="fas fa-check"></i>
+                        <div>
+                            <strong>Integrated Booking & Management:</strong> Secure units and immediately activate the
+                            <strong>built-in booking calendar and channel management tools</strong> for seamless
+                            integration with major OTAs, maximizing occupancy from day one.
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-check"></i>
+                        <div>
+                            <strong>Exclusive Service Marketplace:</strong> Access a curated network of trusted partners
+                            for crucial operational needs, including professional <strong>cleaning, photography,
+                                Airbtics data integration</strong>, and specialised legal/compliance services.
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-check"></i>
+                        <div>
+                            <strong>Compliance-First Inventory:</strong> Only review properties that are already
+                            <strong>legally compliant</strong> with local UK STR laws, drastically reducing due
+                            diligence and accelerating time-to-market.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works-section">
+    <div class="how-it-works-container">
+        <h2 class="how-it-works-title">How the HostBridge Connection Works</h2>
+        <p class="how-it-works-subtitle">We eliminate the complexity and risk, matching supply and demand for
+            high-yield, compliant short-term rentals.</p>
+
+        <div class="how-it-works-steps">
+            <div class="step-card">
+                <div class="step-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <h3 class="step-title">1. Landlord Lists Property</h3>
+                <p class="step-description">Submit your property details. Our platform instantly maps its location
+                    against all local UK STR regulations to confirm compliance status.</p>
+            </div>
+
+            <div class="step-arrow">
+                <i class="fas fa-arrow-right"></i>
+                <div class="step-arrow-label">Vetting &<br>Compliance</div>
+            </div>
+
+            <div class="step-card step-featured">
+                <div class="step-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <h3 class="step-title">2. Vetting & Curated Connection</h3>
+                <p class="step-description">Operators review properties that have passed compliance checks. Landlords
+                    review fully verified operator profiles to ensure trust and a suitable business partner.</p>
+            </div>
+
+            <div class="step-arrow">
+                <i class="fas fa-arrow-right"></i>
+                <div class="step-arrow-label">Secure<br>Digital<br>Contract</div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-icon">
+                    <i class="fas fa-file-signature"></i>
+                </div>
+                <h3 class="step-title">3. Operator Secures Lease</h3>
+                <p class="step-description">Sign the digital contract, instantly securing the property and commencing
+                    monitoring for ongoing regulatory compliance. Seamless and legal.</p>
             </div>
         </div>
     </div>
