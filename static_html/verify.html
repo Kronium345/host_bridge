@@ -427,7 +427,7 @@
             window.flashMessages = [];
         };
 
-        // Check login status and update header
+
         async function checkLoginStatus() {
             try {
                 const response = await fetch('https://host-bridge.onrender.com/api/user/status', { method: 'GET', credentials: 'include' });
