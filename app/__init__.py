@@ -50,4 +50,16 @@ CORS(app, origins=[
 # Ensure SQLite schema exists on startup
 init_db()
 
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    if 'Set-Cookie' in response.headers:
+        cookies = response.headers.getlist('Set-Cookie')
+        response.headers.remove('Set-Cookie')
+        for cookie in cookies:
+            if 'SameSite' not in cookie:
+                cookie += '; SameSite=None; Secure'
+            response.headers.add('Set-Cookie', cookie)
+    return response
+
 from app import routes
