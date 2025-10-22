@@ -110,8 +110,8 @@
       </div>
     </section>
 
-    <!-- Operator Management Dashboard -->
-    <section class="operators-dashboard">
+    <!-- Operator Management Dashboard - Shown when logged in -->
+    <section class="operators-dashboard" id="calendar-section" style="display: none;">
       <h2 class="section-title"><i class="fas fa-calendar-alt"></i> Availability Calendar</h2>
       <div class="calendar-card">
         <div class="calendar-header">
@@ -129,42 +129,113 @@
         <div class="calendar-grid" id="calendar-grid" aria-label="Property availability calendar"></div>
       </div>
 
-      <div class="login-notice"
-        style="text-align: center; margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-        <p style="margin: 0; color: #666;"><i class="fas fa-info-circle"></i> Please <a href="login.html"
-            style="color: #004c46; text-decoration: underline;">log in</a> to make bookings and manage properties.</p>
-      </div>
-
       <!-- Toast container positioned below calendar -->
       <div id="toast-container" style="position: relative; margin-top: 20px; display: flex; justify-content: center;">
       </div>
     </section>
 
+    <!-- Login Required Message - Shown when NOT logged in -->
+    <section class="login-required-section" id="login-required-section" style="display: none;">
+      <div class="verify-container">
+        <div class="status-card">
+          <div class="status-icon">
+            <i class="fas fa-calendar-times"></i>
+          </div>
+          <h3>Calendar Access Requires Login</h3>
+          <p>Please log in to view property availability and make bookings</p>
+          <a href="./login.html" class="btn-primary"
+            style="display: inline-block; margin-top: 20px; padding: 12px 30px; background: #004c46; color: white; text-decoration: none; border-radius: 6px;">Login
+            to Continue</a>
+        </div>
+      </div>
+    </section>
+
     <script>
-      // Simple, dependency-free calendar with status mapping
+      // Calendar functionality with login integration
       (function () {
         const grid = document.getElementById('calendar-grid');
         const title = document.getElementById('cal-title');
         const prev = document.getElementById('cal-prev');
         const next = document.getElementById('cal-next');
+        const calendarSection = document.getElementById('calendar-section');
+        const loginRequiredSection = document.getElementById('login-required-section');
 
-        // Example occupancy map (date string 'YYYY-MM-DD' -> status)
-        // In production, fetch this per property from your API.
-        let occupancy = {
-          // demo entries
-        };
+        let occupancy = {};
+        let isAuthenticated = false;
+        const propertyId = 1;
 
         const today = new Date();
         let viewYear = today.getFullYear();
-        let viewMonth = today.getMonth(); // 0-11
+        let viewMonth = today.getMonth();
 
         function pad(n) { return n < 10 ? '0' + n : '' + n; }
         function dateKey(y, m, d) { return `${y}-${pad(m + 1)}-${pad(d)}`; }
 
+        // Fetch occupancy data
+        async function fetchOccupancy() {
+          try {
+            const response = await fetch(`https://host-bridge.onrender.com/api/booking/occupancy/${propertyId}`, {
+              method: 'GET',
+              credentials: 'include'
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+              occupancy = data.occupancy || {};
+              isAuthenticated = data.authenticated || false;
+              return true;
+            }
+            return false;
+          } catch (error) {
+            console.error('Failed to fetch occupancy:', error);
+            return false;
+          }
+        }
+
+        // Check login status and show/hide calendar
+        async function checkLoginStatus() {
+          try {
+            const response = await fetch('https://host-bridge.onrender.com/api/user/status', {
+              method: 'GET',
+              credentials: 'include'
+            });
+
+            if (response.ok) {
+              const userData = await response.json();
+              if (userData.logged_in && userData.user) {
+                // User is logged in - show calendar, hide login message
+                isAuthenticated = true;
+                if (calendarSection) calendarSection.style.display = 'block';
+                if (loginRequiredSection) loginRequiredSection.style.display = 'none';
+                // Fetch data and build calendar
+                await fetchOccupancy();
+                buildMonth(viewYear, viewMonth);
+              } else {
+                // User not logged in - hide calendar, show login message
+                isAuthenticated = false;
+                if (calendarSection) calendarSection.style.display = 'none';
+                if (loginRequiredSection) loginRequiredSection.style.display = 'block';
+              }
+            } else {
+              // API call failed - hide calendar, show login message
+              isAuthenticated = false;
+              if (calendarSection) calendarSection.style.display = 'none';
+              if (loginRequiredSection) loginRequiredSection.style.display = 'block';
+            }
+          } catch (error) {
+            console.error('Failed to check login status:', error);
+            isAuthenticated = false;
+            if (calendarSection) calendarSection.style.display = 'none';
+            if (loginRequiredSection) loginRequiredSection.style.display = 'block';
+          }
+        }
+
         function buildMonth(y, m) {
+          if (!grid) return;
+
           grid.innerHTML = '';
           const first = new Date(y, m, 1);
-          const startDay = first.getDay(); // 0=Sun
+          const startDay = first.getDay();
           const daysInMonth = new Date(y, m + 1, 0).getDate();
           title.textContent = first.toLocaleString('en-GB', { month: 'long', year: 'numeric' });
 
@@ -178,7 +249,11 @@
           });
 
           // Leading blanks
-          for (let i = 0; i < startDay; i++) { const b = document.createElement('div'); b.className = 'cal-cell blank'; grid.appendChild(b); }
+          for (let i = 0; i < startDay; i++) {
+            const b = document.createElement('div');
+            b.className = 'cal-cell blank';
+            grid.appendChild(b);
+          }
 
           // Days
           for (let d = 1; d <= daysInMonth; d++) {
@@ -187,20 +262,45 @@
             cell.className = 'cal-cell day';
             const key = dateKey(y, m, d);
             const status = occupancy[key];
-            if (status) { cell.classList.add(status); cell.setAttribute('data-status', status); }
+
+            if (status) {
+              cell.classList.add(status);
+              cell.setAttribute('data-status', status);
+            }
+
             cell.innerHTML = `<span class="num">${d}</span>`;
-            cell.addEventListener('click', () => {
-              showLoginToast();
-            });
+
+            // Only add booking functionality if authenticated
+            if (isAuthenticated) {
+              cell.addEventListener('click', () => {
+                if (!status) {
+                  showBookingForm(key);
+                }
+              });
+            }
+
             grid.appendChild(cell);
           }
         }
 
-        prev.addEventListener('click', () => { viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; } buildMonth(viewYear, viewMonth); });
-        next.addEventListener('click', () => { viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; } buildMonth(viewYear, viewMonth); });
+        if (prev) {
+          prev.addEventListener('click', () => {
+            viewMonth--;
+            if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+            buildMonth(viewYear, viewMonth);
+          });
+        }
 
-        buildMonth(viewYear, viewMonth);
+        if (next) {
+          next.addEventListener('click', () => {
+            viewMonth++;
+            if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+            buildMonth(viewYear, viewMonth);
+          });
+        }
 
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', checkLoginStatus);
       })();
 
       // Toast function for login reminder
@@ -554,10 +654,13 @@
         if (response.ok) {
           const userData = await response.json();
           if (userData.logged_in && userData.user) {
+            const userName = userData.user.first_name || userData.user.email;
+
+            // Update desktop navbar
             const navbarRight = document.querySelector('.navbar-right');
             if (navbarRight) {
               const userSpan = document.createElement('span');
-              userSpan.textContent = userData.user.first_name || userData.user.email;
+              userSpan.textContent = userName;
               userSpan.style.cssText = 'margin-right:10px;color:#004c46;font-weight:600;';
               const logoutLink = document.createElement('a');
               logoutLink.href = 'https://host-bridge.onrender.com/logout';
@@ -566,6 +669,24 @@
               navbarRight.innerHTML = '';
               navbarRight.appendChild(userSpan);
               navbarRight.appendChild(logoutLink);
+            }
+
+            // Update mobile navbar
+            const mobileAuth = document.querySelector('.mobile-auth');
+            if (mobileAuth) {
+              const mobileUserDiv = document.createElement('div');
+              mobileUserDiv.className = 'mobile-auth-email';
+              mobileUserDiv.textContent = userName;
+              mobileUserDiv.style.cssText = 'padding: 10px 0; color: #004c46; font-weight: 600; text-align: center;';
+
+              const mobileLogoutLink = document.createElement('a');
+              mobileLogoutLink.href = 'https://host-bridge.onrender.com/logout';
+              mobileLogoutLink.textContent = 'Logout';
+              mobileLogoutLink.className = 'nav-button register-btn';
+
+              mobileAuth.innerHTML = '';
+              mobileAuth.appendChild(mobileUserDiv);
+              mobileAuth.appendChild(mobileLogoutLink);
             }
           }
         }
