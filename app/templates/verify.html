@@ -13,7 +13,7 @@
 <!-- Verification Status -->
 <section class="verify-status-section">
     <div class="verify-container">
-        {% if session.get('user_id') %}
+        {% if current_user.is_authenticated %}
         <div class="status-card">
             <div class="status-icon">
                 <i class="fas fa-clock"></i>
@@ -34,7 +34,7 @@
     </div>
 </section>
 
-{% if session.get('user_id') %}
+{% if current_user.is_authenticated %}
 <!-- Verification Form -->
 <section class="verify-form-section">
     <div class="verify-container">
