@@ -461,13 +461,12 @@ def view_property(property_id: int):
 
 @app.route('/verify')
 def verify():
-	user_id = session.get('user_id')
 	verification_status = None
 	verification_docs = []
 	
-	if user_id:
-		verification_status = get_user_verification_status(user_id)
-		verification_docs = get_user_verification_documents(user_id)
+	if current_user.is_authenticated:
+		verification_status = get_user_verification_status(current_user.id)
+		verification_docs = get_user_verification_documents(current_user.id)
 	
 	return render_template('verify.html', 
 	                      verification_status=verification_status,
