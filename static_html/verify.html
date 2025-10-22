@@ -432,11 +432,19 @@
             const pleaseLoginCard = document.getElementById('please-login-card');
             const verificationForm = document.getElementById('verification-form');
 
+            console.log('Checking login status for verify page...');
+            console.log('Elements found:', { pleaseLoginCard, verificationForm });
+
             try {
                 const response = await fetch('https://host-bridge.onrender.com/api/user/status', { method: 'GET', credentials: 'include' });
+                console.log('API response:', response.ok, response.status);
+
                 if (response.ok) {
                     const userData = await response.json();
+                    console.log('User data:', userData);
+
                     if (userData.logged_in && userData.user) {
+                        console.log('✅ User IS logged in - showing verification form');
                         const navbarRight = document.querySelector('.navbar-right');
                         if (navbarRight) {
                             const userSpan = document.createElement('span');
@@ -450,26 +458,45 @@
                             navbarRight.appendChild(userSpan);
                             navbarRight.appendChild(logoutLink);
                         }
-                        if (pleaseLoginCard) pleaseLoginCard.style.display = 'none';
-                        if (verificationForm) verificationForm.style.display = 'block';
+                        // Show form, hide warning
+                        if (pleaseLoginCard) {
+                            pleaseLoginCard.style.display = 'none';
+                            console.log('Hid login warning');
+                        }
+                        if (verificationForm) {
+                            verificationForm.style.display = 'block';
+                            console.log('Showed verification form');
+                        }
                     } else {
+                        console.log('❌ User NOT logged in - showing login warning');
                         // User is not logged in
-                        if (pleaseLoginCard) pleaseLoginCard.style.display = 'block';
-                        if (verificationForm) verificationForm.style.display = 'none';
+                        if (pleaseLoginCard) {
+                            pleaseLoginCard.style.display = 'block';
+                            console.log('Showed login warning');
+                        }
+                        if (verificationForm) {
+                            verificationForm.style.display = 'none';
+                            console.log('Hid verification form');
+                        }
                     }
                 } else {
+                    console.log('❌ API call failed - assuming not logged in');
                     // API call failed - assume not logged in
                     if (pleaseLoginCard) pleaseLoginCard.style.display = 'block';
                     if (verificationForm) verificationForm.style.display = 'none';
                 }
             } catch (e) {
-                console.error('Login check error:', e);
+                console.error('❌ Login check error:', e);
                 // Error - assume not logged in
                 if (pleaseLoginCard) pleaseLoginCard.style.display = 'block';
                 if (verificationForm) verificationForm.style.display = 'none';
             }
         }
+        // Initial check on page load
         document.addEventListener('DOMContentLoaded', checkLoginStatus);
+
+        // Poll login status every 2 seconds (like React useEffect polling)
+        setInterval(checkLoginStatus, 2000);
     </script>
 
 </body>
