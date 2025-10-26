@@ -37,9 +37,29 @@ body {
     flex: 1;
 }
 
+.logo {
+    background: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.logo a {
+    background: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    display: block;
+}
+
 .logo img {
     height: 44px;
     width: auto;
+    display: block;
+    background: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
 .logo span {
@@ -2793,10 +2813,27 @@ body {
     .drawer-logo {
         margin-bottom: 10px;
         display: block;
+        background: transparent !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    .drawer-logo a {
+        background: transparent !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        display: block;
     }
 
     .drawer-logo img {
         height: 34px;
+        display: block;
+        background: transparent !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
     }
 
     .dropdown-menu {
@@ -2837,10 +2874,27 @@ body {
 
     .logo {
         margin-right: auto;
+        background: transparent !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    .logo a {
+        background: transparent !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        display: block;
     }
 
     .logo img {
         height: 40px;
+        display: block;
+        background: transparent !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
     }
 
     body.nav-open .nav-links {

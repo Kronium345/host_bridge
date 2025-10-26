@@ -34,7 +34,7 @@
             <div class="navbar-left">
                 <div class="logo">
                     <a href="./index.html" aria-label="HostBridge Home">
-                        <img src="./images/final.png" alt="Logo">
+                        <img src="./images/final-img.png" alt="Logo">
                     </a>
                 </div>
                 <button class="hamburger" id="nav-toggle" aria-label="Open menu" aria-expanded="false"
@@ -43,7 +43,7 @@
                 </button>
                 <ul class="nav-links" id="primary-nav">
                     <li class="drawer-logo"><a href="./index.html" aria-label="HostBridge Home"><img
-                                src="./images/final.png" alt="Logo"></a></li>
+                                src="./images/final-img.png" alt="Logo"></a></li>
                     <li><a href="./index.html">Home</a></li>
                     <li class="dropdown">
                         <a href="#">How It Works</a>
@@ -120,17 +120,12 @@
                             <option value="">-- Select Type --</option>
                             <option value="Flat">Flat</option>
                             <option value="House">House</option>
+                            <option value="Villa">Villa</option>
                             <option value="Studio">Studio</option>
                             <option value="Caravan">Caravan</option>
                         </select>
 
-                        <label>STR Regulation Compliance:</label>
-                        <select name="compliance">
-                            <option value="">-- Select --</option>
-                            <option value="Compliant">Compliant</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Not Sure">Not Sure</option>
-                        </select>
+
 
                         <label>Furnishings:</label>
                         <select name="furnishing" required>
@@ -454,6 +449,9 @@
         // Check login status on page load
         document.addEventListener('DOMContentLoaded', checkLoginStatus);
     </script>
+
+    <!-- Navbar Authentication Update -->
+    <script src="./js/navbar-auth.js"></script>
 
 </body>
 
