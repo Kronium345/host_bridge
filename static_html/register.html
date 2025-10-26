@@ -368,6 +368,15 @@
         document.addEventListener('DOMContentLoaded', function () {
             const registerForm = document.getElementById('register-form');
             if (registerForm) {
+
+                // Get role from URL query parameter
+                const urlParams = new URLSearchParams(window.location.search);
+                const roleParam = urlParams.get('role');
+                if (roleParam) {
+                    // Store role in sessionStorage for later use
+                    sessionStorage.setItem('registration_role', roleParam);
+                }
+
                 registerForm.addEventListener('submit', async function (e) {
                     e.preventDefault();
 
@@ -378,6 +387,10 @@
 
                     try {
                         const formData = new FormData(registerForm);
+
+                        // Add role to form data if available
+                        const role = sessionStorage.getItem('registration_role') || 'user';
+                        formData.append('role', role);
 
                         // Detect environment and use appropriate backend URL
                         const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';

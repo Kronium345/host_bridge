@@ -9,6 +9,7 @@ from app.db import (verify_credentials, create_user, find_user_by_email, create_
                      update_user_password, delete_expired_tokens, get_user_by_id,
                      create_booking, get_user_bookings, get_property_bookings,
                      create_testimonial, get_approved_testimonials, get_user_testimonial)
+from app.email_service import send_welcome_email, send_login_notification_email
 import os
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
@@ -219,6 +220,13 @@ def login():
 			login_user(user_obj)
 			flash('Logged in successfully.', 'success')
 			
+			# Send login notification email
+			try:
+				user_name = user.get('first_name') or email.split('@')[0]
+				send_login_notification_email(email, user_name)
+			except Exception as e:
+				print(f"Failed to send login notification email: {e}")
+			
 			# For AJAX requests, return JSON instead of redirecting
 			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
 				return jsonify({'success': True, 'redirect_url': redirect_url})
@@ -374,7 +382,7 @@ def register():
 		phone = request.form.get('phone')
 		password = request.form.get('password', '')
 		confirm_password = request.form.get('confirm_password', '')
-
+		role_param = request.form.get('role', 'user').strip() 
 		if not email or not password:
 			error_msg = 'Email and password are required.'
 			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -394,17 +402,33 @@ def register():
 			flash(error_msg, 'error')
 			return redirect(redirect_url.replace('/index.html', '/register.html'))
 
-		user_id = create_user(email=email, password=password, first_name=first_name, last_name=last_name, phone=phone)
+		# Create user with role (landlord, operator, or user)
+		user_id = create_user(
+			email=email, 
+			password=password, 
+			first_name=first_name, 
+			last_name=last_name, 
+			phone=phone,
+			role=role_param if role_param in ['landlord', 'operator'] else 'user'
+		)
+		
 		from app import User
 		user_obj = User(
 			user_id=user_id,
 			email=email,
 			first_name=first_name,
 			last_name=last_name,
-			role='user'
+			role=role_param if role_param in ['landlord', 'operator'] else 'user'
 		)
 		login_user(user_obj)
 		flash('Account created. You are now signed in.', 'success')
+		
+		# Send welcome email
+		try:
+			user_name = first_name or email.split('@')[0]
+			send_welcome_email(email, user_name, role_param if role_param in ['landlord', 'operator'] else 'user')
+		except Exception as e:
+			print(f"Failed to send welcome email: {e}")
 		
 		# For AJAX requests, return JSON instead of redirecting
 		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
