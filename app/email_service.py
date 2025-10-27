@@ -26,21 +26,20 @@ def send_email(to: str, subject: str, html_body: str) -> bool:
             print("⚠️ EmailJS credentials not configured")
             return False
         
-        # EmailJS REST API endpoint
+        # EmailJS API endpoint
         url = f"https://api.emailjs.com/api/v1.0/email/send"
         
+        # EmailJS expects form data, not JSON
         payload = {
             "service_id": service_id,
             "template_id": template_id,
             "user_id": public_key,
-            "template_params": {
-                "to_email": to,
-                "subject": subject,
-                "message": html_body
-            }
+            "to_email": to,
+            "subject": subject,
+            "message": html_body
         }
         
-        response = requests.post(url, json=payload, timeout=10)
+        response = requests.post(url, data=payload, timeout=10)
         
         if response.status_code == 200:
             print(f"✅ Email sent to {to}")

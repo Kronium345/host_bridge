@@ -9,7 +9,8 @@ from app.db import (verify_credentials, create_user, find_user_by_email, create_
                      update_user_password, delete_expired_tokens, get_user_by_id,
                      create_booking, get_user_bookings, get_property_bookings,
                      create_testimonial, get_approved_testimonials, get_user_testimonial)
-from app.email_service import send_welcome_email, send_login_notification_email
+# from app.email_service import send_welcome_email, send_login_notification_email
+ from app.email_service_sendgrid import send_welcome_email, send_login_notification_email
 import os
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
