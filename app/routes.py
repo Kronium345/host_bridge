@@ -221,12 +221,17 @@ def login():
 			login_user(user_obj)
 			flash('Logged in successfully.', 'success')
 			
-			# Send login notification email
-			try:
-				user_name = user.get('first_name') or email.split('@')[0]
-				send_login_notification_email(email, user_name)
-			except Exception as e:
-				print(f"Failed to send login notification email: {e}")
+		# Send login notification email
+		print("🔵 DEBUG: About to send login notification email...")
+		try:
+			user_name = user.get('first_name') or email.split('@')[0]
+			print(f"🔵 DEBUG: Calling send_login_notification_email({email}, {user_name})")
+			result = send_login_notification_email(email, user_name)
+			print(f"🔵 DEBUG: Email function returned: {result}")
+		except Exception as e:
+			print(f"🔴 DEBUG: Failed to send login notification email: {e}")
+			import traceback
+			traceback.print_exc()
 			
 			# For AJAX requests, return JSON instead of redirecting
 			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -425,11 +430,17 @@ def register():
 		flash('Account created. You are now signed in.', 'success')
 		
 		# Send welcome email
+		print("🟢 DEBUG: About to send welcome email...")
 		try:
 			user_name = first_name or email.split('@')[0]
-			send_welcome_email(email, user_name, role_param if role_param in ['landlord', 'operator'] else 'user')
+			user_role = role_param if role_param in ['landlord', 'operator'] else 'user'
+			print(f"🟢 DEBUG: Calling send_welcome_email({email}, {user_name}, {user_role})")
+			result = send_welcome_email(email, user_name, user_role)
+			print(f"🟢 DEBUG: Welcome email function returned: {result}")
 		except Exception as e:
-			print(f"Failed to send welcome email: {e}")
+			print(f"🔴 DEBUG: Failed to send welcome email: {e}")
+			import traceback
+			traceback.print_exc()
 		
 		# For AJAX requests, return JSON instead of redirecting
 		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
