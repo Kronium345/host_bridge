@@ -32,8 +32,15 @@ def send_email_smtp(to: str, subject: str, html_body: str, smtp_server: str = No
         smtp_password = os.getenv('SMTP_PASSWORD', '')
         sender_email = os.getenv('SENDER_EMAIL', 'noreply@host-bridge.com')
         
+        print(f"📧 DEBUG: Attempting to send email to {to}")
+        print(f"📧 DEBUG: SMTP Host: {smtp_host}")
+        print(f"📧 DEBUG: SMTP User: {smtp_user}")
+        print(f"📧 DEBUG: Sender Email: {sender_email}")
+        print(f"📧 DEBUG: Has Password: {bool(smtp_password)}")
+        
         if not smtp_password:
             print("⚠️ SMTP credentials not configured - User can still register but won't receive email")
+            print("⚠️ To fix: Add SMTP_PASSWORD environment variable in deployed version")
             # Don't fail registration just because email fails
             return False
         
@@ -48,14 +55,24 @@ def send_email_smtp(to: str, subject: str, html_body: str, smtp_server: str = No
         msg.attach(html_part)
         
         # Send email
+        print("📧 DEBUG: Attempting SMTP connection...")
         with smtplib.SMTP(smtp_host, smtp_port) as server:
             server.starttls()
+            print("📧 DEBUG: TLS started, attempting login...")
             server.login(smtp_user, smtp_password)
+            print("📧 DEBUG: Login successful, sending message...")
             server.send_message(msg)
         
         print(f"✅ Email sent to {to} via SMTP")
         return True
         
+    except smtplib.SMTPAuthenticationError as e:
+        print(f"❌ SMTP Authentication Error: {str(e)}")
+        print(f"❌ Check if SMTP_PASSWORD is correct")
+        return False
+    except smtplib.SMTPException as e:
+        print(f"❌ SMTP Error: {str(e)}")
+        return False
     except Exception as e:
         print(f"❌ Error sending email via SMTP: {str(e)}")
         return False
