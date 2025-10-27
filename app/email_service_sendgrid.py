@@ -30,7 +30,9 @@ def send_email_smtp(to: str, subject: str, html_body: str, smtp_server: str = No
         smtp_port = port or int(os.getenv('SMTP_PORT', '587'))
         smtp_user = os.getenv('SMTP_USER', 'apikey')  # For SendGrid, this is always 'apikey'
         smtp_password = os.getenv('SMTP_PASSWORD', '')
-        sender_email = os.getenv('SENDER_EMAIL', 'noreply@host-bridge.com')
+        # Use a verified sender email - SendGrid requires this to be verified in their dashboard
+        # You can verify your email at https://app.sendgrid.com/settings/sender_auth/senders
+        sender_email = os.getenv('SENDER_EMAIL', os.getenv('SENDGRID_VERIFIED_EMAIL', 'hello@sendgrid.me'))
         
         print(f"📧 DEBUG: Attempting to send email to {to}")
         print(f"📧 DEBUG: SMTP Host: {smtp_host}")
@@ -71,7 +73,18 @@ def send_email_smtp(to: str, subject: str, html_body: str, smtp_server: str = No
         print(f"❌ Check if SMTP_PASSWORD is correct")
         return False
     except smtplib.SMTPException as e:
-        print(f"❌ SMTP Error: {str(e)}")
+        error_msg = str(e)
+        print(f"❌ SMTP Error: {error_msg}")
+        
+        # Check for SendGrid specific errors
+        if '550' in error_msg and 'verified Sender Identity' in error_msg:
+            print("❌ SENDER IDENTITY ERROR: The 'From' email is not verified in SendGrid")
+            print("❌ TO FIX:")
+            print("   1. Go to: https://app.sendgrid.com/settings/sender_auth/senders")
+            print("   2. Click 'Create New Sender'")
+            print("   3. Verify your email address (check inbox for verification email)")
+            print("   4. Update SENDER_EMAIL environment variable in Render to your verified email")
+        
         return False
     except Exception as e:
         print(f"❌ Error sending email via SMTP: {str(e)}")

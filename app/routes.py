@@ -239,7 +239,7 @@ def login():
 		
 		return redirect(redirect_url)
 		
-	error_msg = 'Invalid email or password.'
+		error_msg = 'Invalid email or password.'
 		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
 			return jsonify({'error': error_msg}), 400
 		flash(error_msg, 'error')
