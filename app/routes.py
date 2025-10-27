@@ -218,9 +218,9 @@ def login():
 				last_name=user.get('last_name'),
 				role=user.get('role', 'user')
 			)
-			login_user(user_obj)
-			flash('Logged in successfully.', 'success')
-			
+		login_user(user_obj)
+		flash('Logged in successfully.', 'success')
+		
 		# Send login notification email
 		print("🔵 DEBUG: About to send login notification email...")
 		try:
@@ -232,14 +232,14 @@ def login():
 			print(f"🔴 DEBUG: Failed to send login notification email: {e}")
 			import traceback
 			traceback.print_exc()
-			
-			# For AJAX requests, return JSON instead of redirecting
-			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-				return jsonify({'success': True, 'redirect_url': redirect_url})
-			
-			return redirect(redirect_url)
 		
-		error_msg = 'Invalid email or password.'
+		# For AJAX requests, return JSON instead of redirecting
+		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+			return jsonify({'success': True, 'redirect_url': redirect_url})
+		
+		return redirect(redirect_url)
+		
+	error_msg = 'Invalid email or password.'
 		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
 			return jsonify({'error': error_msg}), 400
 		flash(error_msg, 'error')
