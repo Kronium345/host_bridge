@@ -25,7 +25,21 @@ export default (sequelize, DataTypes) => {
         },
         password: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true
+        },
+        authProvider: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            defaultValue: 'local',
+            field: 'auth_provider',
+            validate: {
+                isIn: [['local', 'google']]
+            }
+        },
+        profilePicture: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            field: 'profile_picture'
         },
         role: {
             type: DataTypes.STRING,

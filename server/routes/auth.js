@@ -1,10 +1,13 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
+import { OAuth2Client } from 'google-auth-library';
 import { User } from '../models/index.js';
 import { sendWelcomeEmail, sendLoginNotificationEmail } from '../services/emailService.js';
 import { generateToken, authenticate } from '../middleware/auth.js';
 
 const router = Router();
+
+const googleClient = new OAuth2Client(process.env.WEB_CLIENT_ID);
 
 /**
  * POST /api/register - Register new user
@@ -256,6 +259,122 @@ router.get('/user/profile', authenticate, async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Failed to fetch profile'
+    });
+  }
+});
+
+/**
+ * POST /api/auth/google - Google OAuth authentication
+ */
+router.post('/auth/google', async (req, res) => {
+  try {
+    const { token, role } = req.body;
+
+    if (!token) {
+      return res.status(400).json({
+        success: false,
+        message: 'No token provided'
+      });
+    }
+
+    console.log('🔐 Google OAuth attempt');
+
+    // Verify Google ID token
+    const ticket = await googleClient.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID || process.env.WEB_CLIENT_ID
+    });
+
+    const payload = ticket.getPayload();
+    const { email, name, picture, given_name, family_name } = payload;
+
+    console.log('✅ Google token verified:', { email, name });
+
+    // Find existing user by email
+    let user = await User.findOne({ where: { email } });
+    let isNewUser = false;
+
+    // Create user if not found
+    if (!user) {
+      isNewUser = true;
+      console.log('📝 Creating new user from Google OAuth');
+
+      // Split name into first and last
+      const firstName = given_name || (name ? name.split(' ')[0] : '');
+      const lastName = family_name || (name ? name.split(' ').slice(1).join(' ') : '');
+
+      // Determine user role (use provided role if valid, otherwise default to 'user')
+      const userRole = role && ['landlord', 'operator'].includes(role) ? role : 'user';
+
+      user = await User.create({
+        email,
+        password: null, // No password for Google users
+        firstName,
+        lastName,
+        phoneNumber: '',
+        role: userRole, // Use role from registration page or default
+        authProvider: 'google',
+        profilePicture: picture,
+        emailVerified: true // Google emails are pre-verified
+      });
+
+      console.log('✅ New Google user created:', { id: user.id, email: user.email, role: user.role });
+
+      // Send welcome email (non-blocking)
+      const userName = firstName || email.split('@')[0];
+      sendWelcomeEmail(email, userName, user.role).catch(err => {
+        console.error('Failed to send welcome email to Google user:', err);
+      });
+    } else {
+      console.log('✅ Existing user found:', { id: user.id, email: user.email });
+
+      // Send login notification (non-blocking)
+      const userName = user.firstName || email.split('@')[0];
+      sendLoginNotificationEmail(email, userName).catch(err => {
+        console.error('Failed to send login notification:', err);
+      });
+    }
+
+    // Generate JWT token
+    const authToken = generateToken(user);
+
+    // Set token in cookie (for web)
+    res.cookie('token', authToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+
+    // Create session
+    req.session.user = {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role
+    };
+
+    res.json({
+      success: true,
+      message: isNewUser ? 'Account created successfully' : 'Login successful',
+      token: authToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        first_name: user.firstName,
+        last_name: user.lastName,
+        role: user.role,
+        profile_picture: user.profilePicture,
+        auth_provider: user.authProvider || 'google',
+        is_new_user: isNewUser
+      }
+    });
+  } catch (error) {
+    console.error('❌ Google auth error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Google authentication failed',
+      error: error.message
     });
   }
 });

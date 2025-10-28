@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
-import { sendWelcomeEmail, sendLoginNotificationEmail } from './server/services/emailService.js';
-import { sequelize, User } from './server/models/index.js';
+import { sendWelcomeEmail, sendLoginNotificationEmail } from './services/emailService.js';
+import { sequelize, User } from './models/index.js';
 
 dotenv.config();
 
