@@ -13,7 +13,7 @@
     "setup": "npm run sync"
   },
   "dependencies": {
-    "@upstash/workflow": "^0.4.0",
+    "@upstash/workflow": "^0.2.13",
     "bcrypt": "^6.0.0",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
