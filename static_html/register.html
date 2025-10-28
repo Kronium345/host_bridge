@@ -392,44 +392,30 @@
                         const role = sessionStorage.getItem('registration_role') || 'user';
                         formData.append('role', role);
 
-                        // Detect environment and use appropriate backend URL
-                        const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                        const backendUrl = isLocalDev ? 'http://127.0.0.1:5000' : 'https://host-bridge.onrender.com';
-
-                        const response = await fetch(`${backendUrl}/register`, {
-                            method: 'POST',
-                            body: formData,
-                            credentials: 'include',
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest'
-                            }
+                        // Convert FormData to JSON
+                        const jsonData = {};
+                        formData.forEach((value, key) => {
+                            jsonData[key] = value;
                         });
 
-                        if (response.redirected) {
-                            // Successful registration, redirect to homepage
-                            const frontendUrl = isLocalDev ? 'http://127.0.0.1:5000' : 'https://host-bridge.com';
-                            window.location.href = `${frontendUrl}/index.html`;
+                        const response = await fetch('/api/register', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(jsonData),
+                            credentials: 'include'
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            showToast('Registration successful! Redirecting...', 'success');
+                            setTimeout(() => {
+                                window.location.href = '/index.html';
+                            }, 1000);
                         } else {
-                            // Check response content type
-                            const contentType = response.headers.get('content-type');
-                            if (contentType && contentType.includes('application/json')) {
-                                // JSON response
-                                const data = await response.json();
-                                if (data.success && data.redirect_url) {
-                                    // Successful registration, redirect to the provided URL
-                                    window.location.href = data.redirect_url;
-                                } else if (data.error) {
-                                    showToast(data.error, 'error');
-                                }
-                            } else {
-                                // HTML response - check for flash messages
-                                const text = await response.text();
-                                if (text.includes('already exists') || text.includes('do not match') || text.includes('required')) {
-                                    showToast('Registration failed. Please check your details and try again.', 'error');
-                                } else {
-                                    showToast('Registration failed. Please try again.', 'error');
-                                }
-                            }
+                            showToast(result.message || 'Registration failed', 'error');
                         }
                     } catch (error) {
                         console.error('Registration error:', error);

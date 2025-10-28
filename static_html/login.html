@@ -313,6 +313,58 @@
                     return true;
                 });
             });
+            // Handle login form submission
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async function (e) {
+                    e.preventDefault();
+
+                    const submitBtn = loginForm.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.textContent;
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Signing In...';
+
+                    try {
+                        const formData = new FormData(loginForm);
+                        const data = {
+                            email: formData.get('email'),
+                            password: formData.get('password')
+                        };
+
+                        const response = await fetch('/api/login', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data),
+                            credentials: 'include'
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            if (window.toast) {
+                                window.toast('Login successful! Redirecting...', 'success');
+                            }
+                            setTimeout(() => {
+                                window.location.href = '/index.html';
+                            }, 1000);
+                        } else {
+                            if (window.toast) {
+                                window.toast(result.message || 'Login failed', 'failure');
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Login error:', error);
+                        if (window.toast) {
+                            window.toast('Network error. Please try again.', 'failure');
+                        }
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalText;
+                    }
+                });
+            }
         </script>
 
         <section class="auth-wrapper">
@@ -339,7 +391,7 @@
                     </a>
                     <div class="or-sep">or</div>
 
-                    <form class="form" action="https://host-bridge.onrender.com/login" method="post" id="login-form">
+                    <form class="form" id="login-form">
                         <div class="field">
                             <i class="fa-regular fa-envelope"></i>
                             <input class="input" type="text" id="email" name="email"

@@ -16,8 +16,8 @@
 
             if (response.ok) {
                 const userData = await response.json();
-                if (userData.logged_in && userData.user) {
-                    const userName = userData.user.first_name || userData.user.email;
+                if (userData.authenticated && userData.user) {
+                    const userName = userData.user.firstName || userData.user.first_name || userData.user.email;
 
                     // Update desktop navbar
                     const navbarRight = document.querySelector('.navbar-right');
@@ -30,9 +30,21 @@
                         logoutLink.textContent = 'Logout';
                         logoutLink.className = 'nav-button login-btn';
 
-                        logoutLink.addEventListener('click', function (e) {
-                            console.log('Logout clicked, navigating to:', logoutURL);
-                            window.location.href = logoutURL;
+                        logoutLink.addEventListener('click', async function (e) {
+                            e.preventDefault();
+                            console.log('Logout clicked, sending request...');
+                            try {
+                                const response = await fetch(baseURL + '/api/logout', {
+                                    method: 'POST',
+                                    credentials: 'include'
+                                });
+                                if (response.ok) {
+                                    window.location.href = '/index.html';
+                                }
+                            } catch (err) {
+                                console.error('Logout error:', err);
+                                window.location.href = logoutURL;
+                            }
                         });
 
                         navbarRight.innerHTML = '';
@@ -56,9 +68,21 @@
                         mobileLogoutLink.className = 'nav-button register-btn';
 
                         // Add click event to ensure navigation works
-                        mobileLogoutLink.addEventListener('click', function (e) {
-                            console.log('Mobile logout clicked, navigating to:', logoutURL);
-                            window.location.href = logoutURL;
+                        mobileLogoutLink.addEventListener('click', async function (e) {
+                            e.preventDefault();
+                            console.log('Mobile logout clicked, sending request...');
+                            try {
+                                const response = await fetch(baseURL + '/api/logout', {
+                                    method: 'POST',
+                                    credentials: 'include'
+                                });
+                                if (response.ok) {
+                                    window.location.href = '/index.html';
+                                }
+                            } catch (err) {
+                                console.error('Logout error:', err);
+                                window.location.href = logoutURL;
+                            }
                         });
 
                         mobileAuth.innerHTML = '';
