@@ -347,7 +347,7 @@
                                 window.toast('Login successful! Redirecting...', 'success');
                             }
                             setTimeout(() => {
-                                window.location.href = '/index.html';
+                                window.location.href = './index.html';
                             }, 1000);
                         } else {
                             if (window.toast) {
@@ -618,7 +618,7 @@
 
                 if (response.ok) {
                     const userData = await response.json();
-                    if (userData.logged_in && userData.user) {
+                    if (userData.authenticated && userData.user) {
                         // User is already logged in, redirect to homepage
                         window.location.href = window.ENV.getRelativeURL('index.html');
                     }
@@ -652,11 +652,7 @@
         // Fetch Google Client ID from backend
         async function fetchGoogleClientId() {
             try {
-                const baseURL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                    ? 'http://localhost:3000'
-                    : 'https://host-bridge.onrender.com';
-
-                const response = await fetch(`${baseURL}/api/config/google`);
+                const response = await fetch(window.ENV.getURL('/api/config/google'));
                 const data = await response.json();
                 googleClientId = data.clientId;
                 return googleClientId;
@@ -707,11 +703,7 @@
                 const idToken = response.credential;
 
                 // Send token to backend
-                const baseURL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                    ? 'http://localhost:3000'
-                    : 'https://host-bridge.onrender.com';
-
-                const result = await fetch(`${baseURL}/api/auth/google`, {
+                const result = await fetch(window.ENV.getURL('/api/auth/google'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
