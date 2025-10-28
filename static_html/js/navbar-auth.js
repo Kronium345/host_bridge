@@ -2,14 +2,9 @@
 (function () {
     'use strict';
 
-    // Detect if running locally or in production
-    const isLocal = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
-    const baseURL = isLocal ? window.location.origin : 'https://host-bridge.onrender.com';
-    const logoutURL = baseURL + '/logout';
-
     async function updateNavbarWithUserInfo() {
         try {
-            const response = await fetch(baseURL + '/api/user/status', {
+            const response = await fetch(window.ENV.getURL('/api/user/status'), {
                 method: 'GET',
                 credentials: 'include'
             });
@@ -26,7 +21,7 @@
                         userSpan.textContent = userName;
                         userSpan.style.cssText = 'margin-right:10px;color:#004c46;font-weight:600;';
                         const logoutLink = document.createElement('a');
-                        logoutLink.href = logoutURL;
+                        logoutLink.href = '#';
                         logoutLink.textContent = 'Logout';
                         logoutLink.className = 'nav-button login-btn';
 
@@ -34,16 +29,16 @@
                             e.preventDefault();
                             console.log('Logout clicked, sending request...');
                             try {
-                                const response = await fetch(baseURL + '/api/logout', {
+                                const response = await fetch(window.ENV.getURL('/api/logout'), {
                                     method: 'POST',
                                     credentials: 'include'
                                 });
                                 if (response.ok) {
-                                    window.location.href = '/index.html';
+                                    window.location.href = window.ENV.getRelativeURL('index.html');
                                 }
                             } catch (err) {
                                 console.error('Logout error:', err);
-                                window.location.href = logoutURL;
+                                window.location.href = window.ENV.getRelativeURL('index.html');
                             }
                         });
 
@@ -51,7 +46,7 @@
                         navbarRight.appendChild(userSpan);
                         navbarRight.appendChild(logoutLink);
                         navbarRight.dataset.updated = 'true';
-                        console.log('Desktop navbar updated with logout link:', logoutURL);
+                        console.log('Desktop navbar updated with logout link');
                     }
 
                     // Update mobile navbar
@@ -63,7 +58,7 @@
                         mobileUserDiv.style.cssText = 'padding: 10px 0; color: #004c46; font-weight: 600; text-align: center;';
 
                         const mobileLogoutLink = document.createElement('a');
-                        mobileLogoutLink.href = logoutURL;
+                        mobileLogoutLink.href = '#';
                         mobileLogoutLink.textContent = 'Logout';
                         mobileLogoutLink.className = 'nav-button register-btn';
 
@@ -72,16 +67,16 @@
                             e.preventDefault();
                             console.log('Mobile logout clicked, sending request...');
                             try {
-                                const response = await fetch(baseURL + '/api/logout', {
+                                const response = await fetch(window.ENV.getURL('/api/logout'), {
                                     method: 'POST',
                                     credentials: 'include'
                                 });
                                 if (response.ok) {
-                                    window.location.href = '/index.html';
+                                    window.location.href = window.ENV.getRelativeURL('index.html');
                                 }
                             } catch (err) {
                                 console.error('Logout error:', err);
-                                window.location.href = logoutURL;
+                                window.location.href = window.ENV.getRelativeURL('index.html');
                             }
                         });
 
@@ -89,7 +84,7 @@
                         mobileAuth.appendChild(mobileUserDiv);
                         mobileAuth.appendChild(mobileLogoutLink);
                         mobileAuth.dataset.updated = 'true';
-                        console.log('Mobile navbar updated with logout link:', logoutURL);
+                        console.log('Mobile navbar updated with logout link');
                     }
                 }
             }
