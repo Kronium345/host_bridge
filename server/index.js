@@ -65,7 +65,7 @@ app.use(session({
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-        domain: process.env.COOKIE_DOMAIN || undefined,
+        // Don't set domain - let browser handle it (allows cross-site with SameSite=none)
         maxAge: 24 * 60 * 60 * 1000 // 24 hours
     }
 }));

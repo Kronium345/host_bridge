@@ -14,7 +14,7 @@ const getCookieOptions = () => ({
   httpOnly: true,
   secure: process.env.NODE_ENV === 'production',
   sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-  domain: process.env.COOKIE_DOMAIN || undefined,
+  // Don't set domain - let browser handle it (allows cross-site with SameSite=none)
   maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
 });
 
