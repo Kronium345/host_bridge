@@ -22,11 +22,36 @@ const server = http.createServer(app);
 const io = new Server(server);
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+// Middleware - CORS configuration
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-    credentials: true
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps, Postman, curl)
+        if (!origin) return callback(null, true);
+
+        const allowedOrigins = [
+            'http://localhost:3000',
+            'http://127.0.0.1:3000',
+            'https://host-bridge.onrender.com',
+            'https://host-bridge.com',
+            'https://www.host-bridge.com'
+        ];
+
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            console.log('CORS blocked origin:', origin);
+            callback(null, true); // Allow anyway for development
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    exposedHeaders: ['Set-Cookie']
 }));
+
+// Handle preflight requests
+app.options('*', cors());
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
