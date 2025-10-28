@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { Property, User } from '../models/index.js';
+import Property from '../models/Property.mongoose.js';
+import User from '../models/User.mongoose.js';
 import { authenticate } from '../middleware/auth.js';
 import upload from '../config/multer.js';
 
@@ -58,13 +59,13 @@ router.post('/', authenticate, requireLandlord, upload.array('images', 10), asyn
             status: 'active'
         });
 
-        console.log('✅ Property created:', { id: property.id, title: property.title });
+        console.log('✅ Property created:', { id: property._id, title: property.title });
 
         res.status(201).json({
             success: true,
             message: 'Property listing created successfully',
             property: {
-                id: property.id,
+                id: property._id.toString(),
                 title: property.title,
                 description: property.description,
                 address: property.address,
@@ -109,21 +110,15 @@ router.get('/', async (req, res) => {
             if (maxPrice) where.price.$lte = parseFloat(maxPrice);
         }
 
-        const properties = await Property.findAll({
-            where,
-            include: [{
-                model: User,
-                as: 'owner',
-                attributes: ['id', 'firstName', 'lastName', 'email', 'phoneNumber']
-            }],
-            order: [['createdAt', 'DESC']]
-        });
+        const properties = await Property.find(where)
+            .populate('ownerId', 'firstName lastName email phoneNumber')
+            .sort({ createdAt: -1 });
 
         res.json({
             success: true,
             count: properties.length,
             properties: properties.map(p => ({
-                id: p.id,
+                id: p._id.toString(),
                 title: p.title,
                 description: p.description,
                 address: p.address,
@@ -135,11 +130,11 @@ router.get('/', async (req, res) => {
                 propertyType: p.propertyType,
                 amenities: p.amenities,
                 images: p.images,
-                owner: p.owner ? {
-                    id: p.owner.id,
-                    name: `${p.owner.firstName} ${p.owner.lastName}`,
-                    email: p.owner.email,
-                    phone: p.owner.phoneNumber
+                owner: p.ownerId ? {
+                    id: p.ownerId._id.toString(),
+                    name: `${p.ownerId.firstName} ${p.ownerId.lastName}`,
+                    email: p.ownerId.email,
+                    phone: p.ownerId.phoneNumber
                 } : null,
                 createdAt: p.createdAt
             }))
@@ -159,15 +154,16 @@ router.get('/', async (req, res) => {
  */
 router.get('/my', authenticate, requireLandlord, async (req, res) => {
     try {
-        const properties = await Property.findAll({
-            where: { ownerId: req.user.id },
-            order: [['createdAt', 'DESC']]
-        });
+        const properties = await Property.find({ ownerId: req.user.id })
+            .sort({ createdAt: -1 });
 
         res.json({
             success: true,
             count: properties.length,
-            properties
+            properties: properties.map(p => ({
+                ...p.toObject(),
+                id: p._id.toString()
+            }))
         });
     } catch (error) {
         console.error('❌ My properties fetch error:', error);
@@ -184,13 +180,8 @@ router.get('/my', authenticate, requireLandlord, async (req, res) => {
  */
 router.get('/:id', async (req, res) => {
     try {
-        const property = await Property.findByPk(req.params.id, {
-            include: [{
-                model: User,
-                as: 'owner',
-                attributes: ['id', 'firstName', 'lastName', 'email', 'phoneNumber']
-            }]
-        });
+        const property = await Property.findById(req.params.id)
+            .populate('ownerId', 'firstName lastName email phoneNumber');
 
         if (!property) {
             return res.status(404).json({
@@ -202,7 +193,7 @@ router.get('/:id', async (req, res) => {
         res.json({
             success: true,
             property: {
-                id: property.id,
+                id: property._id.toString(),
                 title: property.title,
                 description: property.description,
                 address: property.address,
@@ -215,11 +206,11 @@ router.get('/:id', async (req, res) => {
                 amenities: property.amenities,
                 images: property.images,
                 status: property.status,
-                owner: property.owner ? {
-                    id: property.owner.id,
-                    name: `${property.owner.firstName} ${property.owner.lastName}`,
-                    email: property.owner.email,
-                    phone: property.owner.phoneNumber
+                owner: property.ownerId ? {
+                    id: property.ownerId._id.toString(),
+                    name: `${property.ownerId.firstName} ${property.ownerId.lastName}`,
+                    email: property.ownerId.email,
+                    phone: property.ownerId.phoneNumber
                 } : null,
                 createdAt: property.createdAt,
                 updatedAt: property.updatedAt
@@ -240,7 +231,7 @@ router.get('/:id', async (req, res) => {
  */
 router.put('/:id', authenticate, requireLandlord, async (req, res) => {
     try {
-        const property = await Property.findByPk(req.params.id);
+        const property = await Property.findById(req.params.id);
 
         if (!property) {
             return res.status(404).json({
@@ -250,7 +241,7 @@ router.put('/:id', authenticate, requireLandlord, async (req, res) => {
         }
 
         // Check if user owns this property
-        if (property.ownerId !== req.user.id && req.user.role !== 'admin') {
+        if (property.ownerId.toString() !== req.user.id && req.user.role !== 'admin') {
             return res.status(403).json({
                 success: false,
                 message: 'Access denied. You can only update your own properties.'
@@ -258,12 +249,16 @@ router.put('/:id', authenticate, requireLandlord, async (req, res) => {
         }
 
         // Update property
-        await property.update(req.body);
+        Object.assign(property, req.body);
+        await property.save();
 
         res.json({
             success: true,
             message: 'Property updated successfully',
-            property
+            property: {
+                ...property.toObject(),
+                id: property._id.toString()
+            }
         });
     } catch (error) {
         console.error('❌ Property update error:', error);
@@ -280,7 +275,7 @@ router.put('/:id', authenticate, requireLandlord, async (req, res) => {
  */
 router.delete('/:id', authenticate, requireLandlord, async (req, res) => {
     try {
-        const property = await Property.findByPk(req.params.id);
+        const property = await Property.findById(req.params.id);
 
         if (!property) {
             return res.status(404).json({
@@ -290,14 +285,14 @@ router.delete('/:id', authenticate, requireLandlord, async (req, res) => {
         }
 
         // Check if user owns this property
-        if (property.ownerId !== req.user.id && req.user.role !== 'admin') {
+        if (property.ownerId.toString() !== req.user.id && req.user.role !== 'admin') {
             return res.status(403).json({
                 success: false,
                 message: 'Access denied. You can only delete your own properties.'
             });
         }
 
-        await property.destroy();
+        await property.deleteOne();
 
         res.json({
             success: true,

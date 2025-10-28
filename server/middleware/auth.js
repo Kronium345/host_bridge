@@ -10,7 +10,7 @@ const JWT_SECRET = process.env.JWT_SECRET || process.env.SESSION_SECRET || 'fall
  */
 export function generateToken(user) {
     const payload = {
-        id: user.id,
+        id: user._id ? user._id.toString() : user.id, // Support both Mongoose and plain objects
         email: user.email,
         role: user.role,
         firstName: user.firstName,

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import { OAuth2Client } from 'google-auth-library';
-import { User } from '../models/index.js';
+import User from '../models/User.mongoose.js';
 import { sendWelcomeEmail, sendLoginNotificationEmail } from '../services/emailService.js';
 import { generateToken, authenticate } from '../middleware/auth.js';
 
@@ -36,7 +36,7 @@ router.post('/register', async (req, res) => {
     }
 
     // Check if user already exists
-    const existingUser = await User.findOne({ where: { email } });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
         success: false,
@@ -60,7 +60,7 @@ router.post('/register', async (req, res) => {
       role: userRole
     });
 
-    console.log('✅ User created:', { id: user.id, email: user.email, role: user.role });
+    console.log('✅ User created:', { id: user._id, email: user.email, role: user.role });
 
     // Send welcome email (non-blocking)
     const userName = first_name || email.split('@')[0];
@@ -80,7 +80,7 @@ router.post('/register', async (req, res) => {
 
     // Also set session (for backward compatibility)
     req.session.user = {
-      id: user.id,
+      id: user._id.toString(),
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -92,7 +92,7 @@ router.post('/register', async (req, res) => {
       message: 'Registration successful',
       token, // Return token for mobile/API clients
       user: {
-        id: user.id,
+        id: user._id.toString(),
         email: user.email,
         first_name: user.firstName,
         last_name: user.lastName,
@@ -126,7 +126,7 @@ router.post('/login', async (req, res) => {
     }
 
     // Find user
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -143,7 +143,7 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    console.log('✅ Login successful:', { id: user.id, email: user.email });
+    console.log('✅ Login successful:', { id: user._id, email: user.email });
 
     // Send login notification (non-blocking)
     const userName = user.firstName || email.split('@')[0];
@@ -163,7 +163,7 @@ router.post('/login', async (req, res) => {
 
     // Create session (for backward compatibility)
     req.session.user = {
-      id: user.id,
+      id: user._id.toString(),
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -175,7 +175,7 @@ router.post('/login', async (req, res) => {
       message: 'Login successful',
       token, // Return token for mobile/API clients
       user: {
-        id: user.id,
+        id: user._id.toString(),
         email: user.email,
         first_name: user.firstName,
         last_name: user.lastName,
@@ -240,9 +240,7 @@ router.get('/user/status', (req, res) => {
  */
 router.get('/user/profile', authenticate, async (req, res) => {
   try {
-    const user = await User.findByPk(req.user.id, {
-      attributes: ['id', 'email', 'firstName', 'lastName', 'phoneNumber', 'role', 'emailVerified']
-    });
+    const user = await User.findById(req.user.id).select('email firstName lastName phoneNumber role emailVerified');
 
     if (!user) {
       return res.status(404).json({
@@ -254,7 +252,7 @@ router.get('/user/profile', authenticate, async (req, res) => {
     res.json({
       success: true,
       user: {
-        id: user.id,
+        id: user._id.toString(),
         email: user.email,
         first_name: user.firstName,
         last_name: user.lastName,
@@ -300,7 +298,7 @@ router.post('/auth/google', async (req, res) => {
     console.log('✅ Google token verified:', { email, name });
 
     // Find existing user by email
-    let user = await User.findOne({ where: { email } });
+    let user = await User.findOne({ email });
     let isNewUser = false;
 
     // Create user if not found
@@ -327,7 +325,7 @@ router.post('/auth/google', async (req, res) => {
         emailVerified: true // Google emails are pre-verified
       });
 
-      console.log('✅ New Google user created:', { id: user.id, email: user.email, role: user.role });
+      console.log('✅ New Google user created:', { id: user._id, email: user.email, role: user.role });
 
       // Send welcome email (non-blocking)
       const userName = firstName || email.split('@')[0];
@@ -335,7 +333,7 @@ router.post('/auth/google', async (req, res) => {
         console.error('Failed to send welcome email to Google user:', err);
       });
     } else {
-      console.log('✅ Existing user found:', { id: user.id, email: user.email });
+      console.log('✅ Existing user found:', { id: user._id, email: user.email });
 
       // Send login notification (non-blocking)
       const userName = user.firstName || email.split('@')[0];
@@ -356,7 +354,7 @@ router.post('/auth/google', async (req, res) => {
 
     // Create session
     req.session.user = {
-      id: user.id,
+      id: user._id.toString(),
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -368,7 +366,7 @@ router.post('/auth/google', async (req, res) => {
       message: isNewUser ? 'Account created successfully' : 'Login successful',
       token: authToken,
       user: {
-        id: user.id,
+        id: user._id.toString(),
         email: user.email,
         first_name: user.firstName,
         last_name: user.lastName,

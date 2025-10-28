@@ -8,7 +8,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { sequelize } from './models/index.js';
+import connectDB from './config/database.js';
 import authRoutes from './routes/auth.js';
 import propertyRoutes from './routes/properties.js';
 
@@ -163,20 +163,7 @@ io.on('connection', (socket) => {
 // Start server
 const startServer = async () => {
     try {
-        // Test database connection
-        await sequelize.authenticate();
-        console.log('✅ Database connection established');
-
-        // Temporarily disable foreign key constraints to avoid sync errors
-        await sequelize.query('PRAGMA foreign_keys = OFF');
-
-        // Sync models (alter: true updates tables without dropping)
-        await sequelize.sync({ alter: true });
-
-        // Re-enable foreign key constraints
-        await sequelize.query('PRAGMA foreign_keys = ON');
-
-        console.log('✅ Database models synchronized');
+        await connectDB();
 
         // Start listening
         server.listen(PORT, () => {
