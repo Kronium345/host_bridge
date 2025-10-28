@@ -85,11 +85,19 @@
                     console.log('✅ Auth status: logged in as', data.user.email);
                     return true;
                 } else {
-                    // Not authenticated
-                    await logout(false); // Don't call API, just clear local state
+                    // Not authenticated on server but we got 200 OK (shouldn't happen with new code)
+                    console.warn('⚠️ Server returned 200 but not authenticated');
+                    await logout(false);
                     return false;
                 }
+            } else if (response.status === 401) {
+                // 401 = Not authenticated (expected from authenticate middleware)
+                console.log('📴 Not authenticated on server, clearing local state');
+                await logout(false);
+                return false;
             } else {
+                // Other error
+                console.error('❌ Auth status check failed:', response.status);
                 await logout(false);
                 return false;
             }

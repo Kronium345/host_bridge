@@ -223,19 +223,21 @@ router.post('/logout', (req, res) => {
 
 /**
  * GET /api/user/status - Check authentication status
+ * Uses authenticate middleware to check both session and JWT
  */
-router.get('/user/status', (req, res) => {
-  if (req.session.user) {
-    res.json({
-      authenticated: true,
-      user: req.session.user
-    });
-  } else {
-    res.json({
-      authenticated: false
-    });
-  }
+router.get('/user/status', authenticate, (req, res) => {
+  // If authenticate middleware passes, user is authenticated
+  res.json({
+    authenticated: true,
+    logged_in: true, // For backward compatibility
+    user: req.user
+  });
 });
+
+/**
+ * GET /api/user/status (fallback for unauthenticated)
+ * This is caught by the authenticate middleware which returns 401
+ */
 
 /**
  * GET /api/user/profile - Get user profile (requires authentication)
