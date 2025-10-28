@@ -375,6 +375,11 @@
                 if (roleParam) {
                     // Store role in sessionStorage for later use
                     sessionStorage.setItem('registration_role', roleParam);
+                    console.log('✅ Role captured from URL:', roleParam);
+
+                    // Optional: Show visual indicator
+                    const roleText = roleParam === 'landlord' ? 'Landlord' : roleParam === 'operator' ? 'Operator' : 'User';
+                    document.title = `Register as ${roleText} - Host Bridge`;
                 }
 
                 registerForm.addEventListener('submit', async function (e) {
@@ -391,6 +396,7 @@
                         // Add role to form data if available
                         const role = sessionStorage.getItem('registration_role') || 'user';
                         formData.append('role', role);
+                        console.log('📤 Sending registration with role:', role);
 
                         // Convert FormData to JSON
                         const jsonData = {};
