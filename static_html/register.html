@@ -340,6 +340,8 @@
     <!-- Environment Config (base URLs) -->
     <script src="./js/env-config.js"></script>
 
+    <!-- Auth Context (must load before navbar-auth) -->
+    <script src="./js/auth-context.js"></script>
 
     <script src="./js/toast.js"></script>
     <script>
@@ -443,7 +445,9 @@
 
                         const result = await response.json();
 
-                        if (result.success) {
+                        if (result.success && result.user) {
+                            // Update AuthContext with user data
+                            await window.AuthContext.login(result.user, result.token);
                             showToast('Registration successful! Redirecting...', 'success');
                             setTimeout(() => {
                                 window.location.href = window.ENV.getRelativeURL('index.html');

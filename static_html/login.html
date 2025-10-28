@@ -568,7 +568,9 @@
                             if (contentType && contentType.includes('application/json')) {
                                 // JSON response
                                 const data = await response.json();
-                                if (data.success) {
+                                if (data.success && data.user) {
+                                    // Update AuthContext with user data
+                                    await window.AuthContext.login(data.user, data.token);
                                     // Redirect to home on any successful login
                                     window.location.href = window.ENV.getRelativeURL('index.html');
                                 } else if (data.error || data.message) {
@@ -632,6 +634,9 @@
 
     <!-- Environment Config (base URLs) -->
     <script src="./js/env-config.js"></script>
+
+    <!-- Auth Context (must load before navbar-auth) -->
+    <script src="./js/auth-context.js"></script>
 
     <!-- Navbar Authentication Update -->
     <script src="./js/navbar-auth.js"></script>
