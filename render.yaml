@@ -3,7 +3,7 @@ services:
     name: host-bridge
     env: node
     plan: free
-    buildCommand: npm install && npm run sync
+    buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /health
     envVars:
