@@ -568,11 +568,13 @@
                             if (contentType && contentType.includes('application/json')) {
                                 // JSON response
                                 const data = await response.json();
-                                if (data.success && data.redirect_url) {
-                                    // Successful login, redirect to the provided URL
-                                    window.location.href = data.redirect_url;
-                                } else if (data.error) {
-                                    showToast(data.error, 'error');
+                                if (data.success) {
+                                    // Redirect to home on any successful login
+                                    window.location.href = window.ENV.getRelativeURL('index.html');
+                                } else if (data.error || data.message) {
+                                    showToast(data.error || data.message, 'error');
+                                } else {
+                                    showToast('Login failed. Please try again.', 'error');
                                 }
                             } else {
                                 // HTML response - check for flash messages
