@@ -236,6 +236,14 @@
                             <i class="fa-solid fa-phone"></i>
                             <input class="input" type="tel" id="phone" name="phone" placeholder="Phone number">
                         </div>
+                        <div class="field span-2">
+                            <i class="fa-solid fa-user-tag"></i>
+                            <select class="input" id="role" name="role" required style="padding-left: 40px;">
+                                <option value="">Select your role</option>
+                                <option value="landlord">Landlord - I want to list properties</option>
+                                <option value="operator">Operator - I want to find properties</option>
+                            </select>
+                        </div>
                         <div class="field">
                             <i class="fa-solid fa-lock"></i>
                             <input class="input" type="password" id="password" name="password" placeholder="Password">
@@ -379,6 +387,12 @@
                     sessionStorage.setItem('registration_role', roleParam);
                     console.log('✅ Role captured from URL:', roleParam);
 
+                    // Pre-select the role in dropdown
+                    const roleDropdown = document.getElementById('role');
+                    if (roleDropdown && (roleParam === 'landlord' || roleParam === 'operator')) {
+                        roleDropdown.value = roleParam;
+                    }
+
                     // Optional: Show visual indicator
                     const roleText = roleParam === 'landlord' ? 'Landlord' : roleParam === 'operator' ? 'Operator' : 'User';
                     document.title = `Register as ${roleText} - Host Bridge`;
@@ -395,9 +409,20 @@
                     try {
                         const formData = new FormData(registerForm);
 
-                        // Add role to form data if available
-                        const role = sessionStorage.getItem('registration_role') || 'user';
-                        formData.append('role', role);
+                        // Get role from dropdown (prioritize) or URL parameter or default to 'user'
+                        const roleDropdown = document.getElementById('role').value;
+                        const urlRole = sessionStorage.getItem('registration_role');
+                        const role = roleDropdown || urlRole || 'user';
+
+                        // Validate role selection
+                        if (!roleDropdown) {
+                            showToast('Please select your role (Landlord or Operator)', 'error');
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = originalText;
+                            document.getElementById('role').focus();
+                            return;
+                        }
+
                         console.log('📤 Sending registration with role:', role);
 
                         // Convert FormData to JSON
