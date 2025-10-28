@@ -175,6 +175,16 @@
                         <textarea name="description" id="description" rows="4"
                             placeholder="Describe your property, features, and amenities..."></textarea>
 
+                        <label>Property Images: (Max 10 images, 5MB each)*</label>
+                        <input type="file" name="images" id="images" accept="image/*" multiple style="display: none;">
+                        <button type="button" onclick="document.getElementById('images').click()"
+                            style="padding: 10px 20px; background: #004c46; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 1em; margin-bottom: 10px; width: 100%;">
+                            Choose Property Images
+                        </button>
+                        <div id="selected-files" style="margin: 10px 0; color: #666; font-size: 0.9em;"></div>
+                        <div id="image-preview" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+                        </div>
+
                         <button type="submit" id="submit-btn">Submit Listing</button>
 
                         <p class="note" style="font-size: 0.9em; color: #666; margin-top: 10px;">
@@ -475,17 +485,40 @@
         // Image preview
         imagesInput.addEventListener('change', function (e) {
             imagePreview.innerHTML = '';
+            const selectedFilesDiv = document.getElementById('selected-files');
             const files = Array.from(e.target.files);
 
             if (files.length > 10) {
                 alert('Maximum 10 images allowed');
                 imagesInput.value = '';
+                selectedFilesDiv.textContent = '';
                 return;
             }
 
+            if (files.length === 0) {
+                selectedFilesDiv.textContent = '';
+                return;
+            }
+
+            // Show selected file names
+            selectedFilesDiv.innerHTML = `<strong>Selected: ${files.length} image(s)</strong><br>${files.map(f => f.name).join(', ')}`;
+
             files.forEach((file, index) => {
+                // Validate file type
+                const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+                if (!validTypes.includes(file.type)) {
+                    alert(`${file.name} is not a valid image file. Please select JPEG, PNG, GIF, or WebP.`);
+                    imagesInput.value = '';
+                    selectedFilesDiv.textContent = '';
+                    imagePreview.innerHTML = '';
+                    return;
+                }
+
                 if (file.size > 5 * 1024 * 1024) {
                     alert(`File ${file.name} is too large. Maximum size is 5MB`);
+                    imagesInput.value = '';
+                    selectedFilesDiv.textContent = '';
+                    imagePreview.innerHTML = '';
                     return;
                 }
 
@@ -496,7 +529,7 @@
 
                     const img = document.createElement('img');
                     img.src = e.target.result;
-                    img.style.cssText = 'width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 2px solid #ddd;';
+                    img.style.cssText = 'width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 2px solid #004c46;';
 
                     imgContainer.appendChild(img);
                     imagePreview.appendChild(imgContainer);
@@ -534,17 +567,21 @@
 
                 // Prepare form data
                 const formData = new FormData();
-                formData.append('title', document.getElementById('title').value);
-                formData.append('address', document.getElementById('address').value);
-                formData.append('city', document.getElementById('city').value);
-                formData.append('propertyType', document.getElementById('propertyType').value);
-                formData.append('price', document.getElementById('price').value);
-                formData.append('bedrooms', document.getElementById('bedrooms').value);
-                formData.append('bathrooms', document.getElementById('bathrooms').value);
-                formData.append('description', document.getElementById('description').value);
+                formData.append('title', document.querySelector('input[name="title"]').value);
+                formData.append('address', 'N/A'); // Not in old form
+                formData.append('city', document.querySelector('input[name="city"]').value);
+                formData.append('propertyType', document.querySelector('select[name="propertyType"]').value);
+                formData.append('price', document.querySelector('input[name="price"]').value);
+                formData.append('bedrooms', document.querySelector('select[name="beds"]').value);
+                formData.append('bathrooms', document.querySelector('select[name="baths"]').value);
+                formData.append('description', document.querySelector('textarea[name="description"]').value);
 
                 // Add images
                 const files = imagesInput.files;
+                if (files.length === 0) {
+                    alert('Please select at least one property image');
+                    return;
+                }
                 for (let i = 0; i < files.length; i++) {
                     formData.append('images', files[i]);
                 }

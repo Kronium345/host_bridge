@@ -3,73 +3,75 @@
  * Dynamically shows/hides "How It Works" dropdown items based on user role
  */
 
-(async function () {
-    const baseURL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:3000'
-        : 'https://host-bridge.onrender.com';
+; (function () {
+    const ensureReady = (fn) => {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', fn);
+        } else {
+            fn();
+        }
+    };
 
-    try {
-        // Fetch user status
-        const response = await fetch(`${baseURL}/api/user/status`, {
-            credentials: 'include'
-        });
-        const data = await response.json();
+    ensureReady(async () => {
+        const baseURL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? 'http://localhost:3000'
+            : 'https://host-bridge.onrender.com';
 
-        // Get the dropdown menus (both desktop and mobile)
-        const dropdowns = document.querySelectorAll('.dropdown');
+        // Helper: show/hide items by role without relying on the dropdown label text
+        const applyVisibility = (role, authenticated) => {
+            const landlordAnchors = document.querySelectorAll('a[href="./how_landlords.html"]');
+            const operatorAnchors = document.querySelectorAll('a[href="./how_operators.html"]');
 
-        dropdowns.forEach(dropdown => {
-            const dropdownLink = dropdown.querySelector('a');
-            if (dropdownLink && dropdownLink.textContent.trim() === 'How It Works') {
-                const dropdownMenu = dropdown.querySelector('.dropdown-menu');
-                if (!dropdownMenu) return;
+            const setDisplay = (anchor, visible) => {
+                if (!anchor) return;
+                const li = anchor.closest('li') || anchor;
+                li.style.display = visible ? 'block' : 'none';
+            };
 
-                const landlordLink = dropdownMenu.querySelector('a[href="./how_landlords.html"]');
-                const operatorLink = dropdownMenu.querySelector('a[href="./how_operators.html"]');
+            if (!authenticated) {
+                landlordAnchors.forEach(a => setDisplay(a, false));
+                operatorAnchors.forEach(a => setDisplay(a, false));
+                return;
+            }
 
-                if (!data.authenticated) {
-                    // Not logged in - hide both items
-                    if (landlordLink) landlordLink.parentElement.style.display = 'none';
-                    if (operatorLink) operatorLink.parentElement.style.display = 'none';
-                } else {
-                    const userRole = data.user.role;
+            if (role === 'landlord') {
+                landlordAnchors.forEach(a => setDisplay(a, true));
+                operatorAnchors.forEach(a => setDisplay(a, false));
+            } else if (role === 'operator') {
+                landlordAnchors.forEach(a => setDisplay(a, false));
+                operatorAnchors.forEach(a => setDisplay(a, true));
+            } else if (role === 'admin') {
+                landlordAnchors.forEach(a => setDisplay(a, true));
+                operatorAnchors.forEach(a => setDisplay(a, true));
+            } else {
+                landlordAnchors.forEach(a => setDisplay(a, false));
+                operatorAnchors.forEach(a => setDisplay(a, false));
+            }
+        };
 
-                    if (userRole === 'landlord') {
-                        // Landlord - show only landlord page
-                        if (landlordLink) landlordLink.parentElement.style.display = 'block';
-                        if (operatorLink) operatorLink.parentElement.style.display = 'none';
-                    } else if (userRole === 'operator') {
-                        // Operator - show only operator page
-                        if (landlordLink) landlordLink.parentElement.style.display = 'none';
-                        if (operatorLink) operatorLink.parentElement.style.display = 'block';
-                    } else if (userRole === 'admin') {
-                        // Admin - show both
-                        if (landlordLink) landlordLink.parentElement.style.display = 'block';
-                        if (operatorLink) operatorLink.parentElement.style.display = 'block';
-                    } else {
-                        // Regular user - hide both
-                        if (landlordLink) landlordLink.parentElement.style.display = 'none';
-                        if (operatorLink) operatorLink.parentElement.style.display = 'none';
-                    }
+        // Retry fetching status a few times to avoid races with session set
+        const fetchStatusWithRetry = async (attempts = 3) => {
+            for (let i = 0; i < attempts; i++) {
+                try {
+                    const res = await fetch(`${baseURL}/api/user/status`, { credentials: 'include' });
+                    if (!res.ok) throw new Error('status not ok');
+                    const data = await res.json();
+                    return data;
+                } catch (e) {
+                    await new Promise(r => setTimeout(r, 300));
                 }
             }
-        });
-    } catch (error) {
-        console.error('Error loading role-based navigation:', error);
-        // On error, hide both items for safety
-        const dropdowns = document.querySelectorAll('.dropdown');
-        dropdowns.forEach(dropdown => {
-            const dropdownLink = dropdown.querySelector('a');
-            if (dropdownLink && dropdownLink.textContent.trim() === 'How It Works') {
-                const dropdownMenu = dropdown.querySelector('.dropdown-menu');
-                if (dropdownMenu) {
-                    const landlordLink = dropdownMenu.querySelector('a[href="./how_landlords.html"]');
-                    const operatorLink = dropdownMenu.querySelector('a[href="./how_operators.html"]');
-                    if (landlordLink) landlordLink.parentElement.style.display = 'none';
-                    if (operatorLink) operatorLink.parentElement.style.display = 'none';
-                }
-            }
-        });
-    }
+            return { authenticated: false };
+        };
+
+        try {
+            const data = await fetchStatusWithRetry(4);
+            const role = data?.user?.role || null;
+            applyVisibility(role, !!data.authenticated);
+        } catch (err) {
+            console.error('Error loading role-based navigation:', err);
+            applyVisibility(null, false);
+        }
+    });
 })();
 
