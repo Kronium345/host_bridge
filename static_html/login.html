@@ -631,10 +631,39 @@
     <!-- Google Sign-In -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
-        function initGoogleSignIn() {
+        let googleClientId = null;
+
+        // Fetch Google Client ID from backend
+        async function fetchGoogleClientId() {
+            try {
+                const baseURL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                    ? 'http://localhost:3000'
+                    : 'https://host-bridge.onrender.com';
+
+                const response = await fetch(`${baseURL}/api/config/google`);
+                const data = await response.json();
+                googleClientId = data.clientId;
+                return googleClientId;
+            } catch (error) {
+                console.error('Failed to fetch Google Client ID:', error);
+                return null;
+            }
+        }
+
+        async function initGoogleSignIn() {
             if (typeof google !== 'undefined') {
+                // Fetch client ID if not already loaded
+                if (!googleClientId) {
+                    await fetchGoogleClientId();
+                }
+
+                if (!googleClientId) {
+                    console.error('Google Client ID not available');
+                    return;
+                }
+
                 google.accounts.id.initialize({
-                    client_id: process.env.WEB_CLIENT_ID,
+                    client_id: googleClientId,
                     callback: handleGoogleSignIn
                 });
 
@@ -678,10 +707,7 @@
                 const data = await result.json();
 
                 if (data.success) {
-                    showToast(data.message || 'Login successful!', 'success');
-                    setTimeout(() => {
-                        window.location.href = './index.html';
-                    }, 1000);
+                    window.location.href = './index.html';
                 } else {
                     showToast(data.message || 'Google sign-in failed', 'error');
                 }

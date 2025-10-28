@@ -10,6 +10,15 @@ const router = Router();
 const googleClient = new OAuth2Client(process.env.WEB_CLIENT_ID);
 
 /**
+ * GET /api/config/google - Get Google OAuth client ID
+ */
+router.get('/config/google', (req, res) => {
+  res.json({
+    clientId: process.env.WEB_CLIENT_ID
+  });
+});
+
+/**
  * POST /api/register - Register new user
  */
 router.post('/register', async (req, res) => {
