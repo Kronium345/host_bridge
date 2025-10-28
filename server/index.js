@@ -60,10 +60,12 @@ app.use(cookieParser());
 app.use(session({
     secret: process.env.SESSION_SECRET || 'host-bridge-secret-key-change-in-production',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false, // Don't create session until something stored
     cookie: {
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        domain: process.env.COOKIE_DOMAIN || undefined,
         maxAge: 24 * 60 * 60 * 1000 // 24 hours
     }
 }));
