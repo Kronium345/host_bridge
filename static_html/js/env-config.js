@@ -2,11 +2,12 @@
 (function () {
     'use strict';
 
-    // Detect environment
-    const isLocal = window.location.hostname === '127.0.0.1' ||
-        window.location.hostname === 'localhost';
+    // Detect environment (support localhost, 127.0.0.1, ::1)
+    const hostname = window.location.hostname;
+    const isLocal = hostname === '127.0.0.1' || hostname === 'localhost' || hostname === '::1';
 
     // Set base URL based on environment
+    // In dev we hit the same origin (Node serves API + static). In prod, API is on Render.
     const BASE_URL = isLocal ? window.location.origin : 'https://host-bridge.onrender.com';
     const FRONTEND_URL = isLocal ? window.location.origin : 'https://host-bridge.com';
 
