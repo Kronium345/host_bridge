@@ -9,6 +9,15 @@ const router = Router();
 
 const googleClient = new OAuth2Client(process.env.WEB_CLIENT_ID);
 
+// Shared cookie options for auth cookies
+const getCookieOptions = () => ({
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+  domain: process.env.COOKIE_DOMAIN || undefined,
+  maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+});
+
 /**
  * GET /api/config/google - Get Google OAuth client ID
  */
@@ -72,11 +81,7 @@ router.post('/register', async (req, res) => {
     const token = generateToken(user);
 
     // Set token in cookie (for web)
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-    });
+    res.cookie('token', token, getCookieOptions());
 
     // Also set session (for backward compatibility)
     req.session.user = {
@@ -155,11 +160,7 @@ router.post('/login', async (req, res) => {
     const token = generateToken(user);
 
     // Set token in cookie (for web)
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-    });
+    res.cookie('token', token, getCookieOptions());
 
     // Create session (for backward compatibility)
     req.session.user = {
@@ -207,9 +208,10 @@ router.post('/logout', (req, res) => {
       });
     }
 
-    // Clear all auth cookies
-    res.clearCookie('connect.sid');
-    res.clearCookie('token');
+    // Clear all auth cookies with same options
+    const opts = getCookieOptions();
+    res.clearCookie('connect.sid', { ...opts });
+    res.clearCookie('token', { ...opts });
     console.log('👋 User logged out:', userEmail);
 
     res.json({
@@ -346,11 +348,7 @@ router.post('/auth/google', async (req, res) => {
     const authToken = generateToken(user);
 
     // Set token in cookie (for web)
-    res.cookie('token', authToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-    });
+    res.cookie('token', authToken, getCookieOptions());
 
     // Create session
     req.session.user = {
