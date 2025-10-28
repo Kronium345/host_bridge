@@ -99,9 +99,10 @@
 
                 <div class="filters-box">
                     <h3>Property Listing Details</h3>
-                    <form class="listing-form" action="https://host-bridge.onrender.com/submit_property" method="post">
-                        <label>Property Title:</label>
-                        <input type="text" name="title" placeholder="e.g. Spacious 2BHK near Heathrow" required>
+                    <form class="listing-form" id="property-listing-form" enctype="multipart/form-data">
+                        <label>Property Title:*</label>
+                        <input type="text" name="title" id="title" placeholder="e.g. Spacious 2BHK near Heathrow"
+                            required>
 
                         <label>Region:</label>
                         <select name="area" required>
@@ -115,8 +116,11 @@
                             <option value="Cumbria">Cumbria</option>
                         </select>
 
-                        <label>Property Type:</label>
-                        <select name="property_type">
+                        <label>City:*</label>
+                        <input type="text" name="city" id="city" placeholder="e.g. London" required>
+
+                        <label>Property Type:*</label>
+                        <select name="propertyType" id="propertyType" required>
                             <option value="">-- Select Type --</option>
                             <option value="Flat">Flat</option>
                             <option value="House">House</option>
@@ -125,10 +129,12 @@
                             <option value="Caravan">Caravan</option>
                         </select>
 
+                        <label>Monthly Rent (£):*</label>
+                        <input type="number" name="price" id="price" min="0" step="1" placeholder="e.g. 1800" required>
 
 
                         <label>Furnishings:</label>
-                        <select name="furnishing" required>
+                        <select name="furnishing" id="furnishing" required>
                             <option value="">-- Select --</option>
                             <option value="Fully Furnished">Fully Furnished</option>
                             <option value="Semi Furnished">Semi Furnished</option>
@@ -166,11 +172,14 @@
                         </select>
 
                         <label>Description:</label>
-                        <textarea name="notes" rows="4" placeholder="Describe your property and features..."></textarea>
+                        <textarea name="description" id="description" rows="4"
+                            placeholder="Describe your property, features, and amenities..."></textarea>
 
-                        <button type="submit">Submit Listing</button>
+                        <button type="submit" id="submit-btn">Submit Listing</button>
 
-                        <!-- <p class="note">🎉 List up to <strong>2 properties</strong> for free with basic tools.</p> -->
+                        <p class="note" style="font-size: 0.9em; color: #666; margin-top: 10px;">
+                            * Required fields. Only landlords can submit property listings.
+                        </p>
                     </form>
                 </div>
             </div>
@@ -452,6 +461,124 @@
 
     <!-- Navbar Authentication Update -->
     <script src="./js/navbar-auth.js"></script>
+
+    <!-- Role-Based Navigation -->
+    <script src="./js/role-based-nav.js"></script>
+
+    <!-- Property Listing Form Handler -->
+    <script>
+        const form = document.getElementById('property-listing-form');
+        const imagesInput = document.getElementById('images');
+        const imagePreview = document.getElementById('image-preview');
+        const submitBtn = document.getElementById('submit-btn');
+
+        // Image preview
+        imagesInput.addEventListener('change', function (e) {
+            imagePreview.innerHTML = '';
+            const files = Array.from(e.target.files);
+
+            if (files.length > 10) {
+                alert('Maximum 10 images allowed');
+                imagesInput.value = '';
+                return;
+            }
+
+            files.forEach((file, index) => {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(`File ${file.name} is too large. Maximum size is 5MB`);
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.style.cssText = 'position: relative; width: 100px; height: 100px;';
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.cssText = 'width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 2px solid #ddd;';
+
+                    imgContainer.appendChild(img);
+                    imagePreview.appendChild(imgContainer);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        // Form submission
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            // Check if user is authenticated
+            const baseURL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                ? 'http://localhost:3000'
+                : 'https://host-bridge.onrender.com';
+
+            try {
+                // Check authentication first
+                const authCheck = await fetch(`${baseURL}/api/user/status`, {
+                    credentials: 'include'
+                });
+                const authData = await authCheck.json();
+
+                if (!authData.authenticated) {
+                    alert('Please login to list a property');
+                    window.location.href = './login.html';
+                    return;
+                }
+
+                if (authData.user.role !== 'landlord' && authData.user.role !== 'admin') {
+                    alert('Only landlords can list properties. Please register as a landlord.');
+                    return;
+                }
+
+                // Prepare form data
+                const formData = new FormData();
+                formData.append('title', document.getElementById('title').value);
+                formData.append('address', document.getElementById('address').value);
+                formData.append('city', document.getElementById('city').value);
+                formData.append('propertyType', document.getElementById('propertyType').value);
+                formData.append('price', document.getElementById('price').value);
+                formData.append('bedrooms', document.getElementById('bedrooms').value);
+                formData.append('bathrooms', document.getElementById('bathrooms').value);
+                formData.append('description', document.getElementById('description').value);
+
+                // Add images
+                const files = imagesInput.files;
+                for (let i = 0; i < files.length; i++) {
+                    formData.append('images', files[i]);
+                }
+
+                // Disable submit button
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Submitting...';
+
+                // Submit form
+                const response = await fetch(`${baseURL}/api/properties`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Property listed successfully!');
+                    form.reset();
+                    imagePreview.innerHTML = '';
+                    window.location.href = './marketplace_listings.html';
+                } else {
+                    alert(data.message || 'Failed to list property');
+                }
+            } catch (error) {
+                console.error('Error submitting property:', error);
+                alert('An error occurred. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Listing';
+            }
+        });
+    </script>
 
 </body>
 

@@ -10,6 +10,7 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { sequelize } from './models/index.js';
 import authRoutes from './routes/auth.js';
+import propertyRoutes from './routes/properties.js';
 
 dotenv.config();
 
@@ -54,9 +55,11 @@ app.use('/images', express.static(join(__dirname, '../static_html/images')));
 app.use('/css', express.static(join(__dirname, '../static_html/css')));
 app.use('/js', express.static(join(__dirname, '../static_html/js')));
 app.use('/data', express.static(join(__dirname, '../static_html/data')));
+app.use('/uploads', express.static(join(__dirname, '../uploads')));
 
 // API Routes
 app.use('/api', authRoutes);
+app.use('/api/properties', propertyRoutes);
 
 // Serve HTML files
 const htmlFiles = [

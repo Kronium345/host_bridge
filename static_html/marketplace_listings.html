@@ -101,107 +101,101 @@
             </div>
 
             <div class="listings-grid" id="listings-grid">
-                <!-- Sample Property Cards -->
-                <a class="property-card" href="./property_details.html?id=1" data-image="./images/house-1.jpg"
-                    data-price="1200" data-beds="3" data-baths="1" data-furnishing="F/U"
-                    data-address="123 Main Street, London, SW1A 1AA">
-                    <div class="property-image">
-                        <img src="./images/house-1.jpg" alt="Property Image">
-                    </div>
-                    <div class="property-content">
-                        <div class="property-price">£1200/mo</div>
-                        <div class="property-details">
-                            <span><i class="fas fa-bed"></i><span class="detail-count"></span></span>
-                            <span><i class="fas fa-bath"></i><span class="detail-count"></span></span>
-                            <span><i class="fas fa-couch"></i><span class="detail-count"></span></span>
-                        </div>
-                        <div class="property-listed">Listed yesterday</div>
-                        <div class="property-address">
-                            <strong>Address:</strong><br>
-                            123 Main Street, London, SW1A 1AA
-                        </div>
-                    </div>
-                </a>
-
-                <a class="property-card" href="./property_details.html?id=2" data-image="./images/house-2.jpg"
-                    data-price="2000" data-beds="1" data-baths="1" data-furnishing="F"
-                    data-address="456 High Street, Manchester, M1 1AA">
-                    <div class="property-image">
-                        <img src="./images/house-2.jpg" alt="Property Image">
-                    </div>
-                    <div class="property-content">
-                        <div class="property-price">£2000/mo</div>
-                        <div class="property-details">
-                            <span><i class="fas fa-bed"></i><span class="detail-count"></span></span>
-                            <span><i class="fas fa-bath"></i><span class="detail-count"></span></span>
-                            <span><i class="fas fa-couch"></i><span class="detail-count"></span></span>
-                        </div>
-                        <div class="property-listed">Listed 2 days ago</div>
-                        <div class="property-address">
-                            <strong>Address:</strong><br>
-                            456 High Street, Manchester, M1 1AA
-                        </div>
-                    </div>
-                </a>
-
-                <a class="property-card" href="./property_details.html?id=3" data-image="./images/house-3.jpg"
-                    data-price="1800" data-beds="2" data-baths="2" data-furnishing="U"
-                    data-address="789 Queen Street, Birmingham, B1 1AA">
-                    <div class="property-image">
-                        <img src="./images/house-3.jpg" alt="Property Image">
-                    </div>
-                    <div class="property-content">
-                        <div class="property-price">£1800/mo</div>
-                        <div class="property-details">
-                            <span><i class="fas fa-bed"></i><span class="detail-count"></span></span>
-                            <span><i class="fas fa-bath"></i><span class="detail-count"></span></span>
-                            <span><i class="fas fa-couch"></i><span class="detail-count"></span></span>
-                        </div>
-                        <div class="property-listed">Listed 3 days ago</div>
-                        <div class="property-address">
-                            <strong>Address:</strong><br>
-                            789 Queen Street, Birmingham, B1 1AA
-                        </div>
-                    </div>
-                </a>
-
-                <a class="property-card" href="./property_details.html?id=4" data-image="./images/house-4.jpg"
-                    data-price="1500" data-beds="2" data-baths="1" data-furnishing="F/U"
-                    data-address="321 Park Lane, Liverpool, L1 1AA">
-                    <div class="property-image">
-                        <img src="./images/house-4.jpg" alt="Property Image">
-                    </div>
-                    <div class="property-content">
-                        <div class="property-price">£1500/mo</div>
-                        <div class="property-details">
-                            <span><i class="fas fa-bed"></i><span class="detail-count"></span></span>
-                            <span><i class="fas fa-bath"></i><span class="detail-count"></span></span>
-                            <span><i class="fas fa-couch"></i><span class="detail-count"></span></span>
-                        </div>
-                        <div class="property-listed">Listed 1 week ago</div>
-                        <div class="property-address">
-                            <strong>Address:</strong><br>
-                            321 Park Lane, Liverpool, L1 1AA
-                        </div>
-                    </div>
-                </a>
+                <!-- Properties will be loaded dynamically -->
+                <div style="text-align: center; padding: 40px; width: 100%;">
+                    <p>Loading properties...</p>
+                </div>
             </div>
         </div>
 
         <script>
-            document.getElementById('search-input').addEventListener('input', function (e) {
-                const searchTerm = e.target.value.toLowerCase();
-                const propertyCards = document.querySelectorAll('.property-card');
-                propertyCards.forEach(card => {
-                    const address = card.querySelector('.property-address').textContent.toLowerCase();
-                    const price = card.querySelector('.property-price').textContent.toLowerCase();
-                    const details = card.querySelector('.property-details').textContent.toLowerCase();
-                    card.style.display = (address.includes(searchTerm) || price.includes(searchTerm) || details.includes(searchTerm)) ? 'block' : 'none';
-                });
-            });
-        </script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
+            // Fetch and display properties
+            async function loadProperties() {
+                const baseURL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                    ? 'http://localhost:3000'
+                    : 'https://host-bridge.onrender.com';
+
+                try {
+                    const response = await fetch(`${baseURL}/api/properties`, {
+                        credentials: 'include'
+                    });
+                    const data = await response.json();
+
+                    const listingsGrid = document.getElementById('listings-grid');
+
+                    if (data.success && data.properties && data.properties.length > 0) {
+                        listingsGrid.innerHTML = data.properties.map(property => {
+                            const imageUrl = property.images && property.images.length > 0
+                                ? property.images[0]
+                                : './images/house-1.jpg';
+
+                            const fullAddress = `${property.address}, ${property.city}, ${property.country || 'UK'}`;
+
+                            return `
+                                <a class="property-card" href="./property_details.html?id=${property.id}" 
+                                   data-image="${imageUrl}"
+                                   data-price="${property.price}" 
+                                   data-beds="${property.bedrooms}" 
+                                   data-baths="${property.bathrooms}"
+                                   data-address="${fullAddress}"
+                                   data-property-id="${property.id}">
+                                    <div class="property-image">
+                                        <img src="${imageUrl}" alt="${property.title}" 
+                                             onerror="this.src='./images/house-1.jpg'">
+                                    </div>
+                                    <div class="property-content">
+                                        <h3 style="margin: 0 0 10px 0; font-size: 1.1em;">${property.title}</h3>
+                                        <div class="property-price">£${property.price}/mo</div>
+                                        <div class="property-details">
+                                            <span><i class="fas fa-bed"></i> ${property.bedrooms}</span>
+                                            <span><i class="fas fa-bath"></i> ${property.bathrooms}</span>
+                                            <span><i class="fas fa-home"></i> ${property.propertyType}</span>
+                                        </div>
+                                        <div class="property-listed">Listed ${getTimeAgo(property.createdAt)}</div>
+                                        <div class="property-address">
+                                            <strong>Address:</strong><br>
+                                            ${fullAddress}
+                                        </div>
+                                    </div>
+                                </a>
+                            `;
+                        }).join('');
+
+                        // Attach click handlers after rendering
+                        attachPropertyClickHandlers();
+                    } else {
+                        listingsGrid.innerHTML = `
+                            <div style="text-align: center; padding: 40px; width: 100%;">
+                                <p style="font-size: 1.2em; color: #666;">No properties listed yet.</p>
+                                <p style="color: #999;">Be the first to list your property!</p>
+                                <a href="./list_property.html" style="display: inline-block; margin-top: 20px; padding: 12px 24px; background: #004c46; color: white; text-decoration: none; border-radius: 8px;">List Property</a>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    console.error('Error loading properties:', error);
+                    document.getElementById('listings-grid').innerHTML = `
+                        <div style="text-align: center; padding: 40px; width: 100%;">
+                            <p style="color: #ff0000;">Failed to load properties. Please try again later.</p>
+                        </div>
+                    `;
+                }
+            }
+
+            function getTimeAgo(dateString) {
+                const date = new Date(dateString);
+                const now = new Date();
+                const diffMs = now - date;
+                const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+                if (diffDays === 0) return 'today';
+                if (diffDays === 1) return 'yesterday';
+                if (diffDays < 7) return `${diffDays} days ago`;
+                if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+                return `${Math.floor(diffDays / 30)} months ago`;
+            }
+
+            function attachPropertyClickHandlers() {
                 const cards = document.querySelectorAll('.property-card');
                 cards.forEach(card => {
                     card.addEventListener('click', function (e) {
@@ -210,16 +204,28 @@
                             price: this.getAttribute('data-price') || '',
                             beds: this.getAttribute('data-beds') || '',
                             baths: this.getAttribute('data-baths') || '',
-                            furnishing: this.getAttribute('data-furnishing') || '',
-                            address: this.getAttribute('data-address') || ''
+                            address: this.getAttribute('data-address') || '',
+                            propertyId: this.getAttribute('data-property-id') || ''
                         };
                         try { sessionStorage.setItem('selectedProperty', JSON.stringify(data)); } catch (_) { }
-                        // Ensure data is stored before navigation
-                        e.preventDefault();
-                        window.location.href = this.getAttribute('href');
                     });
                 });
+            }
+
+            // Search functionality
+            document.getElementById('search-input').addEventListener('input', function (e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const propertyCards = document.querySelectorAll('.property-card');
+                propertyCards.forEach(card => {
+                    const address = card.querySelector('.property-address')?.textContent.toLowerCase() || '';
+                    const price = card.querySelector('.property-price')?.textContent.toLowerCase() || '';
+                    const title = card.querySelector('h3')?.textContent.toLowerCase() || '';
+                    card.style.display = (address.includes(searchTerm) || price.includes(searchTerm) || title.includes(searchTerm)) ? 'block' : 'none';
+                });
             });
+
+            // Load properties on page load
+            document.addEventListener('DOMContentLoaded', loadProperties);
         </script>
     </main>
 
@@ -362,6 +368,9 @@
 
     <!-- Navbar Authentication Update -->
     <script src="./js/navbar-auth.js"></script>
+
+    <!-- Role-Based Navigation -->
+    <script src="./js/role-based-nav.js"></script>
 
 </body>
 
